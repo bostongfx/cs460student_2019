@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)https://www.bongiovi.tw/experiments/webgl/blossom/ -->
+<html class="gr__bongiovi_tw"><script type="text/javascript">
+    var spector;
+    var captureOnLoad = false;
+    var captureOffScreen = false;
+    window.__SPECTOR_Canvases = [];
+
+    (function() {
+        var __SPECTOR_Origin_EXTENSION_GetContext = HTMLCanvasElement.prototype.getContext;
+        HTMLCanvasElement.prototype.__SPECTOR_Origin_EXTENSION_GetContext = __SPECTOR_Origin_EXTENSION_GetContext;
+
+        HTMLCanvasElement.prototype.getContext = function () {
+            var context = null;
+            if (!arguments.length) {
+                return context;
+            }
+
+            if (arguments.length === 1) {
+                context = this.__SPECTOR_Origin_EXTENSION_GetContext(arguments[0]);
+                if (context === null) {
+                    return context;
+                }
+            }
+            else if (arguments.length === 2) {
+                context = this.__SPECTOR_Origin_EXTENSION_GetContext(arguments[0], arguments[1]);
+                if (context === null) {
+                    return context;
+                }
+            }
+
+            var contextNames = ["webgl", "experimental-webgl", "webgl2", "experimental-webgl2"];
+            if (contextNames.indexOf(arguments[0]) !== -1) {
+                context.canvas.setAttribute("__spector_context_type", arguments[0]);
+                // Notify the page a canvas is available.
+                var myEvent = new CustomEvent("SpectorWebGLCanvasAvailableEvent");
+                document.dispatchEvent(myEvent);
+
+                if (captureOffScreen) {
+                    var found = false;
+                    for (var i = 0; i < window.__SPECTOR_Canvases.length; i++) {
+                        if (window.__SPECTOR_Canvases[i] === this) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        window.__SPECTOR_Canvases.push(this);
+                    }
+                }
+
+                if (captureOnLoad) {
+                    // Ensures canvas is in the dom to capture the one we are currently tracking.
+                    if (this.parentElement || false) {
+                        spector.captureContext(context, 500, false);
+                        captureOnLoad = false;
+                    }
+                }
+            }
+
+            return context;
+        }
+    })()</script><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+        <title>Blossom</title>
+        <link rel="stylesheet" type="text/css" href="./Blossom_files/combine0.css">
+        <style type="text/css">
+          html { height: 100% background-color:#FFFFFF;}
+          body { height: 100%; margin: 0px; padding: 0px }
+          #map_canvas { height: 100% }
+          #status { color: #FF0000; position:fixed; top:15px; left:105px; z-index:200;}
+        </style>
+
+        <script id="shader-vs" type="x-shader/x-vertex">
+            attribute vec3 aVertexPosition;
+            attribute vec2 aTextureCoord;
+
+            uniform mat4 uMVMatrix;
+            uniform mat4 uPMatrix;
+
+            varying vec2 vTextureCoord;
+
+            void main(void) {
+                gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+                vec2 texCoord = aTextureCoord;
+                vTextureCoord = texCoord;
+            }
+        </script>
+
+        <script id="shader-vs-bg" type="x-shader/x-vertex">
+            attribute vec3 aVertexPosition;
+            attribute vec2 aTextureCoord;
+
+            uniform mat4 uMVMatrix;
+            uniform mat4 uPMatrix;
+            uniform float yoffset;
+
+            varying vec2 vTextureCoord;
+
+            void main(void) {
+                gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+                vec2 texCoord = aTextureCoord;
+                texCoord.y += yoffset;
+                vTextureCoord = texCoord;
+            }
+        </script>
+
+        <script id="shader-vs-particle" type="x-shader/x-vertex">
+            attribute vec3 aVertexPosition;
+            attribute vec2 aTextureCoord;
+            attribute vec2 sizeOffset;
+            attribute vec4 rotations;
+
+            uniform mat4 uMVMatrix;
+            uniform mat4 uPMatrix;
+            uniform mat3 uNMatrix;
+            uniform mat3 invertCamera;
+
+            uniform vec3 uAmbientColor;
+
+            uniform vec3 uLightingDirection0;
+            uniform vec3 uDirectionalColor0;
+            uniform float lightWeight0;
+
+            varying vec2 vTextureCoord;
+            varying vec3 vVertexCoord;
+            varying vec3 vOutputCoord;
+            varying float life;
+            varying vec3 vLightWeighting;
+
+            vec3 rotateX(vec3 pos, float alpha) {
+                mat4 trans= mat4(   1.0, 0.0, 0.0, 0.0, 
+                                    0.0, cos(alpha), -sin(alpha), 0.0, 
+                                    0.0, sin(alpha), cos(alpha), 0.0, 
+                                    0.0, 0.0, 0.0, 1.0);
+                return vec3(trans * vec4(pos, 1.0));
+            }
+
+            vec3 rotateY(vec3 pos, float alpha) {
+                mat4 trans= mat4(   cos(alpha), 0.0, sin(alpha), 0.0, 
+                                    0.0, 1.0, 0.0, 0.0, 
+                                    -sin(alpha), 0.0, cos(alpha), 0.0, 
+                                    0.0, 0.0, 0.0, 1.0);
+                return vec3(trans * vec4(pos, 1.0));
+            }
+
+            vec3 rotateZ(vec3 pos, float alpha) {
+                mat4 trans= mat4(   cos(alpha), -sin(alpha), 0.0, 0.0, 
+                                    sin(alpha), cos(alpha), 0.0, 0.0, 
+                                    0.0, 0.0, 1.0, 0.0, 
+                                    0.0, 0.0, 0.0, 1.0);
+                return vec3(trans * vec4(pos, 1.0));
+            }
+
+            void main(void) {
+                vec3 size = vec3(sizeOffset, 0.0);
+                size = rotateX(size, rotations.x);
+                size = rotateY(size, rotations.y);
+                size = rotateZ(size, rotations.z);
+
+                vec3 normal = vec3(0.0, 0.0, 1.0);
+                normal = rotateX(normal, rotations.x);
+                normal = rotateY(normal, rotations.y);
+                normal = rotateZ(normal, rotations.z);
+
+                float directionalLightWeighting0 = max(dot(normal, uLightingDirection0), 0.0);
+                vec3 vLightWeighting0 = (uAmbientColor + uDirectionalColor0 * directionalLightWeighting0) * lightWeight0;
+
+                vec3 adjustSize = size;
+                vec3 pos = aVertexPosition + adjustSize;
+                vec4 finalPos = uPMatrix * uMVMatrix * vec4(pos, 1.0);
+                gl_Position = finalPos;
+                vTextureCoord = aTextureCoord;
+                vVertexCoord = finalPos.xyz;
+                life = rotations.w;
+
+                vLightWeighting = vLightWeighting0;
+            }
+        </script>
+
+        <script id="shader-fs-particle" type="x-shader/x-fragment">
+            precision mediump float;
+
+            varying vec2 vTextureCoord;
+            varying vec3 vOutputCoord;
+            varying float life;
+            varying vec3 vLightWeighting;
+
+
+            uniform sampler2D uSampler0;
+
+            void main(void) {
+                float PI2 = 1.5707963;
+                vec4 color = texture2D(uSampler0, vec2(vTextureCoord.s, vTextureCoord.t));
+                color.rgb *= vLightWeighting;
+                color.a *= sin(life * PI2);
+                gl_FragColor = color;
+            }
+        </script>
+
+        <script id="shader-fs" type="x-shader/x-fragment">
+            precision mediump float;
+
+            varying vec2 vTextureCoord;
+            varying vec3 vOutputCoord;
+
+            uniform sampler2D uSampler0;
+
+            void main(void) {
+                vec4 color = texture2D(uSampler0, vec2(vTextureCoord.s, vTextureCoord.t));
+                gl_FragColor = color;
+            }
+        </script>
+
+       
+        <script id="shader-vs-ground" type="x-shader/x-vertex">
+            attribute vec3 aVertexPosition;
+            attribute vec3 aVertexNormal;
+            attribute vec2 aTextureCoord;
+
+            uniform mat4 uMVMatrix;
+            uniform mat4 uPMatrix;
+            uniform mat3 uNMatrix;
+
+            uniform vec3 uAmbientColor;
+
+            uniform vec3 uLightingDirection0;
+            uniform vec3 uDirectionalColor0;
+            uniform float lightWeight0;
+            
+            uniform vec3 uLightingDirection1;
+            uniform vec3 uDirectionalColor1;
+            uniform float lightWeight1;
+            
+            uniform vec3 uLightingDirection2;
+            uniform vec3 uDirectionalColor2;
+            uniform float lightWeight2;
+            
+            varying vec2 vTextureCoord;
+            varying vec3 vLightWeighting;
+            varying vec4 vPos;
+
+            void main(void) {
+                vec4 pos = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+                gl_Position = pos;
+                vPos = pos;
+                vTextureCoord = aTextureCoord;
+
+                vec3 transformedNormal = uNMatrix * aVertexNormal;
+                
+                float directionalLightWeighting0 = max(dot(aVertexNormal, uLightingDirection0), 0.0);
+                vec3 vLightWeighting0 = (uAmbientColor + uDirectionalColor0 * directionalLightWeighting0) * lightWeight0;
+                
+                float directionalLightWeighting1 = max(dot(aVertexNormal, uLightingDirection1), 0.0);
+                vec3 vLightWeighting1 = (uAmbientColor + uDirectionalColor1 * directionalLightWeighting1) * lightWeight1;
+                
+                float directionalLightWeighting2 = max(dot(aVertexNormal, uLightingDirection2), 0.0);
+                vec3 vLightWeighting2 = (uAmbientColor + uDirectionalColor2 * directionalLightWeighting2) * lightWeight2;
+                
+                vLightWeighting = vLightWeighting0+vLightWeighting1+vLightWeighting2;
+            }
+        </script>
+
+        <script id="shader-fs-ground" type="x-shader/x-fragment">
+            precision mediump float;
+
+            varying vec2 vTextureCoord;
+            varying vec3 vLightWeighting;
+            varying vec4 vPos;
+
+            uniform sampler2D uSampler0;
+
+
+            void main(void) {
+                vec4 textureColor = texture2D(uSampler0, vec2(vTextureCoord.s, vTextureCoord.t));
+                vec4 color = vec4(textureColor.rgb * vLightWeighting, textureColor.a);
+                if(vPos.z > 6000.0) color.a = 0.0;
+                else if ( vPos.z > 4000.0) color.a *= cos((vPos.z - 4000.0) / 2000.0 * 1.57);
+                gl_FragColor = color;
+            }
+        </script>
+		
+        <script type="text/javascript" src="./Blossom_files/PxLoader.js.download"></script>
+        <script type="text/javascript" src="./Blossom_files/PxLoaderImage.js.download"></script>
+        <script type="text/javascript" src="./Blossom_files/Stats.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/webgl-utils.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/glMatrix-0.9.5.min.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/dat.gui.min.js.download"></script><style type="text/css">.dg ul{list-style:none;margin:0;padding:0;width:100%;clear:both}.dg.ac{position:fixed;top:0;left:0;right:0;height:0;z-index:0}.dg:not(.ac) .main{overflow:hidden}.dg.main{-webkit-transition:opacity 0.1s linear;-o-transition:opacity 0.1s linear;-moz-transition:opacity 0.1s linear;transition:opacity 0.1s linear}.dg.main.taller-than-window{overflow-y:auto}.dg.main.taller-than-window .close-button{opacity:1;margin-top:-1px;border-top:1px solid #2c2c2c}.dg.main ul.closed .close-button{opacity:1 !important}.dg.main:hover .close-button,.dg.main .close-button.drag{opacity:1}.dg.main .close-button{-webkit-transition:opacity 0.1s linear;-o-transition:opacity 0.1s linear;-moz-transition:opacity 0.1s linear;transition:opacity 0.1s linear;border:0;position:absolute;line-height:19px;height:20px;cursor:pointer;text-align:center;background-color:#000}.dg.main .close-button:hover{background-color:#111}.dg.a{float:right;margin-right:15px;overflow-x:hidden}.dg.a.has-save ul{margin-top:27px}.dg.a.has-save ul.closed{margin-top:0}.dg.a .save-row{position:fixed;top:0;z-index:1002}.dg li{-webkit-transition:height 0.1s ease-out;-o-transition:height 0.1s ease-out;-moz-transition:height 0.1s ease-out;transition:height 0.1s ease-out}.dg li:not(.folder){cursor:auto;height:27px;line-height:27px;overflow:hidden;padding:0 4px 0 5px}.dg li.folder{padding:0;border-left:4px solid rgba(0,0,0,0)}.dg li.title{cursor:pointer;margin-left:-4px}.dg .closed li:not(.title),.dg .closed ul li,.dg .closed ul li > *{height:0;overflow:hidden;border:0}.dg .cr{clear:both;padding-left:3px;height:27px}.dg .property-name{cursor:default;float:left;clear:left;width:40%;overflow:hidden;text-overflow:ellipsis}.dg .c{float:left;width:60%}.dg .c input[type=text]{border:0;margin-top:4px;padding:3px;width:100%;float:right}.dg .has-slider input[type=text]{width:30%;margin-left:0}.dg .slider{float:left;width:66%;margin-left:-5px;margin-right:0;height:19px;margin-top:4px}.dg .slider-fg{height:100%}.dg .c input[type=checkbox]{margin-top:9px}.dg .c select{margin-top:5px}.dg .cr.function,.dg .cr.function .property-name,.dg .cr.function *,.dg .cr.boolean,.dg .cr.boolean *{cursor:pointer}.dg .selector{display:none;position:absolute;margin-left:-9px;margin-top:23px;z-index:10}.dg .c:hover .selector,.dg .selector.drag{display:block}.dg li.save-row{padding:0}.dg li.save-row .button{display:inline-block;padding:0px 6px}.dg.dialogue{background-color:#222;width:460px;padding:15px;font-size:13px;line-height:15px}#dg-new-constructor{padding:10px;color:#222;font-family:Monaco, monospace;font-size:10px;border:0;resize:none;box-shadow:inset 1px 1px 1px #888;word-wrap:break-word;margin:12px 0;display:block;width:440px;overflow-y:scroll;height:100px;position:relative}#dg-local-explain{display:none;font-size:11px;line-height:17px;border-radius:3px;background-color:#333;padding:8px;margin-top:10px}#dg-local-explain code{font-size:10px}#dat-gui-save-locally{display:none}.dg{color:#eee;font:11px 'Lucida Grande', sans-serif;text-shadow:0 -1px 0 #111}.dg.main::-webkit-scrollbar{width:5px;background:#1a1a1a}.dg.main::-webkit-scrollbar-corner{height:0;display:none}.dg.main::-webkit-scrollbar-thumb{border-radius:5px;background:#676767}.dg li:not(.folder){background:#1a1a1a;border-bottom:1px solid #2c2c2c}.dg li.save-row{line-height:25px;background:#dad5cb;border:0}.dg li.save-row select{margin-left:5px;width:108px}.dg li.save-row .button{margin-left:5px;margin-top:1px;border-radius:2px;font-size:9px;line-height:7px;padding:4px 4px 5px 4px;background:#c5bdad;color:#fff;text-shadow:0 1px 0 #b0a58f;box-shadow:0 -1px 0 #b0a58f;cursor:pointer}.dg li.save-row .button.gears{background:#c5bdad url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAANCAYAAAB/9ZQ7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQJJREFUeNpiYKAU/P//PwGIC/ApCABiBSAW+I8AClAcgKxQ4T9hoMAEUrxx2QSGN6+egDX+/vWT4e7N82AMYoPAx/evwWoYoSYbACX2s7KxCxzcsezDh3evFoDEBYTEEqycggWAzA9AuUSQQgeYPa9fPv6/YWm/Acx5IPb7ty/fw+QZblw67vDs8R0YHyQhgObx+yAJkBqmG5dPPDh1aPOGR/eugW0G4vlIoTIfyFcA+QekhhHJhPdQxbiAIguMBTQZrPD7108M6roWYDFQiIAAv6Aow/1bFwXgis+f2LUAynwoIaNcz8XNx3Dl7MEJUDGQpx9gtQ8YCueB+D26OECAAQDadt7e46D42QAAAABJRU5ErkJggg==) 2px 1px no-repeat;height:7px;width:8px}.dg li.save-row .button:hover{background-color:#bab19e;box-shadow:0 -1px 0 #b0a58f}.dg li.folder{border-bottom:0}.dg li.title{padding-left:16px;background:#000 url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.2)}.dg .closed li.title{background-image:url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlGIWqMCbWAEAOw==)}.dg .cr.boolean{border-left:3px solid #806787}.dg .cr.function{border-left:3px solid #e61d5f}.dg .cr.number{border-left:3px solid #2fa1d6}.dg .cr.number input[type=text]{color:#2fa1d6}.dg .cr.string{border-left:3px solid #1ed36f}.dg .cr.string input[type=text]{color:#1ed36f}.dg .cr.function:hover,.dg .cr.boolean:hover{background:#111}.dg .c input[type=text]{background:#303030;outline:none}.dg .c input[type=text]:hover{background:#3c3c3c}.dg .c input[type=text]:focus{background:#494949;color:#fff}.dg .c .slider{background:#303030;cursor:ew-resize}.dg .c .slider-fg{background:#2fa1d6}.dg .c .slider:hover{background:#3c3c3c}.dg .c .slider:hover .slider-fg{background:#44abda}
+</style> 
+        <script type="text/javascript" src="./Blossom_files/buffer-loader.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/SimpleCamera.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/HoverCamera.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/ProjectionPerspectiveMatrix.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/GLModelShader.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/ObjModel.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/GLModel.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/GLTexture.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/GLTextureFilter.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/Scheduler.js.download"></script> 
+
+        <script type="text/javascript" src="./Blossom_files/SoundMixer.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/Particle.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/View.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/ViewBg.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/ViewParticles.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/ViewSun.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/ViewTree.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/ViewGround.js.download"></script> 
+        <script type="text/javascript" src="./Blossom_files/Index.js.download"></script> 
+
+
+		<script type="text/javascript">
+        var scheduler = new Scheduler();
+        var canvasGL, gl, stats, textureBG, textureSUN, textureMountain;
+        var imgLoadedCount = 0;
+        var test;
+		var scale = 1;
+        W = window.innerWidth * scale;
+        H = window.innerHeight;
+
+		function init() {
+            canvasGL = document.createElement("canvas");
+            canvasGL.id = "canvasGL";
+            canvasGL.width = window.innerWidth * scale;
+            canvasGL.height = window.innerHeight;
+            canvasGL.style.position = "absolute";
+
+            gl = canvasGL.getContext("experimental-webgl", {premultipliedAlpha:true});
+            gl.viewportWidth = window.innerWidth * scale;
+            gl.viewportHeight = window.innerHeight;
+            document.body.appendChild(canvasGL);
+
+            stats = new Stats();
+            stats.domElement.style.position = 'absolute';
+            stats.domElement.style.top = '0px';
+            // document.body.appendChild( stats.domElement );
+            // scheduler.addEF(stats, stats.update, []);
+
+            test = new Index(gl).init();
+
+            window.addEventListener('resize', _onResize);
+        }
+
+
+        function _onResize(e) {
+            console.log( "Resize" );
+            canvasGL.width = window.innerWidth;
+            canvasGL.height = window.innerHeight;
+            gl.viewportWidth = window.innerWidth;
+            gl.viewportHeight = window.innerHeight;
+            test.resize();
+        }
+
+
+		</script>
+		
+    </head>
+        
+
+    <body onload="init()" data-gr-c-s-loaded="true">
+    	<div id="map_canvas" style="width:50%; height:100%; z-index:1; position:absolute;"></div>
+        <a href="http://www.chromeexperiments.com/detail/blossom/"><img src="./Blossom_files/badge.png" alt="See my Experiment on ChromeExperiments.com" style="z-index:1; position:absolute;"></a>
+    
+<canvas id="canvasGL" width="1368" height="731" __spector_context_type="experimental-webgl" style="position: absolute;"></canvas><div class="dg ac"><div class="dg main a" style="width: 245px;"><div style="width: 6px; margin-left: -3px; height: 308px; cursor: ew-resize; position: absolute;"></div><ul style="height: auto;"><li class="folder"><div class="dg"><ul><li class="title">Particles</li><li class="cr number has-slider"><div><span class="property-name">numParticles</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 66.6667%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">numEmit</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 20%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">minLife</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 34.2105%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">maxLife</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 74.1379%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">minSize</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 0%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">maxSize</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 27.7778%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">speed</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 72.2222%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">range</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 77.7778%;"></div></div></div></div></li></ul></div></li><li class="folder"><div class="dg"><ul class="closed"><li class="title">Wind</li><li class="cr number has-slider"><div><span class="property-name">windx</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 100%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">windy</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 10%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">windz</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 100%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">windspeed</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 20%;"></div></div></div></div></li></ul></div></li><li class="folder"><div class="dg"><ul class="closed"><li class="title">Ground</li><li class="cr object color" style="border-left-color: rgb(30, 30, 30);"><div><span class="property-name">ambientColor</span><div class="c"><input type="text" style="outline: none; text-align: center; color: rgb(255, 255, 255); border: 0px; font-weight: bold; text-shadow: rgba(0, 0, 0, 0.7) 0px 1px 1px; background-color: rgb(30, 30, 30);"><div class="selector" style="width: 122px; height: 102px; padding: 3px; background-color: rgb(34, 34, 34); box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px;"><div class="field-knob" style="position: absolute; width: 12px; height: 12px; border: 2px solid rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px; border-radius: 12px; z-index: 1; margin-left: -7px; margin-top: 81.2353px; background-color: rgb(30, 30, 30);"></div><div class="saturation-field" style="width: 100px; height: 100px; border: 1px solid rgb(85, 85, 85); margin-right: 3px; display: inline-block; cursor: pointer; background: -webkit-linear-gradient(left, rgb(255, 255, 255) 0%, rgb(255, 0, 0) 100%);"><div style="width: 100%; height: 100%; background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 100%);"></div></div><div class="hue-field" style="width: 15px; height: 100px; display: inline-block; border: 1px solid rgb(85, 85, 85); cursor: ns-resize; background: -webkit-linear-gradient(top, rgb(255, 0, 0) 0%, rgb(255, 0, 255) 17%, rgb(0, 0, 255) 34%, rgb(0, 255, 255) 50%, rgb(0, 255, 0) 67%, rgb(255, 255, 0) 84%, rgb(255, 0, 0) 100%);"><div class="hue-knob" style="position: absolute; width: 15px; height: 2px; border-right: 4px solid rgb(255, 255, 255); z-index: 1; margin-top: 100px;"></div></div></div></div></div></li><li class="folder"><div class="dg"><ul class="closed"><li class="title">Light0</li><li class="cr number has-slider"><div><span class="property-name">light0X</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 50%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">light0Y</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 100%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">light0Z</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 50%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">lightWeight0</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 22%;"></div></div></div></div></li><li class="cr object color" style="border-left-color: rgb(255, 255, 255);"><div><span class="property-name">lightColor0</span><div class="c"><input type="text" style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 255);"><div class="selector" style="width: 122px; height: 102px; padding: 3px; background-color: rgb(34, 34, 34); box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px;"><div class="field-knob" style="position: absolute; width: 12px; height: 12px; border: 2px solid rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px; border-radius: 12px; z-index: 1; margin-left: -7px; margin-top: -7px; background-color: rgb(255, 255, 255);"></div><div class="saturation-field" style="width: 100px; height: 100px; border: 1px solid rgb(85, 85, 85); margin-right: 3px; display: inline-block; cursor: pointer; background: -webkit-linear-gradient(left, rgb(255, 255, 255) 0%, rgb(255, 0, 0) 100%);"><div style="width: 100%; height: 100%; background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 100%);"></div></div><div class="hue-field" style="width: 15px; height: 100px; display: inline-block; border: 1px solid rgb(85, 85, 85); cursor: ns-resize; background: -webkit-linear-gradient(top, rgb(255, 0, 0) 0%, rgb(255, 0, 255) 17%, rgb(0, 0, 255) 34%, rgb(0, 255, 255) 50%, rgb(0, 255, 0) 67%, rgb(255, 255, 0) 84%, rgb(255, 0, 0) 100%);"><div class="hue-knob" style="position: absolute; width: 15px; height: 2px; border-right: 4px solid rgb(255, 255, 255); z-index: 1; margin-top: 100px;"></div></div></div></div></div></li></ul></div></li><li class="folder"><div class="dg"><ul class="closed"><li class="title">Light1</li><li class="cr number has-slider"><div><span class="property-name">light1X</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 100%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">light1Y</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 50%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">light1Z</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 100%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">lightWeight1</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 16.6667%;"></div></div></div></div></li><li class="cr object color" style="border-left-color: rgb(200, 200, 255);"><div><span class="property-name">lightColor1</span><div class="c"><input type="text" style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(200, 200, 255);"><div class="selector" style="width: 122px; height: 102px; padding: 3px; background-color: rgb(34, 34, 34); box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px;"><div class="field-knob" style="position: absolute; width: 12px; height: 12px; border: 2px solid rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px; border-radius: 12px; z-index: 1; margin-left: 14.5686px; margin-top: -7px; background-color: rgb(200, 200, 255);"></div><div class="saturation-field" style="width: 100px; height: 100px; border: 1px solid rgb(85, 85, 85); margin-right: 3px; display: inline-block; cursor: pointer; background: -webkit-linear-gradient(left, rgb(255, 255, 255) 0%, rgb(0, 0, 255) 100%);"><div style="width: 100%; height: 100%; background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 100%);"></div></div><div class="hue-field" style="width: 15px; height: 100px; display: inline-block; border: 1px solid rgb(85, 85, 85); cursor: ns-resize; background: -webkit-linear-gradient(top, rgb(255, 0, 0) 0%, rgb(255, 0, 255) 17%, rgb(0, 0, 255) 34%, rgb(0, 255, 255) 50%, rgb(0, 255, 0) 67%, rgb(255, 255, 0) 84%, rgb(255, 0, 0) 100%);"><div class="hue-knob" style="position: absolute; width: 15px; height: 2px; border-right: 4px solid rgb(255, 255, 255); z-index: 1; margin-top: 33.3333px;"></div></div></div></div></div></li></ul></div></li><li class="folder"><div class="dg"><ul class="closed"><li class="title">Light2</li><li class="cr number has-slider"><div><span class="property-name">light2X</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 0%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">light2Y</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 50%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">light2Z</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 0%;"></div></div></div></div></li><li class="cr number has-slider"><div><span class="property-name">lightWeight2</span><div class="c"><div><input type="text"></div><div class="slider"><div class="slider-fg" style="width: 16.6667%;"></div></div></div></div></li><li class="cr object color" style="border-left-color: rgb(255, 255, 200);"><div><span class="property-name">lightColor2</span><div class="c"><input type="text" style="outline: none; text-align: center; color: rgb(0, 0, 0); border: 0px; font-weight: bold; text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px; background-color: rgb(255, 255, 200);"><div class="selector" style="width: 122px; height: 102px; padding: 3px; background-color: rgb(34, 34, 34); box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px;"><div class="field-knob" style="position: absolute; width: 12px; height: 12px; border: 2px solid rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px; border-radius: 12px; z-index: 1; margin-left: 14.5686px; margin-top: -7px; background-color: rgb(255, 255, 200);"></div><div class="saturation-field" style="width: 100px; height: 100px; border: 1px solid rgb(85, 85, 85); margin-right: 3px; display: inline-block; cursor: pointer; background: -webkit-linear-gradient(left, rgb(255, 255, 255) 0%, rgb(255, 255, 0) 100%);"><div style="width: 100%; height: 100%; background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 100%);"></div></div><div class="hue-field" style="width: 15px; height: 100px; display: inline-block; border: 1px solid rgb(85, 85, 85); cursor: ns-resize; background: -webkit-linear-gradient(top, rgb(255, 0, 0) 0%, rgb(255, 0, 255) 17%, rgb(0, 0, 255) 34%, rgb(0, 255, 255) 50%, rgb(0, 255, 0) 67%, rgb(255, 255, 0) 84%, rgb(255, 0, 0) 100%);"><div class="hue-knob" style="position: absolute; width: 15px; height: 2px; border-right: 4px solid rgb(255, 255, 255); z-index: 1; margin-top: 83.3333px;"></div></div></div></div></div></li></ul></div></li><li class="cr function"><div><span class="property-name">apply</span><div class="c"><div class="button"></div></div></div></li></ul></div></li></ul><div class="close-button" style="width: 245px;">Close Controls</div></div></div></body></html>
