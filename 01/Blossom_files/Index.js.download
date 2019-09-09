@@ -1,0 +1,131 @@
+// Index.js
+
+(function() {
+	var MAX = 1000;
+
+
+	Index = function(gl) {
+		if(gl == undefined) return;
+		this.gl = gl;
+		this.bg = null;
+		this.particle = null;
+		this.textureBg = null;
+		this.textureParticle = null;
+
+		this.gl.viewport(0, 0, this.gl.viewportWidth, this.gl.viewportHeight);
+		this.gl.enable(this.gl.BLEND);
+		this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+
+		this.viewParticles = null;
+		// this.gl.disable(this)
+		var that = this
+		window.addEventListener("resize", function(e) {that._onResize(e);	}	);
+	}
+
+	var p = Index.prototype;
+
+	p.init = function() {
+		var that = this;
+		this.loader = new PxLoader();
+		this.bg = this.loader.addImage("images/giantBG.jpg");
+		this.particle = this.loader.addImage("images/flower.png");
+		this.sun = this.loader.addImage("images/sun.png");
+		this.tree = this.loader.addImage("images/wood.jpg");
+		this.ground = this.loader.addImage("images/ground.jpg");
+		this.loader.addCompletionListener(function(){ that._onImageLoaded()} );
+		this.loader.start();
+
+		return this;
+	}
+
+
+	p._onResize = function(e) {
+		this.gl.viewport(0, 0, window.innerWidth, window.innerHeight);
+	}
+
+
+	p._onImageLoaded = function() {
+		this.textureBg = new GLTexture(this.gl, this.bg);
+		this.textureParticle = new GLTexture(this.gl, this.particle);
+		this.textureSun = new GLTexture(this.gl, this.sun);
+		this.textureTree = new GLTexture(this.gl, this.tree);
+		this.textureGround = new GLTexture(this.gl, this.ground);
+
+		this.projection = new bongiovi.ProjectionPerspectiveMatrix();
+        this.projection.perspective(45, W/H, .1, 10000);
+        this.camera = new bongiovi.HoverCamera().init(3500);   
+
+		this.viewBg = new ViewBg(this.gl, "shader-vs-bg", "shader-fs", this.textureBg);
+		this.viewParticles = new ViewParticles(this.gl, "shader-vs-particle", "shader-fs-particle", this.textureParticle);
+		this.viewSun = new ViewSun(this.gl, "shader-vs-bg", "shader-fs", this.textureSun);
+		this.viewTree = new ViewTree(this.gl, "shader-vs", "shader-fs", this.textureTree);
+		this.viewGround = new ViewGround(this.gl, "shader-vs-ground", "shader-fs-ground", this.textureGround);
+
+		gui = new dat.GUI();
+		var folderParticles = gui.addFolder("Particles");
+		folderParticles.add(this.viewParticles, "numParticles", 500, 2000);
+		folderParticles.add(this.viewParticles, "numEmit", 50, 100);
+		folderParticles.add(this.viewParticles, "minLife", 10, 200);
+		folderParticles.add(this.viewParticles, "maxLife", 10, 300);
+		folderParticles.add(this.viewParticles, "minSize", 10, 100);
+		folderParticles.add(this.viewParticles, "maxSize", 10, 100);
+		folderParticles.add(this.viewParticles, "speed", 1, 10);
+		folderParticles.add(this.viewParticles, "range", 250, 700);
+		folderParticles.open();
+
+		var folderWind = gui.addFolder("Wind");
+		folderWind.add(this.viewParticles, "windx", -1, 1);
+		folderWind.add(this.viewParticles, "windy", 0, 1);
+		folderWind.add(this.viewParticles, "windz", -1, 1);
+		folderWind.add(this.viewParticles, "windspeed", 0, .5);
+
+		var folderGround = gui.addFolder("Ground");
+		folderGround.addColor(this.viewGround, 'ambientColor');
+		var f1 = folderGround.addFolder('Light0');
+		f1.add(this.viewGround, 'light0X', -1.0, 1.0);
+		f1.add(this.viewGround, 'light0Y', -1.0, 1.0);
+		f1.add(this.viewGround, 'light0Z', -1.0, 1.0);
+		f1.add(this.viewGround, 'lightWeight0', 0.0, 3.0);
+		f1.addColor(this.viewGround, 'lightColor0');
+		
+		var f2 = folderGround.addFolder('Light1');
+		f2.add(this.viewGround, 'light1X', -1.0, 1.0);
+		f2.add(this.viewGround, 'light1Y', -1.0, 1.0);
+		f2.add(this.viewGround, 'light1Z', -1.0, 1.0);
+		f2.add(this.viewGround, 'lightWeight1', 0.0, 3.0);
+		f2.addColor(this.viewGround, 'lightColor1');
+		
+		var f3 = folderGround.addFolder('Light2');
+		f3.add(this.viewGround, 'light2X', -1.0, 1.0);
+		f3.add(this.viewGround, 'light2Y', -1.0, 1.0);
+		f3.add(this.viewGround, 'light2Z', -1.0, 1.0);
+		f3.add(this.viewGround, 'lightWeight2', 0.0, 3.0);
+		f3.addColor(this.viewGround, 'lightColor2');
+		
+		folderGround.add(this.viewGround, 'apply');
+
+
+		scheduler.addEF(this, this._loop, []);
+	}
+
+
+	p._loop = function() {
+		var cameraRange = .3;
+		if(this.camera.rx > cameraRange) this.camera.rx = cameraRange;
+		else if ( this.camera.rx < -cameraRange) this.camera.rx = -cameraRange;
+
+		var mtx = this.camera.update();
+
+		this.gl.disable(this.gl.DEPTH_TEST);
+		this.viewBg.render();
+		this.viewSun.render();
+
+		this.gl.enable(this.gl.DEPTH_TEST);
+		this.viewTree.render(mtx, this.projection.matrix);
+		this.viewGround.render(mtx, this.projection.matrix);
+
+		this.gl.disable(this.gl.DEPTH_TEST);
+		this.viewParticles.camera = this.camera;
+		this.viewParticles.render(this.projection.matrix);
+	}
+})();
