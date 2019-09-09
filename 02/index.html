@@ -15,17 +15,19 @@
 	}
     </style>
     <script type="text/javascript">
-	var mytext = "This is a text!";
-	var mynumber = 420;
-	var myfloat = 420.69;
-	var myboolean = true;
+	window.onload = function() {
+		// executed when page completely loads
 
-	console.log(mytext, mynumber, myfloat, myboolean);
+		myOutput = document.getElementById("output");
+		console.log(myOutput);
+	}
     </script>
     <body>
 	<h1>CS460 Assignment 2</h1>
 	<div id="logo">
 		<img style="height:60px" src="gfx/cs460.png" />
+	</div>
+	<div id="output">
 	</div>
     </body>
   </head>
