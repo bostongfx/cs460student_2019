@@ -8,13 +8,12 @@
         top:10px;
       }
     </style>
-    <script>
-      var myText = "This is a text";
-      var myNumber = 8;
-      var myFloat = 3.1415;
-      var myBoolean = true;
+    <script type="text/javascript">
+      window.onload = function() {
+        var myOutput = document.getElementById("output");
+        console.log(myOutput);
+      };
 
-      console.log(myText, myNumber, myFloat, myBoolean); 
     </script>
     <meta charset="utf-8">
     <title>CS460 - 2</title>
@@ -24,6 +23,6 @@
     <div id="logo">
       <img style="height:60px" src="gfx/cs460.png">
     </div>
-
+    <div id="output"></div>
   </body>
 </html>
