@@ -1,6 +1,8 @@
 <html>
   <head>
-    <title>CS460 Assignment 2</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 02</title>
     <style>
       body {
         background-color: black;
@@ -15,16 +17,21 @@
       }
     </style>
     <script type="text/javascript">
-      var mytext= "This is a text!";
-      var mynumber= 8;
-      var myfloat= 3.1415;
-      var myboolean= true;
 
-      console.log(mytext, myfloat, mynumber, myboolean);
+    window.onload = function() {
+
+      // this gets called when the site is ready
+
+      myoutput = document.getElementById("output");
+      // we had to remove "var" to make it global
+
+    };
+
     </script>
   </head>
   <body>
     <h1>CS460 Assignment 2</h1>
     <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+    <div id="output"></div>
   </body>
 </html>
