@@ -1,0 +1,48 @@
+<html>
+	<head>
+		<meta content = "text/html;charset=utf-8" gttp-equiv = "Content-Type">
+		<meta content = "utf-8" http-equiv = "encoding">
+
+		<style>
+			body {
+				background-color: black;
+				color: white; /* font color */
+			}
+
+			#logo {
+				position: absolute;
+				right: 10px;
+				top: 10px;
+			}
+		</style>
+
+		<script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js">
+		</script>
+
+		<script type="text/javascript">
+			window.onload = function() {
+				// this get executed when the page completely load
+
+				// create a new XTK renderer
+				r = new X.renderer3D();
+				r.init(); // initialize the renderer
+
+				// create a new cube
+				c = new X.cube();
+
+				// add the cube to the scene / renderer
+				r.add(c); 
+			};
+		</script>
+	</head>
+
+	<body>
+		<h1>CS460 Assignment 2 </h1>
+		<div id = "logo">
+			<img style = "height: 60px" src = "gfx/cs460.png">
+		</div>
+
+		<div id = "output"></div>
+	</body>
+
+</html>
