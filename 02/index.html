@@ -8,6 +8,9 @@
 				background-color: black;
 				color: white;
 				font-family: sans-serif;
+				padding: 0;
+				height: 100%;
+				overflow: hidden;
 			}
 			
 			#logo{
@@ -22,6 +25,14 @@
 		window.onload = function(){
 			r = new X.renderer3D(); //Creates new XTK renderer
 			r.init(); //Initialize 
+			
+			c = new X.cube(); //Creates a new cube
+			
+			c.color = [1, .4, 1];
+			c.opacity = .6;
+			
+			r.add(c); //Add a cube to the scene/renderer
+			r.render(); //Start rendering	
 		};
 		
 		</script>
