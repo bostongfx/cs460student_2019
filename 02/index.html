@@ -13,12 +13,13 @@
 		}
 	</style>
 	<script type= "text/javascript">
-	var mytext = "this is a text!"
-	var mynumber = 8;
-	var myfloat = 3.145
-	var myboolean = true;
+	window.onload = function() {
+	   var myoutput = document.getElemtById("output");
 
-	consol.log(mytext);
+	   consol.log(myoutput);
+	}
+
+
 	</script>
 </head>
 
@@ -28,5 +29,6 @@
 		<img style="height:60px">
 		src="gfx/cs460.png">
 	</div>
+	<div id="output"></div>
 </body>
 </html>
