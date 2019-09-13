@@ -87,6 +87,10 @@
       c48 = new X.cube();
       c49 = new X.cube();
       c50 = new X.cube();
+      c51 = new X.cube();
+      c52 = new X.cube();
+      c53 = new X.cube();
+      c54 = new X.cube();
 
       // Build from Bottom row up  and l -> R
 
@@ -171,7 +175,7 @@
       c23.color = [.17, .17, .27];
       c23.transform.translateX(-90);
       c23.transform.translateY(0);
-      c24.color = [.59, .69, .89];
+      c24.color = [.49, .59, .79];
       c24.transform.translateX(-60);
       c24.transform.translateY(0);
       c25.color = [.59, .69, .89];
@@ -183,7 +187,7 @@
       c27.color = [.59, .69, .89];
       c27.transform.translateX(30);
       c27.transform.translateY(0);
-      c28.color = [.59, .69, .89];
+      c28.color = [.49, .59, .79];
       c28.transform.translateX(60);
       c28.transform.translateY(0);
       c29.color = [.17, .17, .27];
@@ -192,19 +196,53 @@
 
       // Eyeball decoration
 
-      c43.color = [0, 0, 0];
-      c43.transform.translateX(60);
-      c43.transform.translateY(0);
-      c44.color = [0, 0, 0];
-      c44.transform.translateX(30);
-      c44.transform.translateY(0);
+      // Left
 
       c45.color = [0, 0, 0];
+      c45.lengthZ = 25;
+      c45.lengthY = 15;
       c45.transform.translateX(-60);
-      c45.transform.translateY(0);
+      c45.transform.translateY(5);
       c46.color = [0, 0, 0];
+      c46.lengthZ = 25;
+      c46.lengthY = 15;
       c46.transform.translateX(-30);
-      c46.transform.translateY(0);
+      c46.transform.translateY(5);
+
+      c51.color = [0, 0, 0];
+      c51.lengthZ = 25;
+      c51.lengthY = 15;
+      c51.transform.translateX(-60);
+      c51.transform.translateY(-5);
+      c52.color = [0, 0, 0];
+      c52.lengthZ = 25;
+      c52.lengthY = 15;
+      c52.transform.translateX(-30);
+      c52.transform.translateY(-5);
+
+      // Right
+
+      c43.color = [0, 0, 0];
+      c43.lengthZ = 25;
+      c43.lengthY = 15;
+      c43.transform.translateX(60);
+      c43.transform.translateY(5);
+      c44.color = [0, 0, 0];
+      c44.lengthZ = 25;
+      c44.lengthY = 15;
+      c44.transform.translateX(30);
+      c44.transform.translateY(5);
+
+      c53.color = [0, 0, 0];
+      c53.lengthZ = 25;
+      c53.lengthY = 15;
+      c53.transform.translateX(60);
+      c53.transform.translateY(-5);
+      c54.color = [0, 0, 0];
+      c54.lengthZ = 25;
+      c54.lengthY = 15;
+      c54.transform.translateX(30);
+      c54.transform.translateY(-5);
 
       // 6th row forehead row l -> R
 
@@ -316,33 +354,44 @@
       r.add(c48);
       r.add(c49);
       r.add(c50);
+      // r.add(c51);
+      // r.add(c52);
+      // r.add(c53);
+      // r.add(c54);
 
       // render everything!
       r.render();
 
-
-
       // r.onRender = function() {
-      //   c43.transform.rotateY(.5);
-      //   c44.transform.rotateY(.5);
-      //   c45.transform.rotateY(-.5);
-      //   c46.transform.rotateY(-.5);
+      //   c43.transform.rotateX(1);
+      //   c44.transform.rotateX(1);
+      //   c45.transform.rotateX(1);
+      //   c46.transform.rotateX(1);
+      //   c51.transform.rotateX(-1);
+      //   c52.transform.rotateX(-1);
+      //   c53.transform.rotateX(-1);
+      //   c54.transform.rotateX(-1);
       // };
-      //
-      //
-      // // Blink the eyes by toggleing opacity
-      // setInterval(function() {
-      //   var x = (c24.opacity == 0 ? 1 : 0);
-      //
-      //   c24.opacity = x;
-      //   c25.opacity = x;
-      //   c27.opacity = x;
-      //   c28.opacity = x;
-      //   c43.opacity = x;
-      //   c44.opacity = x;
-      //   c45.opacity = x;
-      //   c46.opacity = x;
-      // }, 1000);
+
+      // Blink the eyes by toggleing opacity
+      setInterval(function() {
+        var x = (c24.opacity == 0 ? 1 : 0);
+
+        c24.opacity = x;
+        c25.opacity = x;
+        c27.opacity = x;
+        c28.opacity = x;
+        c43.opacity = x;
+        c44.opacity = x;
+        c45.opacity = x;
+        c46.opacity = x;
+
+        c51.opacity = x;
+        c52.opacity = x;
+        c53.opacity = x;
+        c54.opacity = x;
+
+      }, 400);
 
     };
   </script>
