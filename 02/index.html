@@ -34,9 +34,10 @@
       r = new X.renderer3D();
       r.init();
 
-      r.camera.position = [0, 0, 400];
+      // frame the art on the screen
+      r.camera.position = [ 0, 0, 400];
 
-      // create a cube and add it!
+      // create a cube and add it! 54 times!
       c1 = new X.cube();
       c2 = new X.cube();
       c3 = new X.cube();
@@ -112,7 +113,7 @@
       c5.color = [.43, .43, .53];
       c5.transform.translateX(-30);
       c5.transform.translateY(-90);
-      c6.color = [.89, .69, .99];
+      c6.color = [.89, .69, .99];  // mouth c6
       c6.transform.translateX(0);
       c6.transform.translateY(-90);
       c7.color = [.43, .43, .53];
@@ -175,74 +176,81 @@
       c23.color = [.17, .17, .27];
       c23.transform.translateX(-90);
       c23.transform.translateY(0);
-      c24.color = [.49, .59, .79];
+      c24.color = [.49, .59, .79];  // [x][]  [][]
       c24.transform.translateX(-60);
       c24.transform.translateY(0);
-      c25.color = [.59, .69, .89];
+      c25.color = [.59, .69, .89];  // [][x]  [][]
       c25.transform.translateX(-30);
       c25.transform.translateY(0);
       c26.color = [.47, .47, .57];
       c26.transform.translateX(0);
       c26.transform.translateY(0);
-      c27.color = [.59, .69, .89];
+      c27.color = [.59, .69, .89];  // [][]  [x][]
       c27.transform.translateX(30);
       c27.transform.translateY(0);
-      c28.color = [.49, .59, .79];
+      c28.color = [.49, .59, .79];  // [][]  [][x]
       c28.transform.translateX(60);
       c28.transform.translateY(0);
       c29.color = [.17, .17, .27];
       c29.transform.translateX(90);
       c29.transform.translateY(0);
 
-      // Eyeball decoration
+      // Add rotating eyelids to simulate blinking
 
       // Left
 
       c45.color = [0, 0, 0];
-      c45.lengthZ = 25;
-      c45.lengthY = 15;
+      c45.lengthX = 22;
+      c45.lengthZ = 10;
+      c45.lengthY = 30;
       c45.transform.translateX(-60);
-      c45.transform.translateY(5);
+      c45.transform.translateY(0);
       c46.color = [0, 0, 0];
-      c46.lengthZ = 25;
-      c46.lengthY = 15;
+      c45.lengthX = 22;
+      c46.lengthZ = 10;
+      c46.lengthY = 30;
       c46.transform.translateX(-30);
-      c46.transform.translateY(5);
+      c46.transform.translateY(0);
 
       c51.color = [0, 0, 0];
-      c51.lengthZ = 25;
-      c51.lengthY = 15;
+      c51.lengthX = 22;
+      c51.lengthZ = 10;
+      c51.lengthY = 30;
       c51.transform.translateX(-60);
-      c51.transform.translateY(-5);
+      c51.transform.translateY(0);
       c52.color = [0, 0, 0];
-      c52.lengthZ = 25;
-      c52.lengthY = 15;
+      c52.lengthX = 22;
+      c52.lengthZ = 10;
+      c52.lengthY = 30;
       c52.transform.translateX(-30);
-      c52.transform.translateY(-5);
+      c52.transform.translateY(0);
 
       // Right
 
       c43.color = [0, 0, 0];
-      c43.lengthZ = 25;
-      c43.lengthY = 15;
+      c43.lengthX = 22;
+      c43.lengthZ = 10;
+      c43.lengthY = 30;
       c43.transform.translateX(60);
-      c43.transform.translateY(5);
+      c43.transform.translateY(0);
       c44.color = [0, 0, 0];
-      c44.lengthZ = 25;
-      c44.lengthY = 15;
+      c44.lengthZ = 10;
+      c44.lengthY = 30;
       c44.transform.translateX(30);
-      c44.transform.translateY(5);
+      c44.transform.translateY(0);
 
       c53.color = [0, 0, 0];
-      c53.lengthZ = 25;
-      c53.lengthY = 15;
+      c53.lengthX = 22;
+      c53.lengthZ = 10;
+      c53.lengthY = 30;
       c53.transform.translateX(60);
-      c53.transform.translateY(-5);
+      c53.transform.translateY(0);
       c54.color = [0, 0, 0];
-      c54.lengthZ = 25;
-      c54.lengthY = 15;
+      c54.lengthX = 22;
+      c54.lengthZ = 10;
+      c54.lengthY = 30;
       c54.transform.translateX(30);
-      c54.transform.translateY(-5);
+      c54.transform.translateY(0);
 
       // 6th row forehead row l -> R
 
@@ -346,52 +354,54 @@
       r.add(c40);
       r.add(c41);
       r.add(c42);
-      // r.add(c43);
-      // r.add(c44);
-      // r.add(c45);
-      // r.add(c46);
+      r.add(c43);
+      r.add(c44);
+      r.add(c45);
+      r.add(c46);
       r.add(c47);
       r.add(c48);
       r.add(c49);
       r.add(c50);
-      // r.add(c51);
-      // r.add(c52);
-      // r.add(c53);
-      // r.add(c54);
+      r.add(c51);
+      r.add(c52);
+      r.add(c53);
+      r.add(c54);
 
       // render everything!
       r.render();
 
-      // r.onRender = function() {
-      //   c43.transform.rotateX(1);
-      //   c44.transform.rotateX(1);
-      //   c45.transform.rotateX(1);
-      //   c46.transform.rotateX(1);
-      //   c51.transform.rotateX(-1);
-      //   c52.transform.rotateX(-1);
-      //   c53.transform.rotateX(-1);
-      //   c54.transform.rotateX(-1);
-      // };
+      r.onRender = function() {
+
+        // r.camera.rotate([1, 0]);
+        c43.transform.rotateX(1);
+        c44.transform.rotateX(1);
+        c45.transform.rotateX(1);
+        c46.transform.rotateX(1);
+        c51.transform.rotateX(-1);
+        c52.transform.rotateX(-1);
+        c53.transform.rotateX(-1);
+        c54.transform.rotateX(-1);
+      };
 
       // Blink the eyes by toggleing opacity
       setInterval(function() {
-        var x = (c24.opacity == 0 ? 1 : 0);
+        // var x = (c24.opacity == 0 ? 1 : 0);
+        //
+        // c24.opacity = x;
+        // c25.opacity = x;
+        // c27.opacity = x;
+        // c28.opacity = x;
+        // c43.opacity = x;
+        // c44.opacity = x;
+        // c45.opacity = x;
+        // c46.opacity = x;
+        //
+        // c51.opacity = x;
+        // c52.opacity = x;
+        // c53.opacity = x;
+        // c54.opacity = x;
 
-        c24.opacity = x;
-        c25.opacity = x;
-        c27.opacity = x;
-        c28.opacity = x;
-        c43.opacity = x;
-        c44.opacity = x;
-        c45.opacity = x;
-        c46.opacity = x;
-
-        c51.opacity = x;
-        c52.opacity = x;
-        c53.opacity = x;
-        c54.opacity = x;
-
-      }, 400);
+      }, 1000);
 
     };
   </script>
