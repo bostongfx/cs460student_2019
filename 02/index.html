@@ -8,6 +8,10 @@
         background-color: black;
         color: white; /* font color */
         font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
       }
 
       #logo {
@@ -16,11 +20,270 @@
         top: 10px;
       }
     </style>
+
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+
     <script type="text/javascript">
 
     window.onload = function() {
 
       // this gets called when the site is ready
+
+      // create a new scene and renderer
+      r = new X.renderer3D();
+      r.init();
+
+      // create a cube and add it!
+      c1 = new X.cube();
+      c2 = new X.cube();
+      c3 = new X.cube();
+      c4 = new X.cube();
+      c5 = new X.cube();
+      c6 = new X.cube();
+      c7 = new X.cube();
+      c8 = new X.cube();
+      c9 = new X.cube();
+      c10 = new X.cube();
+      c11 = new X.cube();
+      c12 = new X.cube();
+      c13 = new X.cube();
+      c14 = new X.cube();
+      c15 = new X.cube();
+      c16 = new X.cube();
+      c17 = new X.cube();
+      c18 = new X.cube();
+      c19 = new X.cube();
+      c20 = new X.cube();
+      c21 = new X.cube();
+      c22 = new X.cube();
+      c23 = new X.cube();
+      c24 = new X.cube();
+      c25 = new X.cube();
+      c26 = new X.cube();
+      c27 = new X.cube();
+      c28 = new X.cube();
+      c29 = new X.cube();
+      c30 = new X.cube();
+      c31 = new X.cube();
+      c32 = new X.cube();
+      c33 = new X.cube();
+      c34 = new X.cube();
+      c35 = new X.cube();
+      c36 = new X.cube();
+      c37 = new X.cube();
+      c38 = new X.cube();
+      c39 = new X.cube();
+      c40 = new X.cube();
+      c41 = new X.cube();
+      c42 = new X.cube();
+
+      // Build from Bottom row up  and l -> R
+
+      c1.color = [1, 0, 0];
+      c1.transform.translateX(-30);
+      c1.transform.translateY(-120);
+      c2.color = [1, 0, 0];
+      c2.transform.translateX(0);
+      c2.transform.translateY(-120);
+      c3.color = [1, 0, 0];
+      c3.transform.translateX(30);
+      c3.transform.translateY(-120);
+
+      // 2nd row - mouth row l -> R
+
+      c4.color = [1, 0, 0];
+      c4.transform.translateX(-60);
+      c4.transform.translateY(-90);
+      c5.color = [1, 0, 0];
+      c5.transform.translateX(-30);
+      c5.transform.translateY(-90);
+      c6.color = [1, 1, 0];
+      c6.transform.translateX(0);
+      c6.transform.translateY(-90);
+      c7.color = [1, 0, 0];
+      c7.transform.translateX(30);
+      c7.transform.translateY(-90);
+      c8.color = [1, 0, 0];
+      c8.transform.translateX(60);
+      c8.transform.translateY(-90);
+
+      // Third Row l -> R
+
+      c9.color = [1, 0, 0];
+      c9.transform.translateX(-90);
+      c9.transform.translateY(-60);
+      c10.color = [1, 0, 0];
+      c10.transform.translateX(-60);
+      c10.transform.translateY(-60);
+      c11.color = [1, 0, 0];
+      c11.transform.translateX(-30);
+      c11.transform.translateY(-60);
+      c12.color = [1, 0, 0];
+      c12.transform.translateX(0);
+      c12.transform.translateY(-60);
+      c13.color = [1, 0, 0];
+      c13.transform.translateX(30);
+      c13.transform.translateY(-60);
+      c14.color = [1, 0, 0];
+      c14.transform.translateX(60);
+      c14.transform.translateY(-60);
+      c15.color = [1, 0, 0];
+      c15.transform.translateX(90);
+      c15.transform.translateY(-60);
+
+      // Middle row l -> R
+
+      c16.color = [1, 0, 0];
+      c16.transform.translateX(-90);
+      c16.transform.translateY(-30);
+      c17.color = [1, 0, 0];
+      c17.transform.translateX(-60);
+      c17.transform.translateY(-30);
+      c18.color = [1, 0, 0];
+      c18.transform.translateX(-30);
+      c18.transform.translateY(-30);
+      c19.color = [1, 0, 0];
+      c19.transform.translateX(0);
+      c19.transform.translateY(-30);
+      c20.color = [1, 0, 0];
+      c20.transform.translateX(30);
+      c20.transform.translateY(-30);
+      c21.color = [1, 0, 0];
+      c21.transform.translateX(60);
+      c21.transform.translateY(-30);
+      c22.color = [1, 0, 0];
+      c22.transform.translateX(90);
+      c22.transform.translateY(-30);
+
+      //  Fifth row - eyeball Row l -> R
+
+      c23.color = [1, 0, 0];
+      c23.transform.translateX(-90);
+      c23.transform.translateY(0);
+      c24.color = [1, 0, 1];
+      c24.transform.translateX(-60);
+      c24.transform.translateY(0);
+      c25.color = [1, 0, 1];
+      c25.transform.translateX(-30);
+      c25.transform.translateY(0);
+      c26.color = [1, 0, 0];
+      c26.transform.translateX(0);
+      c26.transform.translateY(0);
+      c27.color = [1, 0, 1];
+      c27.transform.translateX(30);
+      c27.transform.translateY(0);
+      c28.color = [1, 0, 1];
+      c28.transform.translateX(60);
+      c28.transform.translateY(0);
+      c29.color = [1, 0, 0];
+      c29.transform.translateX(90);
+      c29.transform.translateY(0);
+
+      // 6th row forehead row l -> R
+
+      c30.color = [1, 0, 0];
+      c30.transform.translateX(-90);
+      c30.transform.translateY(30);
+      c31.color = [1, 0, 0];
+      c31.transform.translateX(-60);
+      c31.transform.translateY(30);
+      c32.color = [1, 0, 0];
+      c32.transform.translateX(-30);
+      c32.transform.translateY(30);
+      c33.color = [1, 0, 0];
+      c33.transform.translateX(0);
+      c33.transform.translateY(30);
+      c34.color = [1, 0, 0];
+      c34.transform.translateX(30);
+      c34.transform.translateY(30);
+      c35.color = [1, 0, 0];
+      c35.transform.translateX(60);
+      c35.transform.translateY(30);
+      c36.color = [1, 0, 0];
+      c36.transform.translateX(90);
+      c36.transform.translateY(30);
+
+      // Left Ear
+      c37.color = [1, 0, 0];
+      c37.transform.translateX(-90);
+      c37.transform.translateY(60);
+      c38.color = [1, 0, 0];
+      c38.transform.translateX(-60);
+      c38.transform.translateY(60);
+      c39.color = [1, 0, 0];
+      c39.transform.translateX(-90);
+      c39.transform.translateY(90);
+
+      // Right Ear
+      c40.color = [1, 0, 0];
+      c40.transform.translateX(90);
+      c40.transform.translateY(60);
+      c41.color = [1, 0, 0];
+      c41.transform.translateX(60);
+      c41.transform.translateY(60);
+      c42.color = [1, 0, 0];
+      c42.transform.translateX(90);
+      c42.transform.translateY(90);
+
+
+      r.add(c1);
+      r.add(c2);
+      r.add(c3);
+      r.add(c4);
+      r.add(c5);
+      r.add(c6);
+      r.add(c7);
+      r.add(c8);
+      r.add(c9);
+      r.add(c10);
+      r.add(c11);
+      r.add(c12);
+      r.add(c13);
+      r.add(c14);
+      r.add(c15);
+      r.add(c16);
+      r.add(c17);
+      r.add(c18);
+      r.add(c19);
+      r.add(c20);
+      r.add(c21);
+      r.add(c22);
+      r.add(c23);
+      r.add(c24);
+      r.add(c25);
+      r.add(c26);
+      r.add(c27);
+      r.add(c28);
+      r.add(c29);
+      r.add(c30);
+      r.add(c31);
+      r.add(c32);
+      r.add(c33);
+      r.add(c34);
+      r.add(c35);
+      r.add(c36);
+      r.add(c37);
+      r.add(c38);
+      r.add(c39);
+      r.add(c40);
+      r.add(c41);
+      r.add(c42);
+
+      // render everything!
+      r.render();
+
+        // Blink the eyes by toggleing opacity
+      setInterval(function() {
+        var x;
+        (c24.opacity == 0 ? x = 1 : x = 0);
+
+        c24.opacity = x;
+        c25.opacity = x;
+
+        c27.opacity = x;
+        c28.opacity = x;
+
+      }, 1000);
 
     };
 
