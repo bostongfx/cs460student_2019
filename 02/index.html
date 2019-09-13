@@ -75,6 +75,11 @@
     // render everything!
     r.render();
 
+    r.onRender = function() {
+    	    r.camera.rotate([0,-1]);
+    	};
+
+
     };
 
     </script>
