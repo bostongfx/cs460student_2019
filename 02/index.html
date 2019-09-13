@@ -35,7 +35,7 @@
       r.init();
 
       // frame the art on the screen
-      r.camera.position = [ 0, 0, 400];
+      r.camera.position = [ 0, 0, 1000];
 
       // create a cube and add it! 54 times!
       c1 = new X.cube();
@@ -385,12 +385,12 @@
 
       // Blink the eyes by toggleing opacity
       setInterval(function() {
-        // var x = (c24.opacity == 0 ? 1 : 0);
-        //
-        // c24.opacity = x;
-        // c25.opacity = x;
-        // c27.opacity = x;
-        // c28.opacity = x;
+        var x = (c24.opacity == 0 ? 1 : 0);
+
+        c24.opacity = x;
+        c25.opacity = x;
+        c27.opacity = x;
+        c28.opacity = x;
         // c43.opacity = x;
         // c44.opacity = x;
         // c45.opacity = x;
@@ -401,7 +401,7 @@
         // c53.opacity = x;
         // c54.opacity = x;
 
-      }, 1000);
+      }, 100);
 
     };
   </script>
