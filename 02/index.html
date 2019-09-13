@@ -1,35 +1,86 @@
-<!DOCTYPE html>
 <html>
-	<head>
-	<style>
-		body {
-			background-color: black;
-			color: white; /* Font Color */
-		}
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
 
-		#logo {
-			position: absolute;
-			right: 10px;
-			top: 10px;
-		}
-	</style>
-	<script type="text/javascript">
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+    
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
 
-		window.onload = function() {
+    <script type="text/javascript">
 
-			//this will be executed,
-			//when the page completely loads
+    // this gets called when the site is ready
+    window.onload = function() {
+    	//makes and adds cube
+    	function makecube(){
+    		c = new X.cube();
+      		c.center = [ x * 3, y * 3, 0];
+      		c.lengthX = c.lengthY = c.lengthZ = 2;
+      		//fox cyan eyes
+      		if ((y == 3) && (x == 2 || x == 3 || x == 5 || x == 6)){
+      			c.color = [ 0, 1, 1];
+      		}
+      		//fox red nose
+      		else if ((y == 6) && (x == 4)){
+      			c.color = [ 1, 0, 0];
+      		}
+      		else {
+      			c.color = [ 1, 1, 1];
+      		}
+      		// add it!
+      		r.add(c);
+    	}
+      // create a new scene and renderer
+      r = new X.renderer3D();
+      r.init();
 
-		}
-		
+      // create canvas, top down, 
+      //starts upper right to bottom left
+      for ( var y = 0; y < 9; y++) {
+      	for ( var x = 0; x < 9; x++) {
 
-		
-	</script>
-</head>
-<body>
-	<h1>CS460 Assignment 2</h1>
-	<div id="logo">
-	<img style="height:60px" src="gfx/cs460.png">
-	</div>
-</body>
+      		if ( (y < 6) && (x == 1 || x == 7) ){
+      			makecube();
+      		}
+      		if ( (y >= 1 && y < 7) && (x == 2 || x == 6) ){
+      			makecube();
+      		}
+      		if ( (y >= 2 && y < 8) && (x == 3 || x == 5) ){
+      			makecube();
+      		}
+      		if ( (y >= 2 && y < 8) && (x == 4) ){
+      			makecube();
+      		}
+
+      	}
+
+      }
+
+    // render everything!
+    r.render();
+
+    };
+
+    </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
 </html>
