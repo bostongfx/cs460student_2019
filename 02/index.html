@@ -24,27 +24,165 @@
                 r.init();
 
                 // Create a new cube
-                c = new X.cube();
-                b = new X.cube();
-                a = new X.cube();
-                d = new X.cube();
-                e = new X.cube();
-                    // Positions
-                c.center = [0,0,0];
-                b.center = [25,0,0];
-                a.center = [50, 0, 0];
-                d.center = [25, -25, 0];
-                e.center = [25, 25, 0];
+                //first row
+                r1_1 = new X.cube();
+                r1_1.center = [0, 0, 0];
+                r1_2 = new X.cube();
+                r1_2.center = [150, 0, 0];
+                
+                // second row
+                r2_1 = new X.cube();
+                r2_1.center = [0, -25, 0];
+                r2_2 = new X.cube();
+                r2_2.center = [25, -25, 0];
+                r2_3 = new X.cube();
+                r2_3.center = [125, -25, 0];
+                r2_4 = new X.cube();
+                r2_4.center = [150, -25, 0];
+
+                // third row
+                r3_1 = new X.cube();
+                r3_1.center = [0, -50, 0];
+                r3_2 = new X.cube();
+                r3_2.center = [25, -50, 0];
+                r3_3 = new X.cube();
+                r3_3.center = [50, -50, 0];
+                r3_4 = new X.cube();
+                r3_4.center = [75, -50, 0];
+                r3_5 = new X.cube();
+                r3_5.center = [100, -50, 0];
+                r3_6 = new X.cube();
+                r3_6.center = [125, -50, 0];
+                r3_7 = new X.cube();
+                r3_7.center = [150, -50, 0];
+
+                // fourth row
+                r4_1 = new X.cube();
+                r4_1.center = [0, -75, 0];
+                r4_2 = new X.cube();
+                r4_2.center = [25, -75, 0];
+                r4_3 = new X.cube();
+                r4_3.center = [50, -75, 0];
+                r4_4 = new X.cube();
+                r4_4.center = [75, -75, 0];
+                r4_5 = new X.cube();
+                r4_5.center = [100, -75, 0];
+                r4_6 = new X.cube();
+                r4_6.center = [125, -75, 0];
+                r4_7 = new X.cube();
+                r4_7.center = [150, -75, 0];
+
+                // fifth row
+                r5_1 = new X.cube();
+                r5_1.center = [0, -100, 0];
+                r5_2 = new X.cube();
+                r5_2.center = [25, -100, 0];
+                r5_3 = new X.cube();
+                r5_3.center = [50, -100, 0];
+                r5_4 = new X.cube();
+                r5_4.center = [75, -100, 0];
+                r5_5 = new X.cube();
+                r5_5.center = [100, -100, 0];
+                r5_6 = new X.cube();
+                r5_6.center = [125, -100, 0];
+                r5_7 = new X.cube();
+                r5_7.center = [150, -100, 0];
+
+                // sixth row
+                r6_1 = new X.cube();
+                r6_1.center = [0, -125, 0];
+                r6_2 = new X.cube();
+                r6_2.center = [25, -125, 0];
+                r6_3 = new X.cube();
+                r6_3.center = [50, -125, 0];
+                r6_4 = new X.cube();
+                r6_4.center = [75, -125, 0];
+                r6_5 = new X.cube();
+                r6_5.center = [100, -125, 0];
+                r6_6 = new X.cube();
+                r6_6.center = [125, -125, 0];
+                r6_7 = new X.cube();
+                r6_7.center = [150, -125, 0];
+
+                // seventh row
+                r7_1 = new X.cube();
+                r7_1.center = [25, -150, 0];
+                r7_2 = new X.cube();
+                r7_2.center = [50, -150, 0];
+                r7_3 = new X.cube(); // Mouth
+                r7_3.center = [75, -150, 0];
+                r7_4 = new X.cube();
+                r7_4.center = [100, -150, 0];
+                r7_5 = new X.cube();
+                r7_5.center = [125, -150, 0];
+
+                // eigth row
+                r8_1 = new X.cube();
+                r8_1.center = [50, -175, 0];
+                r8_2 = new X.cube();
+                r8_2.center = [75, -175, 0];
+                r8_3 = new X.cube();
+                r8_3.center = [100, -175, 0];
+
+                // colors for mouth and eyes
+                r4_2.color = [100, 85, 0];
+                r4_3.color = [100, 85, 0];
+                r4_5.color = [100, 85, 0];
+                r4_6.color = [100, 85, 0];
+                r7_3.color = [0, 200, 0];
+
                 // Add cube to renderer/scene
-                r.add(c);
-                r.add(b);
-                r.add(a);
-                r.add(d);
-                r.add(e);
+                r.add(r1_1);
+                r.add(r1_2);
+                r.add(r2_1);
+                r.add(r2_2);
+                r.add(r2_3);
+                r.add(r2_4);
 
-                r.camera.position = [0, 0, 100];
+                r.add(r3_1);
+                r.add(r3_2);
+                r.add(r3_3);
+                r.add(r3_4);
+                r.add(r3_5);
+                r.add(r3_6);
+                r.add(r3_7);
 
-                b.color = [100, 100, 0];
+                r.add(r4_1);
+                r.add(r4_2);
+                r.add(r4_3);
+                r.add(r4_4);
+                r.add(r4_5);
+                r.add(r4_6);
+                r.add(r4_7);
+
+                r.add(r5_1);
+                r.add(r5_2);
+                r.add(r5_3);
+                r.add(r5_4);
+                r.add(r5_5);
+                r.add(r5_6);
+                r.add(r5_7);
+
+                r.add(r6_1);
+                r.add(r6_2);
+                r.add(r6_3);
+                r.add(r6_4);
+                r.add(r6_5);
+                r.add(r6_6);
+                r.add(r6_7);
+
+                r.add(r7_1);
+                r.add(r7_2);
+                r.add(r7_3);
+                r.add(r7_4);
+                r.add(r7_5);
+
+                r.add(r8_1);
+                r.add(r8_2);
+                r.add(r8_3);
+
+
+                r.camera.position = [0, 0, 200];
             
                 r.render();
             };
