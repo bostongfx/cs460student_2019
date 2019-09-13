@@ -29,12 +29,18 @@
     window.onload = function() {
     	//makes and adds cube
     	function makecube(){
+    		//var eyes2 = new X.cube(); //TODO
     		c = new X.cube();
       		c.center = [ x * 3, y * 3, 0];
       		c.lengthX = c.lengthY = c.lengthZ = 2;
       		//fox cyan eyes
       		if ((y == 3) && (x == 2 || x == 3 || x == 5 || x == 6)){
-      			c.color = [ 0, 1, 1];
+      			eyes = new X.cube();
+      			eyes.center = [ x * 3, y * 3, 0];
+      			eyes.lengthX = eyes.lengthY = eyes.lengthZ = 2.1;
+      			eyes.color = [ 0, 1, 1];
+      			r.add(eyes);
+      			//eyes2 = eyes.union(eyes); //TODO
       		}
       		//fox red nose
       		else if ((y == 6) && (x == 4)){
@@ -78,6 +84,12 @@
     r.onRender = function() {
     	    r.camera.rotate([0,-1]);
     	};
+    setInterval(function() {
+    	eyes.color = [ 1, 1, 1];
+    }, 1000);
+    setInterval(function() {
+    	eyes.color = [ 0, 1, 1];
+    }, 2000);
 
 
     };
