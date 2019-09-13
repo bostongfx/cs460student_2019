@@ -17,11 +17,23 @@
         top: 10px;
       }
     </style>
+ <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
     <script type="text/javascript">
  
     window.onload = function() {
  
       // this gets called when the site is ready
+ 
+      // create a new scene and renderer
+      r = new X.renderer3D();
+      r.init();
+ 
+      // create a cube and add it!
+      c = new X.cube();
+      r.add(c);
+ 
+      // render everything!
+      r.render()
  
     };
  
