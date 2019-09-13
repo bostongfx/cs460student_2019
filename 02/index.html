@@ -35,7 +35,7 @@
       r.init();
 
       // frame the art on the screen
-      r.camera.position = [ 0, 0, 400];
+      r.camera.position = [ 0, 0, 1000];
 
       // create a cube and add it! 54 times!
       c1 = new X.cube();
@@ -365,28 +365,37 @@
       r.render();
 
       r.onRender = function() {
-
-        // r.camera.rotate([1, 0]);
-        // c43.transform.rotateX(1);
-        // c44.transform.rotateX(1);
-        // c45.transform.rotateX(1);
-        // c46.transform.rotateX(1);
-        // c51.transform.rotateX(-1);
-        // c52.transform.rotateX(-1);
-        // c53.transform.rotateX(-1);
-        // c54.transform.rotateX(-1);
+        r.camera.rotate([1, 0]);
+        c43.transform.rotateX(1);
+        c44.transform.rotateX(1);
+        c45.transform.rotateX(1);
+        c46.transform.rotateX(1);
+        c51.transform.rotateX(-1);
+        c52.transform.rotateX(-1);
+        c53.transform.rotateX(-1);
+        c54.transform.rotateX(-1);
       };
 
       // Blink the eyes by toggleing opacity
-      // setInterval(function() {
-      //   var x = (c24.opacity == 0 ? 1 : 0);
-      //
-      //   c24.opacity = x;
-      //   c25.opacity = x;
-      //   c27.opacity = x;
-      //   c28.opacity = x;
-      //
-      // }, 100);
+      setInterval(function() {
+
+        // randomly generate eye color
+        var R = Math.random();
+        var G = Math.random();
+        var B = Math.random();
+
+        c24.color = [R, G, B];
+        c25.color = [R, G, B];
+        c27.color = [R, G, B];
+        c28.color = [R, G, B];
+
+        // flashing lights
+        var x = (c24.opacity == 0 ? 1 : 0);
+        c24.opacity = x;
+        c25.opacity = x;
+        c27.opacity = x;
+        c28.opacity = x;
+      }, 100);
 
     };
   </script>
