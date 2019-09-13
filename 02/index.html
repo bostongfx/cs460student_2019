@@ -182,9 +182,13 @@
                 r.add(r8_3);
 
 
-                r.camera.position = [0, 0, 200];
+                r.camera.position = [0, 0, 300];
             
                 r.render();
+
+                r.onRender = function() {
+                    r.camera.rotate([1,0]);
+                };
             };
         </script>
 
