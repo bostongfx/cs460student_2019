@@ -15,8 +15,23 @@
             }
         </style>
 
+        <script type="text/javascript" src="http://get.goxtk.com/xtk_edge.js"></script>
         <script type="text/javascript">
             window.onload = function() {
+                // create XTk renderer
+                r = new X.renderer3D();
+                // Initialize renderer
+                r.init();
+
+                // Create a new cube
+                c = new X.cube();
+                c.color = [0, 100, 0];
+                c.opacity = 0.3;
+                c.lengthY = 90;
+                // Add cuve to renderer/scene
+                r.add(c)
+
+                r.render();
             };
         </script>
 
