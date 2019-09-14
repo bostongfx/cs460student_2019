@@ -25,10 +25,86 @@
 		window.onload = function(){
 			r = new X.renderer3D(); //Creates new XTK renderer
 			r.init(); //Initialize 
+			r.camera.position = [0, 0, 500];
+			//2D array of pixels for image
 			
-			c = new X.cube(); //Creates a new cube
 			
-			r.add(c); //Add a cube to the scene/renderer
+			//Colors
+			var col1 = [0.76, 0.8, 0.88]
+			var col2 = [0.98, 0.75, 0.2]
+			var col3 = [0, 0.14, 0.42]
+			
+			var pixels = [
+				[0, 1, 0, 0, 0, 0, 0, 1, 0],
+				[0, 1, 1, 0, 0, 0, 1, 1, 0],
+				[0, 1, 1, 0, 0, 0, 1, 1, 0],
+				[0, 1, 1, 1, 1, 1, 1, 1, 0],
+				[0, 1, 2, 2, 1, 2, 2, 1, 0],
+				[0, 1, 1, 1, 1, 1, 1, 1, 0],
+				[0, 1, 1, 1, 1, 1, 1, 1, 0],
+				[0, 0, 1, 1, 3, 1, 1, 0, 0],
+				[0, 0, 0, 1, 1, 1, 0, 0, 0],
+			]
+			
+			
+			
+			//Center pixel
+			var centerPixelX = parseInt(pixels.length / 2);
+			var centerPixelY = parseInt(pixels[0].length / 2);
+			
+			//Cube parameters
+			var cubeLength = 20;
+			var cubeGap = 2.5;
+			
+			
+			for(var y = 0; y < pixels.length; y++){
+				for(var x = 0; x < pixels[y].length; x++){
+					if(pixels[y][x] != 0){
+					
+						//Determines the cube color
+						var color;
+						switch(pixels[y][x]){
+							case 1:
+								color = col1;
+								break;
+							case 2:
+								color = col2;
+								break;
+							case 3:
+								color = col3;
+								break;
+							default:
+								color = col1;
+								break;
+						
+						}
+						
+						
+						
+						//Creates cube and sets it's properties
+						pixels[y][x] = new X.cube();
+						pixels[y][x].lengthX = cubeLength;
+						pixels[y][x].lengthY = cubeLength;
+						pixels[y][x].lengthZ = cubeLength;
+						pixels[y][x].color = color;
+						
+						
+						
+						//Position based on index from center pixel
+						var xPos = ((cubeLength / 2) + cubeGap + (cubeLength / 2)) * (x - centerPixelX);
+						var yPos = ((cubeLength / 2) + cubeGap + (cubeLength / 2)) * -(y - centerPixelY); //Invert y value because we're starting top left
+						pixels[y][x].center = [xPos, yPos, 0];
+						
+
+						
+						//Add pixel to scene
+						r.add(pixels[y][x]);
+						
+					}
+				}
+
+			}			
+			
 			r.render(); //Start rendering	
 		};
 		
