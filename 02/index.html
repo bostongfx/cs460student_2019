@@ -35,6 +35,12 @@
                 r2_3.center = [125, -25, 0];
                 r2_4 = new X.cube();
                 r2_4.center = [150, -25, 0];
+                
+                // Variables to store eyes
+                leftEye1 = new X.cube();
+                leftEye2 = new X.cube();
+                rightEye1 = new X.cube();
+                rightEye2 = new X.cube();
 
                 // rows three through six
                 for ( var y = 0; y < 4; y++) {
@@ -43,16 +49,20 @@
                         c.center = [x * 25, (y * 25) - 125, 0];
                         c.lengthX = c.lengthY = c.lengthZ = 20;
                         if (y == 2 && x == 1) {
-                            c.color = [0, 100, 0];
+                            c.color = [0, 255, 255];
+                            leftEye1 = c;
                         }
                         if (y == 2 && x == 2) {
-                            c.color = [0, 100, 0];
+                            c.color = [0, 255, 255];
+                            leftEye2 = c;
                         }
                         if (y == 2 && x == 4) {
-                            c.color = [0, 100, 0];
+                            c.color = [0, 255, 255];
+                            rightEye1 = c;
                         }
                         if (y == 2 && x == 5) {
-                            c.color = [0, 100, 0];
+                            c.color = [0, 255, 255];
+                            rightEye2 = c;
                         }
                         r.add(c);
                     }
@@ -102,6 +112,13 @@
 
                 r.camera.position = [0, 0, 300];
             
+                setInterval(function() {
+                    leftEye1.color = [255, 255, 255];
+                    leftEye2.color = [255, 255, 255];
+                    rightEye1.color = [255, 255, 255];
+                    rightEye2.color = [255, 255, 255];
+                }, 5000);
+
                 r.render();
 
                 r.onRender = function() {
