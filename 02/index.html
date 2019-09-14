@@ -29,18 +29,37 @@
     window.onload = function() {
     	//makes and adds cube
     	function makecube(){
-    		//var eyes2 = new X.cube(); //TODO
     		c = new X.cube();
       		c.center = [ x * 3, y * 3, 0];
       		c.lengthX = c.lengthY = c.lengthZ = 2;
       		//fox cyan eyes
-      		if ((y == 3) && (x == 2 || x == 3 || x == 5 || x == 6)){
-      			eyes = new X.cube();
-      			eyes.center = [ x * 3, y * 3, 0];
-      			eyes.lengthX = eyes.lengthY = eyes.lengthZ = 2.1;
-      			eyes.color = [ 0, 1, 1];
-      			r.add(eyes);
-      			//eyes2 = eyes.union(eyes); //TODO
+      		if ((y == 3) && (x == 2)){
+      			eye1 = new X.cube();
+      			eye1.center = [ x * 3, y * 3, 0];
+      			eye1.lengthX = eye1.lengthY = eye1.lengthZ = 2.1;
+      			eye1.color = [ 0, 1, 1];
+      			r.add(eye1);
+      		}
+      		if ((y == 3) && (x == 3)){
+      			eye2 = new X.cube();
+      			eye2.center = [ x * 3, y * 3, 0];
+      			eye2.lengthX = eye2.lengthY = eye2.lengthZ = 2.1;
+      			eye2.color = [ 0, 1, 1];
+      			r.add(eye2);
+      		}
+      		if ((y == 3) && (x == 5)){
+      			eye3 = new X.cube();
+      			eye3.center = [ x * 3, y * 3, 0];
+      			eye3.lengthX = eye3.lengthY = eye3.lengthZ = 2.1;
+      			eye3.color = [ 0, 1, 1];
+      			r.add(eye3);
+      		}
+      		if ((y == 3) && (x == 6)){
+      			eye4 = new X.cube();
+      			eye4.center = [ x * 3, y * 3, 0];
+      			eye4.lengthX = eye4.lengthY = eye4.lengthZ = 2.1;
+      			eye4.color = [ 0, 1, 1];
+      			r.add(eye4);
       		}
       		//fox red nose
       		else if ((y == 6) && (x == 4)){
@@ -79,16 +98,28 @@
       }
 
     // render everything!
+    r.camera.position = [0, 0, -100];
     r.render();
 
-    r.onRender = function() {
-    	    r.camera.rotate([0,-1]);
-    	};
+    // rotates the camera
+    // r.onRender = function() {
+    // 	    r.camera.rotate([0,-1]);
+    // 	};
+
+    // Eye turns white
     setInterval(function() {
-    	eyes.color = [ 1, 1, 1];
+    	eye1.color = [ 1, 1, 1];
+    	eye2.color = [ 1, 1, 1];
+    	eye3.color = [ 1, 1, 1];
+    	eye4.color = [ 1, 1, 1];
     }, 1000);
+    
+    // Eye turns cyan
     setInterval(function() {
-    	eyes.color = [ 0, 1, 1];
+    	eye1.color = [ 0, 1, 1];
+    	eye2.color = [ 0, 1, 1];
+    	eye3.color = [ 0, 1, 1];
+    	eye4.color = [ 0, 1, 1];
     }, 2000);
 
 
