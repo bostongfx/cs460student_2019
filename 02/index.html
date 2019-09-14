@@ -55,7 +55,9 @@
 				r.render(); // start rendering
 
 				var i = 0;
-				function Eyes() {
+				setInterval(function() 
+				{
+					
 					if (i==0) {
 						lightB(c1); lightB(c2); lightB(c3); lightB(c4);
 						i = 1;
@@ -64,8 +66,7 @@
 						White(c1); White(c2); White(c3); White(c4);
 						i = 0;
 					}
-				}
-				setInterval(Eyes, 1000);
+				}, 1000);
 				
 				function Up(x,y){
 					for(var i = 1; i <= y; i++) {
