@@ -114,12 +114,17 @@
     	eye4.color = [ 1, 1, 1];
     }, 1000);
     
-    // Eye turns cyan
+    // Eye turns random colors
     setInterval(function() {
-    	eye1.color = [ 0, 1, 1];
-    	eye2.color = [ 0, 1, 1];
-    	eye3.color = [ 0, 1, 1];
-    	eye4.color = [ 0, 1, 1];
+      // this portion was inspired by observing git user dotcasek
+      var red = Math.random(); 
+      var green = Math.random();
+      var blue = Math.random();
+
+    	eye1.color = [ red, green, blue];
+    	eye2.color = [ red, green, blue];
+    	eye3.color = [ red, green, blue];
+    	eye4.color = [ red, green, blue];
     }, 2000);
 
 
