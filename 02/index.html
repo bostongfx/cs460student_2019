@@ -1,8 +1,6 @@
 <html>
     <head>
-
         <meta charset='utf-8'>
-
         <style>
             body {
                 background-color: black;
@@ -14,7 +12,6 @@
                 top: 10px;
             }
         </style>
-
         <script type="text/javascript" src="http://get.goxtk.com/xtk_edge.js"></script>
         <script type="text/javascript">
             window.onload = function() {
@@ -23,7 +20,6 @@
                 // Initialize renderer
                 r.init();
 
-                // Create a new cube
                 //first row
                 r1_1 = new X.cube();
                 r1_1.center = [0, 0, 0];
@@ -40,69 +36,27 @@
                 r2_4 = new X.cube();
                 r2_4.center = [150, -25, 0];
 
-                // third row
-                r3_1 = new X.cube();
-                r3_1.center = [0, -50, 0];
-                r3_2 = new X.cube();
-                r3_2.center = [25, -50, 0];
-                r3_3 = new X.cube();
-                r3_3.center = [50, -50, 0];
-                r3_4 = new X.cube();
-                r3_4.center = [75, -50, 0];
-                r3_5 = new X.cube();
-                r3_5.center = [100, -50, 0];
-                r3_6 = new X.cube();
-                r3_6.center = [125, -50, 0];
-                r3_7 = new X.cube();
-                r3_7.center = [150, -50, 0];
-
-                // fourth row
-                r4_1 = new X.cube();
-                r4_1.center = [0, -75, 0];
-                r4_2 = new X.cube();
-                r4_2.center = [25, -75, 0];
-                r4_3 = new X.cube();
-                r4_3.center = [50, -75, 0];
-                r4_4 = new X.cube();
-                r4_4.center = [75, -75, 0];
-                r4_5 = new X.cube();
-                r4_5.center = [100, -75, 0];
-                r4_6 = new X.cube();
-                r4_6.center = [125, -75, 0];
-                r4_7 = new X.cube();
-                r4_7.center = [150, -75, 0];
-
-                // fifth row
-                r5_1 = new X.cube();
-                r5_1.center = [0, -100, 0];
-                r5_2 = new X.cube();
-                r5_2.center = [25, -100, 0];
-                r5_3 = new X.cube();
-                r5_3.center = [50, -100, 0];
-                r5_4 = new X.cube();
-                r5_4.center = [75, -100, 0];
-                r5_5 = new X.cube();
-                r5_5.center = [100, -100, 0];
-                r5_6 = new X.cube();
-                r5_6.center = [125, -100, 0];
-                r5_7 = new X.cube();
-                r5_7.center = [150, -100, 0];
-
-                // sixth row
-                r6_1 = new X.cube();
-                r6_1.center = [0, -125, 0];
-                r6_2 = new X.cube();
-                r6_2.center = [25, -125, 0];
-                r6_3 = new X.cube();
-                r6_3.center = [50, -125, 0];
-                r6_4 = new X.cube();
-                r6_4.center = [75, -125, 0];
-                r6_5 = new X.cube();
-                r6_5.center = [100, -125, 0];
-                r6_6 = new X.cube();
-                r6_6.center = [125, -125, 0];
-                r6_7 = new X.cube();
-                r6_7.center = [150, -125, 0];
+                // rows three through six
+                for ( var y = 0; y < 4; y++) {
+                    for ( var x = 0; x < 7; x++) {
+                        var c = new X.cube();
+                        c.center = [x * 25, (y * 25) - 125, 0];
+                        c.lengthX = c.lengthY = c.lengthZ = 20;
+                        if (y == 2 && x == 1) {
+                            c.color = [0, 100, 0];
+                        }
+                        if (y == 2 && x == 2) {
+                            c.color = [0, 100, 0];
+                        }
+                        if (y == 2 && x == 4) {
+                            c.color = [0, 100, 0];
+                        }
+                        if (y == 2 && x == 5) {
+                            c.color = [0, 100, 0];
+                        }
+                        r.add(c);
+                    }
+                }
 
                 // seventh row
                 r7_1 = new X.cube();
@@ -116,7 +70,7 @@
                 r7_5 = new X.cube();
                 r7_5.center = [125, -150, 0];
 
-                // eigth row
+                // eight row
                 r8_1 = new X.cube();
                 r8_1.center = [50, -175, 0];
                 r8_2 = new X.cube();
@@ -125,10 +79,6 @@
                 r8_3.center = [100, -175, 0];
 
                 // colors for mouth and eyes
-                r4_2.color = [100, 85, 0];
-                r4_3.color = [100, 85, 0];
-                r4_5.color = [100, 85, 0];
-                r4_6.color = [100, 85, 0];
                 r7_3.color = [0, 200, 0];
 
                 // Add cube to renderer/scene
@@ -138,38 +88,6 @@
                 r.add(r2_2);
                 r.add(r2_3);
                 r.add(r2_4);
-
-                r.add(r3_1);
-                r.add(r3_2);
-                r.add(r3_3);
-                r.add(r3_4);
-                r.add(r3_5);
-                r.add(r3_6);
-                r.add(r3_7);
-
-                r.add(r4_1);
-                r.add(r4_2);
-                r.add(r4_3);
-                r.add(r4_4);
-                r.add(r4_5);
-                r.add(r4_6);
-                r.add(r4_7);
-
-                r.add(r5_1);
-                r.add(r5_2);
-                r.add(r5_3);
-                r.add(r5_4);
-                r.add(r5_5);
-                r.add(r5_6);
-                r.add(r5_7);
-
-                r.add(r6_1);
-                r.add(r6_2);
-                r.add(r6_3);
-                r.add(r6_4);
-                r.add(r6_5);
-                r.add(r6_6);
-                r.add(r6_7);
 
                 r.add(r7_1);
                 r.add(r7_2);
@@ -191,16 +109,12 @@
                 };
             };
         </script>
-
     </head>
-
     <body>
         <h1> CS460 Assignment 2</h1>
         <div id ="logo">
         <img style="height:60px" 
         src="gfx/cs460.png"</img>
         </div>
-
     </body>
-
 </html>
