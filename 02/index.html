@@ -46,6 +46,7 @@
                 for ( var y = 0; y < 4; y++) {
                     for ( var x = 0; x < 7; x++) {
                         var c = new X.cube();
+                        c.color = [150, 1, 0];
                         c.center = [x * 25, (y * 25) - 125, 0];
                         c.lengthX = c.lengthY = c.lengthZ = 20;
                         if (y == 2 && x == 1) {
@@ -89,7 +90,7 @@
                 r8_3.center = [100, -175, 0];
 
                 // colors for mouth and eyes
-                r7_3.color = [0, 200, 0];
+                r7_3.color = [100, 0, 0];
 
                 // Add cube to renderer/scene
                 r.add(r1_1);
