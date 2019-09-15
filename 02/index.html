@@ -17,6 +17,7 @@
             window.onload = function() {
                 // create XTk renderer
                 r = new X.renderer3D();
+                
                 // Initialize renderer
                 r.init();
 
@@ -113,19 +114,30 @@
 
                 r.camera.position = [0, 0, 300];
             
+                // Make fox blink
                 setInterval(function() {
                     leftEye1.color = [255, 255, 255];
                     leftEye2.color = [255, 255, 255];
                     rightEye1.color = [255, 255, 255];
                     rightEye2.color = [255, 255, 255];
-                }, 5000);
+                }, 1000);
+
+                setInterval(function() {
+                    leftEye1.color = [0, 255, 255];
+                    leftEye2.color = [0, 255, 255];
+                    rightEye1.color = [0, 255, 255];
+                    rightEye2.color = [0, 255, 255];
+                }, 800);
+
 
                 r.render();
 
                 r.onRender = function() {
                     r.camera.rotate([1,0]);
                 };
+                
             };
+
         </script>
     </head>
     <body>
