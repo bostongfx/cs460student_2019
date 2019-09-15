@@ -35,42 +35,46 @@
 
       // create a cube and add it!
       // tip of tree
-      c = new X.cube();
-      c.center = [0, 100, 0]
-      c.color = [0.9, 1, 0]
-      c.opacity = 0.80
-      r.add(c);
+      // 0
+      tip = new X.cube();
+      tip.center = [0, 100, 0]
+      tip.color = [0, 0.3, 1]
+      tip.opacity = 0.80
+      r.add(tip);
       
-      // Rows 2-3
+      // 000
+      // 000
       for (var y = 75; y > 25; y = y-25) {
         for ( var x = -25; x < 50; x = x+25) {
-          c = new X.cube();
-          c.center = [x, y, 0]
-          c.color = [0, 1, 0.35]
-          c.opacity = 0.70
-          r.add(c);
+          c1 = new X.cube();
+          c1.center = [x, y, 0]
+          c1.color = [0, 0.3, 0.9]
+          c1.opacity = 0.70
+          r.add(c1);
         }
       }
 
-      // Rows 4-5
+      // 0000000
+      // 0000000
       for (var y = 25; y > -25; y = y-25) {
-        for ( var x = -75; x < 100; x = x+25) {
-          c = new X.cube();
-          c.center = [x, y, 0]
-          c.color = [0, 1, 0.3]
-          c.opacity = 0.70
-          r.add(c);
+        for ( var x = 75; x > -100; x = x-25) {
+          c2 = new X.cube();
+          c2.center = [x, y, 0]
+          c2.color = [0, 0.3, 0.8]
+          c2.opacity = 0.70
+          r.add(c2);
         }
       }
 
-      // Rows 6-7
+      // 000000000
+      // 000000000
       for (var y = -25; y > -75; y = y-25) {
         for ( var x = -100; x < 125; x = x+25) {
-          c = new X.cube();
-          c.center = [x, y, 0]
-          c.color = [0, 1, 0.4]
-          c.opacity = 0.70
-          r.add(c);
+          c3 = new X.cube();
+          c3.center = [x, y, 0]
+          c3.color = [0, 0.3, 0.7]
+          c3.opacity = 0.7
+          r.add(c3);
         }
       }
 
@@ -86,13 +90,23 @@
       }
 
       // set camera further away!
-      r.camera.position = [0, 0, 800];
+      r.camera.position = [0, 0, 400];
 
       // render everything!
       r.render();
 
-    };
+      // Animate my tree
+      setInterval(function() {
+        var r = Math.random();
+        var g = Math.random();
+        var b = Math.random();
+        tip.color = [r, 0, b]
+        c1.color = [r, g, 0.1]
+        c2.color = [0.2, g, b]
+        c3.color = [r, g, b]
+      }, 130);
 
+    };
     </script>
   </head>
   <body>
