@@ -1,38 +1,102 @@
 <html>
   <head>
-    <meta charset="utf-8"/>
-    <style type="text/css">
-    	body {
-    		background-color: black;
-    		color: white; /* inline css */
-    	}
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
 
-    	#logo {
-    		position: absolute;
-    		right: 30px;
-    		top: 10px;
-    	}
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
     </style>
+    
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+
     <script type="text/javascript">
 
-    	window.onload = function() {
+    window.onload = function() {
 
-        // this will get executed,
-        // when the page completely loads
+      // this gets called when the site is ready
 
+      // create a new scene and renderer
+      r = new X.renderer3D();
+      r.init();
 
+      // create a cube and add it!
+      // tip of tree
+      c = new X.cube();
+      c.center = [0, 100, 0]
+      c.color = [0.9, 1, 0]
+      c.opacity = 0.80
+      r.add(c);
+      
+      // Rows 2-3
+      for (var y = 75; y > 25; y = y-25) {
+        for ( var x = -25; x < 50; x = x+25) {
+          c = new X.cube();
+          c.center = [x, y, 0]
+          c.color = [0, 1, 0.35]
+          c.opacity = 0.70
+          r.add(c);
+        }
+      }
 
-    	}
+      // Rows 4-5
+      for (var y = 25; y > -25; y = y-25) {
+        for ( var x = -75; x < 100; x = x+25) {
+          c = new X.cube();
+          c.center = [x, y, 0]
+          c.color = [0, 1, 0.3]
+          c.opacity = 0.70
+          r.add(c);
+        }
+      }
+
+      // Rows 6-7
+      for (var y = -25; y > -75; y = y-25) {
+        for ( var x = -100; x < 125; x = x+25) {
+          c = new X.cube();
+          c.center = [x, y, 0]
+          c.color = [0, 1, 0.4]
+          c.opacity = 0.70
+          r.add(c);
+        }
+      }
+
+      // Tree stump
+      for (var y = -75; y > -125; y = y-25) {
+        for ( var x = -25; x < 50; x = x+25) {
+          c = new X.cube();
+          c.center = [x, y, 0]
+          c.color = [0.5, 0.35, 0.3]
+          c.opacity = 0.80
+          r.add(c);
+        }
+      }
+
+      // set camera further away!
+      r.camera.position = [0, 0, 800];
+
+      // render everything!
+      r.render();
+
+    };
 
     </script>
   </head>
-
   <body>
     <h1>CS460 Assignment 2</h1>
-
-    <div id="logo">
-    	<img style="height:70px" src="gfx/cs460.png">
-    </div>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
   </body>
-
 </html>
