@@ -27,16 +27,14 @@
 			r.init(); //Initialize 
 			r.camera.position = [0, 0, 500];
 			//2D array of pixels for image
-			
-			
 			//Colors
-			var col1 = [0.76, 0.8, 0.88]
-			var col2 = [0.98, 0.75, 0.2]
-			var col3 = [0, 0.14, 0.42]
+			var col1 = [0.76, 0.8, 0.88];
+			var col2 = [1, 1, 0.3];
+			var col3 = [0, 0.14, 0.42];
 			
 			var pixels = [
-				[0, 1, 0, 0, 0, 0, 0, 1, 0],
-				[0, 1, 1, 0, 0, 0, 1, 1, 0],
+				[0, 2, 0, 0, 0, 0, 0, 2, 0],
+				[0, 2, 2, 0, 0, 0, 2, 2, 0],
 				[0, 1, 1, 0, 0, 0, 1, 1, 0],
 				[0, 1, 1, 1, 1, 1, 1, 1, 0],
 				[0, 1, 2, 2, 1, 2, 2, 1, 0],
@@ -46,8 +44,8 @@
 				[0, 0, 0, 1, 1, 1, 0, 0, 0],
 			]
 			
-			
-			
+			var eyePosX = new Array();
+			var eyePosY = new Array();
 			//Center pixel
 			var centerPixelX = parseInt(pixels.length / 2);
 			var centerPixelY = parseInt(pixels[0].length / 2);
@@ -64,12 +62,17 @@
 						//Determines the cube color
 						var color;
 						switch(pixels[y][x]){
+							//Base Color
 							case 1:
 								color = col1;
 								break;
+							//Eye and Glowy bits
 							case 2:
+								eyePosX.push(x);
+								eyePosY.push(y);
 								color = col2;
 								break;
+							//Nose
 							case 3:
 								color = col3;
 								break;
@@ -104,8 +107,30 @@
 				}
 
 			}			
-			
+
 			r.render(); //Start rendering	
+		
+		
+			//Kinda looked like a robot so I made the eyes fade out
+			var rise = true;
+			//Eye pixels 
+			setInterval(function() {
+				for(var i = 0; i < eyePosX.length; i++){
+					if(pixels[eyePosY[i]][eyePosX[i]].color[0] < .3 || pixels[eyePosY[i]][eyePosX[i]].color[1] < .3)
+						rise = true;
+					else if(pixels[eyePosY[i]][eyePosX[i]].color[0] > 1 || pixels[eyePosY[i]][eyePosX[i]].color[1] > 1)
+						rise = false
+					if(rise){
+						pixels[eyePosY[i]][eyePosX[i]].color[0] = pixels[eyePosY[i]][eyePosX[i]].color[0] + .001;
+						pixels[eyePosY[i]][eyePosX[i]].color[1] = pixels[eyePosY[i]][eyePosX[i]].color[1] + .001;
+					}
+					else{
+						pixels[eyePosY[i]][eyePosX[i]].color[0] = pixels[eyePosY[i]][eyePosX[i]].color[0] - .001;
+						pixels[eyePosY[i]][eyePosX[i]].color[1] = pixels[eyePosY[i]][eyePosX[i]].color[1] - .001;
+					}
+				}
+			}, 10);
+			
 		};
 		
 		</script>
