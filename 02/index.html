@@ -20,14 +20,13 @@
         top: 10px;
       }
     </style>
-    
-    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+
+    <script type="text/javascript" src="js/xtk_edge.js"></script>
 
     <script type="text/javascript">
 
+    // this gets called when the site is ready
     window.onload = function() {
-
-      // this gets called when the site is ready
 
       // create a new scene and renderer
       r = new X.renderer3D();
@@ -70,8 +69,27 @@
       
       
 
+<<<<<<< HEAD
       // set camera further away!
       r.camera.position = [0, 0, 1000];
+=======
+      // create a cube (object)
+      c = new X.cube();
+
+      //[red,green,blue] vals as array, decimal 0.0-1.1 per value
+      c.color = [1,0,0];
+
+      //change dimensions
+      // c.lengthX = 60;
+      // c.lengthY
+      // c.lengthZ
+
+      //opacity
+      c.opacity = 0.5;
+
+      //add cube (object)
+      r.add(c);
+>>>>>>> 3b962a9f57b74d354b6ccb87bae0c5e795b2450b
 
       // render everything!
       r.render();
