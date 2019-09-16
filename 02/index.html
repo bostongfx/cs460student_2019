@@ -32,6 +32,7 @@
     	r = new X.renderer3D(); // we create a new XTK renderer
     	r.init(); // initialize the renderer
 
+    	var eyes = [];
     	var i;
     	var j;
     	x = -75;
@@ -44,6 +45,7 @@
  				if (i == 1) {
  					if (j == 1 || j == 2 || j == 4 || j == 5) {
  						c.color = [0, 0.75, 1];
+ 						eyes.push(c);
  					}
  				}
  				r.add(c);
@@ -97,6 +99,25 @@
 
     	r.camera.position = [0, 0, 1000];
     	r.render();  // start rendering
+
+
+    	var blink = true;
+    	setInterval(function() {
+ 			var k;
+ 			
+ 			if (blink) {
+ 				for (k = 0; k < 4; k++)
+ 					eyes[k].color = [1, 1, 1];
+ 				blink = false;
+ 			}
+ 			else {
+ 				for (k = 0; k < 4; k++)
+ 					eyes[k].color = [0, 0.75, 1];
+ 				blink = true;
+ 			}
+
+		}, 1000);
+
     };
 
     </script>
