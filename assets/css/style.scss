@@ -10,3 +10,10 @@ body {
 .iframe-container {
  margin: 30px;
 }
+
+header h1::before {
+ content: none;
+}
+header h1 {
+ margin: 0;
+}
