@@ -8,6 +8,10 @@
         background-color: black;
         color: white; /* font color */
         font-family: sans-serif;
+
+        padding: 0;
+        height: 100%; /* fills up everything*/
+        overflow: hidden !important; /
       }
 
       #logo {
@@ -16,12 +20,122 @@
         top: 10px;
       }
     </style>
+
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js">
+    </script>
+
     <script type="text/javascript">
 
     window.onload = function() {
-
       // this gets called when the site is ready
 
+		// create a new XTK renderer
+    	r =  new X.renderer3D();
+    	r.init(); // initialize the renderer
+    	
+    	for (var i = 0; i<4; i++) {
+    	for (var k = 0; k<7; k++) {	
+
+    			var c = new X.cube();
+    			// set the center position in world space
+      c.center = [k*25, i*25, 0];
+      // configure the edge length
+      c.lengthX = c.lengthY = c.lengthZ = 20	;
+    			r.add(c);
+    			
+    	}
+    }
+
+ //    	// create a new cube
+     	c = new X.cube();
+     	c1 = new X.cube();
+     	c2 = new X.cube();
+     	c3 = new X.cube();
+     	c4 = new X.cube();
+     	c5 = new X.cube();
+     	c6 = new X.cube();
+     	c7 = new X.cube();
+     	c8 = new X.cube();
+     	c9 = new X.cube();
+    	c10 = new X.cube();
+    	c11 = new X.cube();
+    	c12 = new X.cube();
+    	c13 = new X.cube();
+    	c14 = new X.cube();
+    	c15 = new X.cube();
+    	c16 = new X.cube();
+    	c17 = new X.cube();
+
+ //    	// add color R, G, B
+     	c.color = [1, 0, 0];
+     	c14.color = [0, 0.1, 0.8];
+     	c15.color = [0, 0.1, 0.8];
+     	c16.color = [0, 0.1, 0.8];
+     	c17.color = [0, 0.1, 0.8];
+ //    	 // set camera further away!
+       r.camera.position = [0, 100, 1000];
+
+       	c.center = [75,100,0];
+		c1.center = [100,100,0];
+		c2.center = [125, 100 ,0]
+		c3.center = [50, 100, 0];
+		c4.center = [25, 100, 0];
+ 	 	c5.center = [75, 125,0];
+		c6.center = [50,125,0];
+	 	c7.center = [100,125,0];
+	 	//ears
+	 	c8.center = [125,-25,0];
+	 	c9.center = [150,-25,0];
+	 	c10.center = [150, -50, 0];
+
+	 	c11.center = [25,-25,0];
+	 	c12.center = [0,-25,0];
+	 	c13.center = [0,-50,0];
+
+	 	//eyes
+	 	c14.center = [100,25,0];
+	 	c15.center = [125,25,0];
+	 	c16.center = [50,25,0];
+	 	c17.center = [25,25,0];
+	// 	c4.center = [0, 50,0];
+
+		//c4.center = []
+	// 	c
+	// 	c10.center = [0,75,0];
+ //    	//c1.lengthX = 10;
+ //    	//c1.lengthY = 10;
+ //    	//c1.lengthZ = 10;
+
+
+
+ //    	 //c1.start = [-40, 0, 0];
+
+ //    	// c. lengthZ
+ // // c.transform.translateY(30);
+ //  //c.transform.translateX(-30);
+ //    	// opacity 0-1
+ //    	//c.opacity = 0.5;
+ //    	// add the cube to the scene/renderer
+     	r.add(c);
+     	r.add(c1);
+     	r.add(c2);
+     	r.add(c3);
+     	r.add(c4);
+     	r.add(c5);
+     	r.add(c6);
+     	r.add(c7);
+     	r.add(c8);
+     	r.add(c9);
+     	r.add(c10);
+     	r.add(c11);
+     	r.add(c12);
+     	r.add(c13);
+     	r.add(c14);
+     	r.add(c15);
+     	r.add(c16);
+     	r.add(c17);
+    	// start rendering
+    	r.render();
     };
 
     </script>
