@@ -67,54 +67,40 @@
     	c17 = new X.cube();
 
  //    	// add color R, G, B
+
      	c.color = [1, 0, 0];
      	c14.color = [0, 0.1, 0.8];
      	c15.color = [0, 0.1, 0.8];
      	c16.color = [0, 0.1, 0.8];
      	c17.color = [0, 0.1, 0.8];
+   
  //    	 // set camera further away!
-       r.camera.position = [0, 100, 1000];
+       r.camera.position = [0, 0, 1000];
 
-       	c.center = [75,100,0];
-		c1.center = [100,100,0];
-		c2.center = [125, 100 ,0]
-		c3.center = [50, 100, 0];
-		c4.center = [25, 100, 0];
- 	 	c5.center = [75, 125,0];
-		c6.center = [50,125,0];
-	 	c7.center = [100,125,0];
+       	c.center = [75,-25,0];
+		c1.center = [100,-25,0];
+		c2.center = [125, -25 ,0]
+		c3.center = [50, -25, 0];
+		c4.center = [25, -25, 0];
+ 	 	c5.center = [75, -50,0];
+		c6.center = [50,-50,0];
+	 	c7.center = [100,-50,0];
+
 	 	//ears
-	 	c8.center = [125,-25,0];
-	 	c9.center = [150,-25,0];
-	 	c10.center = [150, -50, 0];
+	 	c8.center = [125,100,0];
+	 	c9.center = [150,100,0];
+	 	c10.center = [150, 125, 0];
 
-	 	c11.center = [25,-25,0];
-	 	c12.center = [0,-25,0];
-	 	c13.center = [0,-50,0];
+	 	c11.center = [25,100,0];
+	 	c12.center = [0,100,0];
+	 	c13.center = [0,125,0];
 
 	 	//eyes
-	 	c14.center = [100,25,0];
-	 	c15.center = [125,25,0];
-	 	c16.center = [50,25,0];
-	 	c17.center = [25,25,0];
-	// 	c4.center = [0, 50,0];
+	 	c14.center = [100,50,0];
+	 	c15.center = [125,50,0];
+	 	c16.center = [50,50,0];
+	 	c17.center = [25,50,0];
 
-		//c4.center = []
-	// 	c
-	// 	c10.center = [0,75,0];
- //    	//c1.lengthX = 10;
- //    	//c1.lengthY = 10;
- //    	//c1.lengthZ = 10;
-
-
-
- //    	 //c1.start = [-40, 0, 0];
-
- //    	// c. lengthZ
- // // c.transform.translateY(30);
- //  //c.transform.translateX(-30);
- //    	// opacity 0-1
- //    	//c.opacity = 0.5;
  //    	// add the cube to the scene/renderer
      	r.add(c);
      	r.add(c1);
@@ -130,10 +116,12 @@
      	r.add(c11);
      	r.add(c12);
      	r.add(c13);
+     	 setInterval(function() {
      	r.add(c14);
      	r.add(c15);
      	r.add(c16);
      	r.add(c17);
+     	  }, 10);
     	// start rendering
     	r.render();
     };
