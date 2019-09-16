@@ -32,18 +32,317 @@
       r = new X.renderer3D();
       r.init();
  
-     //dimension max
-     var dim = 9; 
-     var c = []
-     for(i = 0; i < dim;i++)
-     {
-     c[i]  = new X.cube();
-     j = c.lengthX*2
-     c[i].center = [j*2,0,0]
-     r.add(c[i]);
-     }
-     
-      /*
+
+
+/*
+ [[1,2,1,1,1,1,1,2,1]
+ [1,2,2,1,1,1,2,2,1]
+ [1,2,2,1,1,1,2,2,1]
+ [1,2,2,2,2,2,2,2,1]
+ [1,2,0,0,2,0,0,2,1]
+ [1,2,2,2,2,2,2,2,1]
+ [1,2,2,2,2,2,2,2,1]
+ [1,1,2,2,0,2,2,1,1]
+ [1,1,1,2,2,2,1,1,1]]
+ */
+
+c1a = new X.cube();
+c2a = new X.cube();
+c3a = new X.cube();
+c4a = new X.cube();
+c5a = new X.cube();
+c6a = new X.cube();
+c7a = new X.cube();
+c8a = new X.cube();
+c9a = new X.cube();
+
+c1b = new X.cube();
+c2b = new X.cube();
+c3b = new X.cube();
+c4b = new X.cube();
+c5b = new X.cube();
+c6b = new X.cube();
+c7b = new X.cube();
+c8b = new X.cube();
+c9b = new X.cube();
+
+c1c = new X.cube();
+c2c = new X.cube();
+c3c = new X.cube();
+c4c = new X.cube();
+c5c = new X.cube();
+c6c = new X.cube();
+c7c = new X.cube();
+c8c = new X.cube();
+c9c = new X.cube();
+
+c1d = new X.cube();
+c2d = new X.cube();
+c3d = new X.cube();
+c4d = new X.cube();
+c5d = new X.cube();
+c6d = new X.cube();
+c7d = new X.cube();
+c8d = new X.cube();
+c9d = new X.cube();
+
+c1e = new X.cube();
+c2e = new X.cube();
+c3e = new X.cube();
+c4e = new X.cube();
+c5e = new X.cube();
+c6e = new X.cube();
+c7e = new X.cube();
+c8e = new X.cube();
+c9e = new X.cube();
+
+c1f = new X.cube();
+c2f = new X.cube();
+c3f = new X.cube();
+c4f = new X.cube();
+c5f = new X.cube();
+c6f = new X.cube();
+c7f = new X.cube();
+c8f = new X.cube();
+c9f = new X.cube();
+
+c1g = new X.cube();
+c2g = new X.cube();
+c3g = new X.cube();
+c4g = new X.cube();
+c5g = new X.cube();
+c6g = new X.cube();
+c7g = new X.cube();
+c8g = new X.cube();
+c9g = new X.cube();
+
+c1h = new X.cube();
+c2h = new X.cube();
+c3h = new X.cube();
+c4h = new X.cube();
+c5h = new X.cube();
+c6h = new X.cube();
+c7h = new X.cube();
+c8h = new X.cube();
+c9h = new X.cube();
+
+c1i = new X.cube();
+c2i = new X.cube();
+c3i = new X.cube();
+c4i = new X.cube();
+c5i = new X.cube();
+c6i = new X.cube();
+c7i = new X.cube();
+c8i = new X.cube();
+c9i = new X.cube();
+
+
+c1j = new X.cube();
+c2j = new X.cube();
+c3j = new X.cube();
+c4j = new X.cube();
+c5j = new X.cube();
+c6j = new X.cube();
+c7j = new X.cube();
+c8j = new X.cube();
+c9j = new X.cube();
+
+
+c1a.center = [0,0,0]
+c2a.center = [30,0,0]
+c3a.center = [60,0,0]
+c4a.center = [90,0,0]
+c5a.center = [120,0,0]
+c6a.center = [150,0,0]
+c7a.center = [180,0,0]
+c8a.center = [210,0,0]
+c9a.center = [240,0,0]
+
+c1b.center = [0,30,0]
+c2b.center = [0,60,0]
+c3b.center = [0,90,0]
+c4b.center = [0,120,0]
+c5b.center = [0,150,0]
+c6b.center = [0,180,0]
+c7b.center = [0,210,0]
+c8b.center = [0,240,0]
+c9b.center = [0,270,0]
+
+c1c.center = [30,30,0]
+c2c.center = [30,60,0]
+c3c.center = [30,90,0]
+c4c.center = [30,120,0]
+c5c.center = [30,150,0]
+c6c.center = [30,180,0]
+c7c.center = [30,210,0]
+c8c.center = [30,240,0]
+c9c.center = [30,270,0]
+
+c1d.center = [60,30,0]
+c2d.center = [60,60,0]
+c3d.center = [60,90,0]
+c4d.center = [60,120,0]
+c5d.center = [60,150,0]
+c6d.center = [60,180,0]
+c7d.center = [60,210,0]
+c8d.center = [60,240,0]
+c9d.center = [60,270,0]
+
+c1e.center = [90,30,0]
+c2e.center = [90,60,0]
+c3e.center = [90,90,0]
+c4e.center = [90,120,0]
+c5e.center = [90,150,0]
+c6e.center = [90,180,0]
+c7e.center = [90,210,0]
+c8e.center = [90,240,0]
+c9e.center = [90,270,0]
+
+c1f.center = [120,30,0]
+c2f.center = [120,60,0]
+c3f.center = [120,90,0]
+c4f.center = [120,120,0]
+c5f.center = [120,150,0]
+c6f.center = [120,180,0]
+c7f.center = [120,210,0]
+c8f.center = [120,240,0]
+c9f.center = [120,270,0]
+
+c1g.center = [150,30,0]
+c2g.center = [150,60,0]
+c3g.center = [150,90,0]
+c4g.center = [150,120,0]
+c5g.center = [150,150,0]
+c6g.center = [150,180,0]
+c7g.center = [150,210,0]
+c8g.center = [150,240,0]
+c9g.center = [150,270,0]
+
+c1h.center = [180,30,0]
+c2h.center = [180,60,0]
+c3h.center = [180,90,0]
+c4h.center = [180,120,0]
+c5h.center = [180,150,0]
+c6h.center = [180,180,0]
+c7h.center = [180,210,0]
+c8h.center = [180,240,0]
+c9h.center = [180,270,0]
+
+c1i.center = [210,30,0]
+c2i.center = [210,60,0]
+c3i.center = [210,90,0]
+c4i.center = [210,120,0]
+c5i.center = [210,150,0]
+c6i.center = [210,180,0]
+c7i.center = [210,210,0]
+c8i.center = [210,240,0]
+c9i.center = [210,270,0]
+
+
+
+r.add(c1a)
+r.add(c2a)
+r.add(c3a)
+r.add(c4a)
+r.add(c5a)
+r.add(c6a)
+r.add(c7a)
+r.add(c8a)
+r.add(c9a)
+
+r.add(c1b)
+r.add(c2b)
+r.add(c3b)
+r.add(c4b)
+r.add(c5b)
+r.add(c6b)
+r.add(c7b)
+r.add(c8b)
+r.add(c9b)
+
+r.add(c1c)
+r.add(c2c)
+r.add(c3c)
+r.add(c4c)
+r.add(c5c)
+r.add(c6c)
+r.add(c7c)
+r.add(c8c)
+r.add(c9c)
+
+r.add(c1d)
+r.add(c2d)
+r.add(c3d)
+r.add(c4d)
+r.add(c5d)
+r.add(c6d)
+r.add(c7d)
+r.add(c8d)
+r.add(c9d)
+
+r.add(c1e)
+r.add(c2e)
+r.add(c3e)
+r.add(c4e)
+r.add(c5e)
+r.add(c6e)
+r.add(c7e)
+r.add(c8e)
+r.add(c9e)
+
+r.add(c1f)
+r.add(c2f)
+r.add(c3f)
+r.add(c4f)
+r.add(c5f)
+r.add(c6f)
+r.add(c7f)
+r.add(c8f)
+r.add(c9f)
+
+r.add(c1g)
+r.add(c2g)
+r.add(c3g)
+r.add(c4g)
+r.add(c5g)
+r.add(c6g)
+r.add(c7g)
+r.add(c8g)
+r.add(c9g)
+
+r.add(c1h)
+r.add(c2h)
+r.add(c3h)
+r.add(c4h)
+r.add(c5h)
+r.add(c6h)
+r.add(c7h)
+r.add(c8h)
+r.add(c9h)
+
+r.add(c1i)
+r.add(c2i)
+r.add(c3i)
+r.add(c4i)
+r.add(c5i)
+r.add(c6i)
+r.add(c7i)
+r.add(c8i)
+r.add(c9i)
+
+
+r.add(c1j)
+r.add(c2j)
+r.add(c3j)
+r.add(c4j)
+r.add(c5j)
+r.add(c6j)
+r.add(c7j)
+r.add(c8j)
+r.add(c9j)
+
+
+/*
        // create cubes
       c1 = new X.cube();
       c2 = new X.cube();
@@ -69,28 +368,8 @@
       
       
 
-<<<<<<< HEAD
       // set camera further away!
       r.camera.position = [0, 0, 1000];
-=======
-      // create a cube (object)
-      c = new X.cube();
-
-      //[red,green,blue] vals as array, decimal 0.0-1.1 per value
-      c.color = [1,0,0];
-
-      //change dimensions
-      // c.lengthX = 60;
-      // c.lengthY
-      // c.lengthZ
-
-      //opacity
-      c.opacity = 0.5;
-
-      //add cube (object)
-      r.add(c);
->>>>>>> 3b962a9f57b74d354b6ccb87bae0c5e795b2450b
-
       // render everything!
       r.render();
 
