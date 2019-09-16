@@ -32,10 +32,46 @@
       // create a new scene and renderer
       r = new X.renderer3D();
       r.init();
+ 
+     //dimension max
+     var dim = 9; 
+     var c = []
+     for(i = 0; i < dim;i++)
+     {
+     c[i]  = new X.cube();
+     j = c.lengthX*2
+     c[i].center = [j*2,0,0]
+     r.add(c[i]);
+     }
+     
+      /*
+       // create cubes
+      c1 = new X.cube();
+      c2 = new X.cube();
+      c3 = new X.cube();
+    
+      //center for cubes
+       c1.center = [0,0,0]
+       c2.center = [c1.lengthX,0,0]
+       c3.center = [c2.lengthX*2,0,0]
+       
+       //color for cubes
+       c1.color = [0,0,1]
+       c2.color = [0,1,0]
+       c3.color = [1,0,0]
+       
+       
+      //add cubes
+      r.add(c1);
+      r.add(c2);
+      r.add(c3);
+      
+*/
+      
+      
 
-      // create a cube and add it!
-      c = new X.cube();
-      r.add(c);
+      // set camera further away!
+      r.camera.position = [0, 0, 1000];
 
       // render everything!
       r.render();
