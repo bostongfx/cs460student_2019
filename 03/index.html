@@ -31,7 +31,7 @@
         scene.add( light );
 
         geometry = new THREE.BoxBufferGeometry( 20, 20, 20 );
-        material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        material = new THREE.MeshStandardMaterial({ color: 0xffffff, wireframe:true });
         cube = new THREE.Mesh( geometry, material );
         
         scene.add(cube);
