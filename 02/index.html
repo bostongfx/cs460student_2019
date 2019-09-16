@@ -34,4 +34,285 @@
     <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
     <div id="output"></div>
   </body>
+</html><<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
+
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+    
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+      // this gets called when the site is ready
+
+      // create a new scene and renderer
+      r = new X.renderer3D();
+      r.init();
+
+      // create a cube and add it!
+      c = new X.cube();
+      r.add(c);
+
+      c2 = new X.cube();
+      c2.center = [25, 0, 0];//x y z
+
+      c3 = new X.cube();
+      // 25 to the right
+      // 25 to the up
+      c3.center = [25, 25, 0];
+      c3.color = [0, 1, 0]
+
+      c4 = new X.cube();
+      c4.center = [25, 50, 0]
+
+      c5 = new X.cube();
+      c5.center = [25, 75, 0]
+
+      c6 = new X.cube();
+      c6.center = [25, 100, 0]
+
+      c7 = new X.cube();
+      c7.center = [25, 125, 0]
+
+      c8 = new X.cube();
+      c8.center = [50, 0, 0];//x y z
+
+      c9 = new X.cube();
+      // 25 to the right
+      // 25 to the up
+      c9.center = [50, 25, 0];
+
+      c10 = new X.cube();
+      c10.center = [50, 50, 0]
+
+      c11 = new X.cube();
+      c11.center = [50, 75, 0]
+
+      c12 = new X.cube();
+      c12.center = [50, 100, 0]
+      c12.color = [1, 1, 0]
+
+      c13 = new X.cube();
+      c13.center = [50, 125, 0]
+
+      c14 = new X.cube();
+      c14.center = [0, 25, 0];//x y z
+
+      c15 = new X.cube();
+      // 25 to the right
+      // 25 to the up
+      c15.center = [0, 50, 0];
+
+      c16 = new X.cube();
+      c16.center = [0, 75, 0]
+
+      c17 = new X.cube();
+      c17.center = [0, 100, 0]
+      c17.color = [1, 1, 0]
+
+      c18 = new X.cube();
+      c18.center = [0, 125, 0]
+
+      c19 = new X.cube();
+      c19.center = [-25, 25, 0]
+
+      c20 = new X.cube();
+      c20.center = [-25, 50, 0];//x y z
+
+      c21 = new X.cube();
+      // 25 to the right
+      // 25 to the up
+      c21.center = [-25, 75, 0];
+
+      c22 = new X.cube();
+      c22.center = [-25, 100, 0]
+      c22.color = [1, 1, 0]
+
+      c23 = new X.cube();
+      c23.center = [-25, 125, 0]
+
+      c24 = new X.cube();
+      c24.center = [-25, 150, 0]
+
+      c25 = new X.cube();
+      c25.center = [-50, 50, 0];//x y z
+
+      c26 = new X.cube();
+      // 25 to the right
+      // 25 to the up
+      c26.center = [-50, 75, 0];
+
+      c27 = new X.cube();
+      c27.center = [-50, 100, 0]
+
+      c28 = new X.cube();
+      c28.center = [-50, 125, 0]
+
+      c29 = new X.cube();
+      c29.center = [-50, 150, 0]
+
+      c30 = new X.cube();
+      c30.center = [-50, 175, 0]
+
+      c31 = new X.cube();
+      c31.center = [75, 25, 0]
+
+      c32 = new X.cube();
+      c32.center = [75, 50, 0];//x y z
+
+      c33 = new X.cube();
+      // 25 to the right
+      // 25 to the up
+      c33.center = [75, 75, 0];
+
+      c34 = new X.cube();
+      c34.center = [75, 100, 0]
+      c34.color = [1, 1, 0]
+
+      c35 = new X.cube();
+      c35.center = [75, 125, 0]
+
+      c36 = new X.cube();
+      c36.center = [75, 150, 0]
+
+      c37 = new X.cube();
+      c37.center = [100, 50, 0];//x y z
+
+      c38 = new X.cube();
+      // 25 to the right
+      // 25 to the up
+      c38.center = [100, 75, 0];
+
+      c39 = new X.cube();
+      c39.center = [100, 100, 0]
+
+      c40 = new X.cube();
+      c40.center = [100, 125, 0]
+
+      c41 = new X.cube();
+      c41.center = [100, 150, 0]
+
+      c42 = new X.cube();
+      c42.center = [100, 175, 0]
+
+      r.add(c3);
+
+      r.add(c2);
+
+      r.add(c4);
+
+      r.add(c5);
+
+      r.add(c6);
+
+      r.add(c7);
+
+      r.add(c8);
+
+      r.add(c9);
+
+      r.add(c10);
+
+      r.add(c11);
+
+      r.add(c12);
+
+      r.add(c13);
+
+      r.add(c14);
+
+      r.add(c15);
+
+      r.add(c16);
+
+      r.add(c17);
+
+      r.add(c18);
+
+      r.add(c19);
+
+      r.add(c20);
+
+      r.add(c21);
+
+      r.add(c22);
+
+      r.add(c23);
+
+      r.add(c24); 
+
+      r.add(c25);
+
+      r.add(c26);
+
+      r.add(c27);
+
+      r.add(c28);
+
+      r.add(c29); 
+
+      r.add(c30);
+
+      r.add(c31);
+
+      r.add(c32);
+
+      r.add(c33);
+
+      r.add(c34);
+
+      r.add(c35); 
+
+      r.add(c36);
+
+      r.add(c37);
+
+      r.add(c38);
+
+      r.add(c39);
+
+      r.add(c40);
+
+      r.add(c41); 
+
+      r.add(c42);
+
+
+
+
+      // set camera function away!
+      r.camera.position = [0, 0, 1000]
+        ;
+
+      // render everything!
+      r.render();
+
+    };
+
+    </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
 </html>
