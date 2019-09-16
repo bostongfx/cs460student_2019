@@ -1,0 +1,108 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        padding: 0;
+  		height: 100%;
+  		overflow: hidden !important;  
+}
+      }
+
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+    </script>
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+     // this gets called when the site is ready
+
+    	r = new X.renderer3D(); // we create a new XTK renderer
+    	r.init(); // initialize the renderer
+
+    	var i;
+    	var j;
+    	x = -75;
+    	y = 75;
+		for (i = 0; i < 4; i++) {
+			for (j = 0; j < 7; j++) {
+ 				c = new X.cube();
+ 				c.center = [x, y, 0];
+ 				x += 25;
+ 				if (i == 1) {
+ 					if (j == 1 || j == 2 || j == 4 || j == 5) {
+ 						c.color = [0, 0.75, 1];
+ 					}
+ 				}
+ 				r.add(c);
+ 			}
+ 			x = -75;
+ 			y -= 25;
+		}
+
+		x = -50;
+		for (i = 0; i < 5; i++) {
+			c = new X.cube();
+			c.center = [x, y, 0];
+			x += 25;
+			if (i == 2)
+				c.color = [1, 0, 0];
+			r.add(c);
+		}
+
+		x = -25;
+		y -= 25;
+		for (i = 0; i < 3; i++) {
+			c = new X.cube();
+			c.center = [x, y, 0];
+			x += 25;
+			r.add(c);
+		}
+
+		c1 = new X.cube();
+		c1.center = [-75, 100, 0];
+		r.add(c1);
+
+		c2 = new X.cube();
+		c2.center = [-50, 100, 0];
+		r.add(c2);
+
+		c1 = new X.cube();
+		c1.center = [75, 100, 0];
+		r.add(c1);
+
+		c2 = new X.cube();
+		c2.center = [50, 100, 0];
+		r.add(c2);
+
+		c = new X.cube();
+		c.center = [-75, 125, 0];
+		r.add(c);
+
+		c = new X.cube();
+		c.center = [75, 125, 0];
+		r.add(c);
+
+    	r.camera.position = [0, 0, 1000];
+    	r.render();  // start rendering
+    };
+
+    </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
+</html>
