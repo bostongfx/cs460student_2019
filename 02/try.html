@@ -1,0 +1,118 @@
+<!-- <!DOCTYPE html> -->
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
+
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+    <!-- everything comes from goXTK.com -->
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+    
+  <script type = "text/javascript">
+
+      var items = [[0, 0, 0, 0, 1, 0, 0, 0, 0],
+                   [0, 0, 0, 1, 1, 1, 0, 0, 0], 
+                   [0, 0, 0, 1, 1, 1, 0, 0, 0], 
+                   [0, 1, 1, 1, 1, 1, 1, 1, 0],
+                   [0, 1, 1, 1, 1, 1, 1, 1, 0], 
+                   [1, 1, 1, 1, 1, 1, 1, 1, 1], 
+                   [1, 1, 1, 1, 1, 1, 1, 1, 1],
+                   [0, 0, 0, 1, 1, 1, 0, 0, 0],
+                   [0, 0, 0, 1, 1, 1, 0, 0, 0]];
+    window.onload = function(){
+
+      //create and initialize a 3D render
+      r = new X.renderer3D();
+      r.init();
+
+      var i = 0;
+      var j = 0;
+      for (i; i < items.length; i++) {
+          for (j = 0; j < items[0].length; j++){
+
+            cube = new X.cube();
+            cube.center = [i * 3, j * 3, 1];
+            cube.color = [1, 1, 1];
+            cube.lengthX = cube.lengthY = cube.lengthZ = 2;
+
+            if(items[i][j] == 0){
+                cube.color = [0, 0, 0];
+            }
+            if(items[i][j] == 1){
+                cube.color = [0, 1, 0];
+            }
+            
+            r.add(cube);
+
+            //set camera further away
+            r.camera.position[0, 0, 1000];
+
+            r.render();
+          }
+      }
+    //   r.add(cube);
+    //   r.render();
+    setInterval(function(){
+
+        items[0][4] = 2;
+        items[2][3] = 2;
+        items[2][5] = 2;
+        items[4][1] = 2;
+        items[4][4] = 2;
+        items[4][7] = 2;
+        items[6][2] = 2;
+        items[6][4] = 2;
+        items[6][6] = 2;
+
+        for (i = 0; i < items.length; i++){
+            for (j = 0; j < items[0].length; j++){
+                cube = new X.cube();
+                cube.center = [i * 3, j * 3, 1];
+                cube.color = [1, 1, 1];
+                cube.lengthX = cube.lengthY = cube.lengthZ = 2;
+
+                if(items[i][j] == 0){
+                    cube.color = [0, 0, 0];
+                }
+                if(items[i][j] == 1){
+                    cube.color = [0, 1, 0];
+                }
+                if(items[i][j] == 2){
+                    cube.color = [1, 0, 0];
+                }
+            
+                r.add(cube);
+
+                //set camera further away
+                r.camera.position[0, 0, 1000];
+
+                r.render();
+            }
+        }
+
+    }, 1000);
+
+    }
+
+  </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
+</html>
