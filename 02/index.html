@@ -1,0 +1,119 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
+
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+    
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+      // this gets called when the site is ready
+
+      // create a new scene and renderer
+      r = new X.renderer3D();
+      r.init();
+
+      // create a cube and add it!
+      var c = {};
+
+      for (var x = 0; x < 7; x++) {
+          c[x] = new X.cube();
+          c[x].center = [x*25, 0, 0]
+          r.add(c[x])
+      }
+      for (var x = 0; x < 7; x++) {
+          c[x] = new X.cube();
+          c[x].center = [x*25, 25, 0]
+          r.add(c[x])
+      }
+      for (var x = 0; x < 7; x++) {
+          c[x] = new X.cube();
+          c[x].center = [x*25, 50, 0]
+          if (x > 0 && x < 3) {
+            c[x].color = [0,1,0];
+          }
+          if (x > 3 && x < 6) {
+            c[x].color = [0,1,0];
+          }
+          r.add(c[x])
+      }
+      for (var x = 0; x < 7; x++) {
+          c[x] = new X.cube();
+          c[x].center = [x*25, 75, 0]
+          c[x].color = [1,1,1];
+          r.add(c[x]);
+      }
+      
+      
+      for (var x = 5; x < 7; x++) {
+          c[x] = new X.cube();
+          c[x].center = [x*25, 100, 0]
+          r.add(c[x]);
+      }
+      for (var x = 0; x < 2; x++) {
+          c[x] = new X.cube();
+          c[x].center = [x*25, 100, 0]
+          r.add(c[x]);
+      }
+      for (var x = 1; x < 3; x++) {
+          c[x] = new X.cube();
+          c[x].center = [x*25, -25, 0]
+          r.add(c[x]);
+      }
+      for (var x = 4; x < 6; x++) {
+          c[x] = new X.cube();
+          c[x].center = [x*25, -25, 0]
+          r.add(c[x]);
+      }
+      c = new X.cube();
+      c.center = [75, -25, 0];
+      c.color = [1,0,0];
+      r.add(c);
+      for (var x = 2; x < 5; x++) {
+          c[x] = new X.cube();
+          c[x].center = [x*25, -50, 0]
+          r.add(c[x]);
+      }
+      c = new X.cube();
+      c.center = [150, 125, 0];
+      r.add(c);
+      c = new X.cube();
+      c.center = [0, 125, 0]; 
+      r.add(c);
+      c = new X.cube();
+      c.center = 
+      // set camera further away!
+      r.camera.position = [0, 0, 1000];
+
+      // render everything!
+      r.render();
+
+    };
+
+    </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
+</html>
