@@ -1,0 +1,8 @@
+Richard Pan
+CS460 - Graphics
+Assignment 02 Bonus
+9/16/2019
+
+Q1. If we didn't care about the gap between cubes, then we could go "row by row" in the 9x9 grid and extend the horizontal length of the cube (c.lengthX) by 20 pixels (or the full width of a cube) for each square that should be the same color in the same row. For example, for the tree pixel art, in the second row, we could extend the length of the first green cube 3 times. Yet, as we extend the length, we also need to update the center by adding 10 (or half the width of the cube) to the first cube's center x-coordinate.
+
+Q2. *shown on the code*

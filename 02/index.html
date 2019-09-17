@@ -33,7 +33,7 @@
       r = new X.renderer3D(); // initialize the renderer
       r.init();
 
-
+      var grid = [[]];
       // go through each row and add a different
       // number of cubes specific to each row
       // r1, c5; r2 r3 r8 r9, c4-6; r4 r5, c2-c8;
@@ -51,10 +51,14 @@
           else if (i == 5 || i == 6)
             temp.color = [0, 1, 0];
           else
-            temp.color = [0, 0, 0];
+            temp.color = [0.1, 0.1, 0.1];
           r.add(temp);
         }
       }
+
+      setInterval(function() {
+
+      }, 1000);
 
       r.camera.position = [0, 0, 400];
 
