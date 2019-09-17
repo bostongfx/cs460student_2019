@@ -67,23 +67,7 @@
     	c17 = new X.cube();
 
  //    	// add color R, G, B
-
-     	// c.color = [1, 0, 0];
-     	// c14.color = [0, 0., 0.8];
-     	// c15.color = [0, 0.1, 0.8];
-     	// c16.color = [0, 0.1, 0.8];
-     	// c17.color = [0, 0.1, 0.8];
 		c.color = [1, 0, 0];
-     	// setInterval(function() {
-     	
-     	// c14.color = [1, 0.1, 0.8];
-     	// c15.color = [1, 0.1, 0.8];
-     	// c16.color = [1, 0.1, 0.8];
-     	// c17.color = [1, 0.1, 0.8];
-      //   	  }, 1000);
-
-     	
-      //c14.color = [1,1,1];
 
      	
  //    	 // set camera further away!
@@ -134,33 +118,38 @@
      	r.add(c16);
      	r.add(c17);
 
-    function color(){ 
-    alert(c14.color);    	     	
-	if ( c14.color === [1,1,1] )
-     {
-     	alert("came in white");
-     	c14.color = [1, 0, 0.8];
-     	c15.color = [1, 0, 0.8];
-     	c16.color = [1, 0, 0.8];
-     	c17.color = [1, 0, 0.8];
+// function to open eyes
+    function color_open(){ 
 
-     };
-    if (c14.color === [1,0,0.8])
-     {
-      	alert("came in pink");
+     	c14.color = [0, 0, 1];
+     	c15.color = [0, 0, 1];
+     	c16.color = [0, 0, 1];
+     	c17.color = [0, 0, 1];
+
+ };
+
+ // function to close eyes
+      function color_close(){ 
+
       	c14.color = [1,1,1];
      	c15.color = [1,1,1];
      	c16.color = [1,1,1];
      	c17.color = [1,1,1];
-  	 };
+
   	 
  };
 
    setInterval(function() {
-        color();
+        color_open();
+   
+    }, 600);
+    setInterval(function() {
+        color_close();
+   
     }, 1000);
+        r.render();
     	// start rendering
-    	r.render();
+    	
     };
 
     </script>
