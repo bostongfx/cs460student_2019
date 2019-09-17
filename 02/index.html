@@ -1,48 +1,231 @@
 <html>
-	<head>
-		<meta content = "text/html;charset=utf-8" gttp-equiv = "Content-Type">
-		<meta content = "utf-8" http-equiv = "encoding">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
 
-		<style>
-			body {
-				background-color: black;
-				color: white; /* font color */
-			}
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+    
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
 
-			#logo {
-				position: absolute;
-				right: 10px;
-				top: 10px;
-			}
-		</style>
+    <script type="text/javascript">
 
-		<script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js">
-		</script>
+    // bonus question #2
+    setInterval(function() {
+      c24.color = [0.1, 0.4, 1];
+      c34.color = [0.1, 0.4, 1];
+      c54.color = [0.1, 0.4, 1];
+      c64.color = [0.1, 0.4, 1];
+      setTimeout(function() {
+        c24.color = [0, 0, 0];
+        c34.color = [0, 0, 0];
+        c54.color = [0, 0, 0];
+        c64.color = [0, 0, 0];
+      }, 500);
+    }, 1000);
 
-		<script type="text/javascript">
-			window.onload = function() {
-				// this get executed when the page completely load
+    window.onload = function() {
 
-				// create a new XTK renderer
-				r = new X.renderer3D();
-				r.init(); // initialize the renderer
+      // this gets called when the site is ready
 
-				// create a new cube
-				c = new X.cube();
+      // create a new scene and renderer
+      r = new X.renderer3D();
+      r.init();
 
-				// add the cube to the scene / renderer
-				r.add(c); 
-			};
-		</script>
-	</head>
 
-	<body>
-		<h1>CS460 Assignment 2 </h1>
-		<div id = "logo">
-			<img style = "height: 60px" src = "gfx/cs460.png">
-		</div>
+      // create cubes with special colors
 
-		<div id = "output"></div>
-	</body>
+      // left eyes
+      c24 = new X.cube();
+      c24.center = [2*25, 4*25, 0]; 
+      c24.color = [0.1, 0.4, 1];
+      r.add(c24);
+      c34 = new X.cube();
+      c34.center = [3*25, 4*25, 0]; 
+      c34.color = [0.1, 0.4, 1];
+      r.add(c34);
 
+      // right eyes
+      c54 = new X.cube();
+      c54.center = [5*25, 4*25, 0]; 
+      c54.color = [0.1, 0.4, 1];
+      r.add(c54);
+      c64 = new X.cube();
+      c64.center = [6*25, 4*25, 0]; 
+      c64.color = [0.1, 0.4, 1];
+      r.add(c64);
+
+      
+
+      // mouth
+      c41 = new X.cube();
+      c41.center = [4*25, 1*25, 0]; 
+      c41.color = [1, 0, 0];
+      r.add(c41);
+
+
+      // create the rest of the face (by rows)
+      c30 = new X.cube();
+      c30.center = [3*25, 0*25, 0];
+      r.add(c30);
+      c40 = new X.cube();
+      c40.center = [4*25, 0*25, 0];
+      r.add(c40);
+      c50 = new X.cube();
+      c50.center = [5*25, 0*25, 0];
+      r.add(c50);
+
+      c21 = new X.cube();
+      c21.center = [2*25, 1*25, 0];
+      r.add(c21);
+      c31 = new X.cube();
+      c31.center = [3*25, 1*25, 0];
+      r.add(c31);
+      c51 = new X.cube();
+      c51.center = [5*25, 1*25, 0];
+      r.add(c51);
+      c61 = new X.cube();
+      c61.center = [6*25, 1*25, 0];
+      r.add(c61);
+
+      c12 = new X.cube();
+      c12.center = [1*25, 2*25, 0];
+      r.add(c12);
+      c22 = new X.cube();
+      c22.center = [2*25, 2*25, 0];
+      r.add(c22);
+      c32 = new X.cube();
+      c32.center = [3*25, 2*25, 0];
+      r.add(c32);
+      c42 = new X.cube();
+      c42.center = [4*25, 2*25, 0];
+      r.add(c42);
+      c52 = new X.cube();
+      c52.center = [5*25, 2*25, 0];
+      r.add(c52);
+      c62 = new X.cube();
+      c62.center = [6*25, 2*25, 0];
+      r.add(c62);
+      c72 = new X.cube();
+      c72.center = [7*25, 2*25, 0];
+      r.add(c72);
+
+
+      c13 = new X.cube();
+      c13.center = [1*25, 3*25, 0];
+      r.add(c13);
+      c23 = new X.cube();
+      c23.center = [2*25, 3*25, 0];
+      r.add(c23);
+      c33 = new X.cube();
+      c33.center = [3*25, 3*25, 0];
+      r.add(c33);
+      c43 = new X.cube();
+      c43.center = [4*25, 3*25, 0];
+      r.add(c43);
+      c53 = new X.cube();
+      c53.center = [5*25, 3*25, 0];
+      r.add(c53);
+      c63 = new X.cube();
+      c63.center = [6*25, 3*25, 0];
+      r.add(c63);
+      c73 = new X.cube();
+      c73.center = [7*25, 3*25, 0];
+      r.add(c73);
+
+      c14 = new X.cube();
+      c14.center = [1*25, 4*25, 0];
+      r.add(c14);
+      c44 = new X.cube();
+      c44.center = [4*25, 4*25, 0];
+      r.add(c44);
+      c74 = new X.cube();
+      c74.center = [7*25, 4*25, 0];
+      r.add(c74);
+
+      c15 = new X.cube();
+      c15.center = [1*25, 5*25, 0];
+      r.add(c15);
+      c25 = new X.cube();
+      c25.center = [2*25, 5*25, 0];
+      r.add(c25);
+      c35 = new X.cube();
+      c35.center = [3*25, 5*25, 0];
+      r.add(c35);
+      c45 = new X.cube();
+      c45.center = [4*25, 5*25, 0];
+      r.add(c45);
+      c55 = new X.cube();
+      c55.center = [5*25, 5*25, 0];
+      r.add(c55);
+      c65 = new X.cube();
+      c65.center = [6*25, 5*25, 0];
+      r.add(c65);
+      c75 = new X.cube();
+      c75.center = [7*25, 5*25, 0];
+      r.add(c75);
+
+      c16 = new X.cube();
+      c16.center = [1*25, 6*25, 0];
+      r.add(c16);
+      c26 = new X.cube();
+      c26.center = [2*25, 6*25, 0];
+      r.add(c26);
+      c66 = new X.cube();
+      c66.center = [6*25, 6*25, 0];
+      r.add(c66);
+      c76 = new X.cube();
+      c76.center = [7*25, 6*25, 0];
+      r.add(c76);
+
+      c17 = new X.cube();
+      c17.center = [1*25, 7*25, 0];
+      r.add(c17);
+      c27 = new X.cube();
+      c27.center = [2*25, 7*25, 0];
+      r.add(c27);
+      c67 = new X.cube();
+      c67.center = [6*25, 7*25, 0];
+      r.add(c67);
+      c77 = new X.cube();
+      c77.center = [7*25, 7*25, 0];
+      r.add(c77);
+
+      c18 = new X.cube();
+      c18.center = [1*25, 8*25, 0];
+      r.add(c18);
+      c78 = new X.cube();
+      c78.center = [7*25, 8*25, 0];
+      r.add(c78);
+
+      // set camera further away!
+      r.camera.position = [0, 0, 500];
+
+      // render everything!
+      r.render();
+
+    };
+    
+
+    </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
 </html>
