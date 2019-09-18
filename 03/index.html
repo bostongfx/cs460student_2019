@@ -29,6 +29,16 @@
 		renderer = new THREE.WebGLRenderer();
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		document.body.appendChild(renderer.domElement);
+		renderer.domElement.onclick = function(e){
+			pixCord = new THREE.Vector2(e.clientX, e.clientY);
+			console.log("Pixel Coords: ", pixCord);
+			
+			viewCord = new THREE.Vector2((pixCord.x / window.innerWidth) * 2 - 1, -(pixCord.y / window.innerWidth) * 2 + 1);
+			console.log("View Coords: ", viewCord);
+			
+			viewCordNear = new THREE.Vector3(viewCord.x, viewCord.y, 0);
+			console.log("View Coords Near: ", viewCordNear);
+		}
 		
 		//Light setup
 		ambientLight = new THREE.AmbientLight();
