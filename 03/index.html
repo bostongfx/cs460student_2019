@@ -1,5 +1,6 @@
 <html>
   <head>
+     <meta charset="UTF-8">
     <style>
       html, body {
         background-color:#000;
@@ -22,6 +23,23 @@
         renderer = new THREE.WebGLRenderer();
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( renderer.domElement );
+
+        renderer.domElement.onclick = function(e){
+          console.log("i clicked");
+          pixel_coords = new THREE.Vector2(e.clientX, e.clientY);
+
+          console.log(pixel_coords);
+
+          vp_coords = new THREE.Vector2(
+            (pixel_coords.x / window.innerWidth) * 2 - 1,
+            -(pixel_coords.y / window.innerHeight) * 2 + 1);
+
+            console.log('viewport coords ', vp_coords);
+
+            vp_coords_near = new THREE.Vector3(vp_coords.x, vp_coords.y, 0);
+
+            console.log(vp_coords_near);
+        };
 
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );
