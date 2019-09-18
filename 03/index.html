@@ -1,5 +1,6 @@
 <html>
   <head>
+    <meta charset="utf-8">
     <style>
       html, body { 
         background-color:#000;
@@ -7,10 +8,13 @@
         padding: 0;
         height: 100%;
         overflow: hidden !important;  
+        touch-action: none;
       }
     </style>
+    
     <script src="js/three.min.js" type="text/javascript"></script>
     <script src="js/TrackballControls.js" type="text/javascript"></script>
+
     <script>
       window.onload = function() {
 
@@ -23,6 +27,24 @@
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( renderer.domElement );
         
+
+        renderer.domElement.onclick = function (e){
+            console.log("yay!, we clicked!");
+
+            // console.log(e);
+
+            var pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+            console.log('pixel_coords', pixel_coords);
+
+            var vp_x_coords = ((pixel_coords.x / window.innerWidth) * 2 - 1);
+            var vp_y_coords = ((pixel_coords.y / window.innerHeight) * 2 + 1);
+            var vp_coords = new THREE.Vector2( vp_x_coords, vp_y_coords);
+
+            console.log('Viewport Coords', vp_coords)
+        }
+
+
+
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );
 
@@ -40,10 +62,10 @@
         //extra cube (comment out to remove)
         /*---start---*/
         
-        geometry2 = new THREE.BoxBufferGeometry( 10, 10, 10 );
+       /* geometry2 = new THREE.BoxBufferGeometry( 10, 10, 10 );
         material2 = new THREE.MeshStandardMaterial({ color: 0xffffff, wireframe:false });
         cube2 = new THREE.Mesh( geometry2, material2);
-        scene.add(cube2);
+        scene.add(cube2);*/
         
         /*---end---*/
 
@@ -61,6 +83,7 @@
         renderer.render( scene, camera );
 
       };
+
     </script>
   </head>
   <body></body>
