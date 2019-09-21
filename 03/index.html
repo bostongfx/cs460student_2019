@@ -112,85 +112,95 @@
           // update cube position
           // cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
          
-          var hasTorus = false;
-          var hasBox = false;
-          var hasOcta = false;
-          var hasCone = false;
-          var hasRing = false;
+       var hasTorus = false;
+       var hasBox = false;
+       var hasOcta = false;
+       var hasCone = false;
+       var hasRing = false;
+       var hasSphere = false;
 
+       var TorusKnot = createGeometry.TorusKnot(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+       var Box = createGeometry.Box(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z)
+       var Octahedron = createGeometry.Octahedron(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z)
+       var Cone = createGeometry.Cone(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z)
+       var Ring = createGeometry.Ring(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z)
+       var Sphere = createGeometry.Sphere(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+       
+       //for now: uncomment the geometry that is desired to be generated (on shift + click)
 
-
-         var TorusKnot = createGeometry.TorusKnot(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
-          // scene.add(TorusKnot);
-         
-         var Box = createGeometry.Box(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z)
-         // scene.add(Box);
-        
-
-         var Octahedron = createGeometry.Octahedron(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z)
-         // scene.add(Octahedron);
-
-
-         var Cone = createGeometry.Cone(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z)
-         // scene.add(Cone);
-
-         var Ring = createGeometry.Ring(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z)
-         // scene.add(Ring);
+       // scene.add(Sphere);
+       scene.add(Cone);
+       // scene.add(TorusKnot);
+       // scene.add(Box);
+       // scene.add(Octahedron);
+       // scene.add(Ring);
 
         };
-
-        
-
-
       };
 
       function createGeometry () 
       {
+
+        createGeometry.globalRadius = 10;
+        createGeometry.globalWidth = 40;
+        createGeometry.globalHeight = 40;
+        createGeometry.globalDepth = 40;
+        createGeometry.globalInnerRadius = (createGeometry.globalRadius/2);
+
         createGeometry.TorusKnot = function (x,y,z)
         {
 
-        var geometry = new THREE.TorusKnotBufferGeometry( 10, 3, 100, 16 );
-        var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+        var radius = createGeometry.globalRadius;
+        var tube = 3;
+        var tubularSegments = 100;
+        var radialSegments = 16;
+
+        var geometry = new THREE.TorusKnotBufferGeometry(radius, tube, tubularSegments, radialSegments);
+
+        var material = new THREE.MeshBasicMaterial( { color: "green" } );
         var torusknot = new THREE.Mesh( geometry, material );
         torusknot.position.set(x,y,z)
-        //scene.add( torusknot );
         return torusknot;
         };
 
         createGeometry.Box = function (x,y,z)
         {
 
-        var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
-        var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+        var width = createGeometry.globalWidth;
+        var height = createGeometry.globalHeight;
+        var depth = createGeometry.globalDepth;
+
+        var geometry = new THREE.BoxBufferGeometry( width, height, depth);
+        var material = new THREE.MeshBasicMaterial( {color: "white"} );
         var box = new THREE.Mesh( geometry, material );
         box.position.set(x,y,z);
-        // scene.add( cube );
         return box;
         };
 
          createGeometry.Octahedron = function (x,y,z)
         {
 
-        var geometry = new THREE.OctahedronBufferGeometry( 1, 1 );
-        var material = new THREE.MeshBasicMaterial( {color: 0x00aaff} );
+        var radius = createGeometry.globalRadius;
+        var detail = 1;
+
+        var geometry = new THREE.OctahedronBufferGeometry(radius, detail);
+        var material = new THREE.MeshBasicMaterial( {color: "yellow"} );
         var octahedron = new THREE.Mesh( geometry, material );
         octahedron.position.set(x,y,z);
-        // scene.add( octahedron );
         return octahedron;
         };
-
-
 
          createGeometry.Cone = function (x,y,z)
         {
 
+        var radius = createGeometry.globalRadius;
+        var height = createGeometry.globalHeight;
+        var radialSegments = 32;
         
-        var geometry = new THREE.ConeBufferGeometry( 5, 20, 32 );
-        var material = new THREE.MeshBasicMaterial( {color: 0xac5b5a} );
+        var geometry = new THREE.ConeBufferGeometry( radius, height, radialSegments );
+        var material = new THREE.MeshBasicMaterial( {color: "darkred"} );
         var cone = new THREE.Mesh( geometry, material );
-        // scene.add( cone );
         cone.position.set(x,y,z);
-        // scene.add( octahedron );
         return cone;
         };
 
@@ -198,15 +208,29 @@
          createGeometry.Ring = function (x,y,z)
         {
 
+        var innerRadius = createGeometry.globalInnerRadius;
+        var outerRadius = createGeometry.globalRadius;
+        var thetaSegments = 32;
         
-        var geometry = new THREE.RingBufferGeometry( 1, 5, 32 );
-        var material = new THREE.MeshBasicMaterial( {color: 0xaf1ee0} );
+        var geometry = new THREE.RingBufferGeometry(innerRadius, outerRadius, thetaSegments );
+        var material = new THREE.MeshBasicMaterial( {color: "darkgreen"} );
         var ring = new THREE.Mesh( geometry, material );
-        // scene.add( cone );
         ring.position.set(x,y,z);
-        // scene.add( octahedron );
         return ring;
         };
+      }
+
+      createGeometry.Sphere = function (x,y,z)
+      {
+        var radius = createGeometry.globalRadius;
+        var widthSegments = createGeometry.globalWidth;
+        var heightSegments = createGeometry.globalHeight;
+
+        var geometry = new THREE.SphereBufferGeometry( radius, widthSegments, heightSegments);
+        var material = new THREE.MeshBasicMaterial( {color: "purple"} );
+        var sphere = new THREE.Mesh( geometry, material );
+        sphere.position.set(x, y, z);
+        return sphere;
       }
 
       function animate() {
