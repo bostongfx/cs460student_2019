@@ -175,7 +175,7 @@ break;
 
         var geometry = new THREE.TorusKnotBufferGeometry(radius, tube, tubularSegments, radialSegments);
 
-        var material = new THREE.MeshBasicMaterial( { color: "green" } );
+        var material = new THREE.MeshBasicMaterial( { color: "darkgreen" } );
         var torusknot = new THREE.Mesh( geometry, material );
         torusknot.position.set(x,y,z)
         return torusknot;
@@ -231,7 +231,7 @@ break;
         var thetaSegments = 32;
         
         var geometry = new THREE.RingBufferGeometry(innerRadius, outerRadius, thetaSegments );
-        var material = new THREE.MeshBasicMaterial( {color: "darkgreen"} );
+        var material = new THREE.MeshBasicMaterial( {color: "darkblue"} );
         var ring = new THREE.Mesh( geometry, material );
         ring.position.set(x,y,z);
         return ring;
