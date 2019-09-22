@@ -70,7 +70,8 @@
         //
         // ACTION!
         //
-        renderer.domElement.onclick = function(e) {
+        // renderer.domElement.onclick = function(e) {
+        renderer.domElement.onmousemove = function(e) {
 
 
           if (!e.shiftKey) {
@@ -105,16 +106,17 @@ console.log('Counter Value',counter);
 switch(counter) 
 {
 case 0:
-var Box = createGeometry.Box(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z)
-scene.add(Box);
-console.log('Geometry Type:', "Box");
+var TorusKnot = createGeometry.TorusKnot(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+scene.add(TorusKnot);
+console.log('Geometry Type:', "TorusKnot");
 counter++;    
 break;
 
 case 1: 
-var TorusKnot = createGeometry.TorusKnot(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
-scene.add(TorusKnot);
-console.log('Geometry Type:', "TorusKnot");
+
+var Box = createGeometry.Box(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z)
+scene.add(Box);
+console.log('Geometry Type:', "Box");
 counter++;   
 break;
 
@@ -158,9 +160,9 @@ break;
       {
 
         createGeometry.globalRadius = 10;
-        createGeometry.globalWidth = 40;
-        createGeometry.globalHeight = 40;
-        createGeometry.globalDepth = 40;
+        createGeometry.globalWidth = 20;
+        createGeometry.globalHeight = 20;
+        createGeometry.globalDepth = 20;
         createGeometry.globalInnerRadius = (createGeometry.globalRadius/2);
 
         createGeometry.TorusKnot = function (x,y,z)
