@@ -15,6 +15,8 @@
     <script>
       window.onload = function() {
 
+        // Three.js code goes here
+
         scene = new THREE.Scene();
 
         fov = 75;
@@ -27,94 +29,172 @@
 
         renderer = new THREE.WebGLRenderer();
         renderer.setSize( window.innerWidth, window.innerHeight );
-        document.body.appendChild( renderer.domElement );
+        document.body.appendChild(renderer.domElement );
+
+        function makecube(){
+        // Add cube
+        geometry = new THREE.BoxBufferGeometry( 15, 15, 15);
+        var color = new THREE.Color( rannum(),rannum(),rannum());
+        material = new THREE.MeshStandardMaterial({color: color});
+        cube = new THREE.Mesh( geometry, material);
+        scene.add(cube);
+        cube.position.set(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
+        counterCount();
+        }
+
+        function makeknot(){
+        // Add knot
+        geometry = new THREE.TorusKnotBufferGeometry( 10, 3, 100, 16);
+        var color = new THREE.Color( rannum(),rannum(),rannum());
+        material = new THREE.MeshStandardMaterial({color: color});
+        knot = new THREE.Mesh( geometry, material);
+        scene.add(knot);
+        knot.position.set(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
+        counterCount();
+        }
+
+        function makesphere(){
+        // Add sphere
+        geometry = new THREE.SphereBufferGeometry( 5, 32, 32);
+        var color = new THREE.Color( rannum(),rannum(),rannum());
+        material = new THREE.MeshStandardMaterial({color: color});
+        sphere = new THREE.Mesh( geometry, material);
+        scene.add(sphere);
+        sphere.position.set(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
+        counterCount();
+        }
+
+        function makeocta(){
+        // Add octahedron
+        geometry = new THREE.OctahedronBufferGeometry( 10);
+        var color = new THREE.Color( rannum(),rannum(),rannum());
+        material = new THREE.MeshStandardMaterial({color: color});
+        octahedron = new THREE.Mesh( geometry, material);
+        scene.add(octahedron);
+        octahedron.position.set(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
+        counterCount();
+        }
+
+        function makecone(){
+        // Add cone
+        geometry = new THREE.ConeBufferGeometry( 10, 10);
+        var color = new THREE.Color( rannum(),rannum(),rannum());
+        material = new THREE.MeshStandardMaterial({color: color});
+        cone = new THREE.Mesh( geometry, material);
+        scene.add(cone);
+        cone.position.set(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
+        counterCount();
+        }
+
+        function makering(){
+        // Add ring
+        geometry = new THREE.RingBufferGeometry( 1, 10, 32);
+        var color = new THREE.Color( rannum(),rannum(),rannum() );
+        material = new THREE.MeshStandardMaterial({color: color});
+        ring = new THREE.Mesh( geometry, material);
+        scene.add(ring);
+        ring.position.set(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
+        counterCount();
+        }
+
+        //returns a random number, made into a function if tweaking is required
+        function rannum(){
+
+            return Math.random();
+        }
+
+        //Has an array of shapes, returns random shapes
+        function newshape(){
+
+            var shapes = [makecube, makeknot, makesphere, makeocta, makecone, makering];
+
+            return shapes[Math.floor(Math.random() * shapes.length)];
+        }
         
+
+        //Keeps track of amount of shapes
+        var shapeCounter = 0;
+        function counterCount() {
+
+            shapeCounter++;
+        }
+
+        //onclick is now onmousemove
+        renderer.domElement.onmousemove = function( e ){
+
+            if (!e.shiftKey) {
+                e.preventDefault();
+                return false;
+            }
+
+            
+            //Can we click?
+            console.log('Yay! We clicked!');
+            pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+
+            //pixel coordinates
+            console.log('Pixel coords', pixel_coords);
+            vp_coords = new THREE.Vector2( 
+                        ( pixel_coords.x / window.innerWidth ) * 2 - 1,  //X
+                        -( pixel_coords.y / window.innerHeight ) * 2 + 1) // Y
+
+            //view port coordinates
+            console.log('Viewport coords', vp_coords);
+            vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+
+            raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(vp_coords_near, camera);
+            intersects = raycaster.intersectObject(invisible_plane);
+
+            first_intersection = intersects[0];
+
+            //3D position coordinates
+            console.log('3D point' + first_intersection.point);
+
+
+            //Creates a New random Shape
+            newshape()();
+
+            //Keeps track of shape count.
+            console.log('There has been ' + shapeCounter + ' shapes.');
+
+
+
+
+          };
+
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );
 
-        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        light = new THREE.DirectionalLight( 0xffffff, 5.0);
         light.position.set( 10, 100, 10 );
-        scene.add( light );
+        scene.add(light);
 
+        //Make invisible plane
+        geometry = new THREE.PlaneBufferGeometry(10000, 10000);
+        material = new THREE.MeshStandardMaterial({visible: false});
+        invisible_plane = new THREE.Mesh(geometry, material);
 
-        // now we add the cube
-        // geometry = new THREE.BoxBufferGeometry( 20, 20, 20);
-        // material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-        // cube = new THREE.Mesh( geometry, material);
-        // scene.add(cube);
-
-
-        //
-        // The invisible plane
-        //
-        geometry = new THREE.PlaneBufferGeometry( 10000, 10000 );
-        material = new THREE.MeshBasicMaterial( {
-          visible: false
-        });
-
-        invisible_plane = new THREE.Mesh( geometry, material );
-
-        scene.add( invisible_plane );
-        //
-        //
-        //
-
-
+        scene.add(invisible_plane);
 
         controls = new THREE.TrackballControls( camera );
 
         animate();
-
-
-        //
-        // ACTION!
-        //
-
-        renderer.domElement.onclick = function(e) {
-
-          if (!e.shiftKey) {
-            e.preventDefault();
-            return false;
-          }
-
-          console.log('yes! you clicked!');
-
-          pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
-
-          console.log('Pixel coordinates', pixel_coords);
-
-          vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
-                                        -( pixel_coords.y / window.innerHeight ) * 2 + 1);
-
-          console.log('Viewport coordinates', vp_coords);
-
-          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
-
-          raycaster = new THREE.Raycaster();
-          raycaster.setFromCamera(vp_coords_near, camera);
-          intersects = raycaster.intersectObject(invisible_plane);
-
-          console.log('Ray to Invisible Plane', intersects[0].point);
-
-          // update cube position
-          // cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
         
-        };
-
-        
-
-
       };
 
       function animate() {
 
         requestAnimationFrame( animate );
 
+        // console.log('check');
+
         controls.update();
-        renderer.render( scene, camera );
+
+        // and here...
+        renderer.render( scene, camera);
 
       };
-
     </script>
   </head>
   <body></body>
