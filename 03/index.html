@@ -30,6 +30,12 @@
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		document.body.appendChild(renderer.domElement);
 		renderer.domElement.onclick = function(e){
+		
+		
+			if(!e.shiftKey){
+				e.preventDefault();
+				return false;
+			}
 			pixCord = new THREE.Vector2(e.clientX, e.clientY);
 			console.log("Pixel Coords: ", pixCord);
 			
@@ -38,7 +44,19 @@
 			
 			viewCordNear = new THREE.Vector3(viewCord.x, viewCord.y, 0);
 			console.log("View Coords Near: ", viewCordNear);
+			
+			raycaster = new THREE.Raycaster();
+			raycaster.setFromCamera(viewCordNear, camera);
+			intersects = raycaster.intersectObject(invisiblePlane);
+			
+			firstIntersection = intersects[0];
+			console.log(firstIntersection.point);
+			
+			cube.position.set(firstIntersection.point.x, firstIntersection.point.y, firstIntersection.point.z);
+			
+			
 		}
+
 		
 		//Light setup
 		ambientLight = new THREE.AmbientLight();
@@ -53,6 +71,12 @@
 		cube = new THREE.Mesh(geometry, material);
 		scene.add(cube);
 		
+		geometry = new THREE.PlaneBufferGeometry(10000, 10000);
+		material = new THREE.MeshStandardMaterial({
+			visible : false
+			});
+		invisiblePlane = new THREE.Mesh(geometry, material);
+		scene.add(invisiblePlane);
 		//Controls
 		controls = new THREE.TrackballControls(camera);
 		
