@@ -25,7 +25,8 @@
         zFar = 10000;
         // console.log(ratio);
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-        camera.position.set( 0, 0, 100);
+        // placed camera futher from canvas
+        camera.position.set( 0, 0, 1000);
 
         renderer = new THREE.WebGLRenderer();
         renderer.setSize( window.innerWidth, window.innerHeight );
