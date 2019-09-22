@@ -1,87 +1,168 @@
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="UTF-8" />
     <style>
       html, body { 
         background-color:#000;
-        color: #fff;
         margin: 0;
         padding: 0;
         height: 100%;
         overflow: hidden !important;  
       }
-        #logo {
-          position: absolute;
-          right: 10px;
-          top: 10px;
-        }
     </style>
     <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script src="lodash.js"></script>
     <script>
+      function shapePicker(shapeNumber) {
+        switch (shapeNumber) {
+          case(0):
+            // Cube
+            cubeGeometry = new THREE.BoxBufferGeometry(20, 20, 20);
+            cubeMaterial = new THREE.MeshStandardMaterial();
+            cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            cube.material.color.setHex(Math.random() * 0xffffff);
+            cube.position.set(20, 20, 20);
+            return cube;
+
+          case(1):
+            // Sphere
+            sphereGeometry = new THREE.SphereBufferGeometry(20, 20, 20);
+            sphereMaterial = new THREE.MeshStandardMaterial();
+            sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            sphere.material.color.setHex(Math.random() * 0xffffff);
+            return sphere;
+
+          case(2):
+            // Torus Knot
+            torusGeometry = new THREE.TorusKnotBufferGeometry(20, 7, 1000);
+            torusMaterial = new THREE.MeshStandardMaterial();
+            torus = new THREE.Mesh(torusGeometry, torusMaterial);
+            torus.material.color.setHex(Math.random() * 0xffffff);
+            return torus;
+
+          case(3):
+            // Octahedron
+            octahedronGeometry = new THREE.OctahedronBufferGeometry(20);
+            octahedronMaterial = new THREE.MeshStandardMaterial();
+            octahedron = new THREE.Mesh(octahedronGeometry, octahedronMaterial);
+            octahedron.material.color.setHex(Math.random() * 0xffffff);
+            return octahedron;
+
+          case(4):
+            // Cone
+            coneGeometry = new THREE.ConeBufferGeometry(20, 20);
+            coneMaterial = new THREE.MeshStandardMaterial();
+            cone = new THREE.Mesh(coneGeometry, coneMaterial);
+            cone.material.color.setHex(Math.random() * 0xffffff);
+            return cone;
+
+          case(5):
+            // Ring
+            ringGeometry = new THREE.RingBufferGeometry(1, 5, 20);
+            ringMaterial = new THREE.MeshStandardMaterial();
+            ring = new THREE.Mesh(ringGeometry, ringMaterial);
+            ring.material.color.setHex(Math.random() * 0xffffff);
+            return ring;
+        }
+      }
+
       window.onload = function() {
 
-
-		// Three.js code goes here
         scene = new THREE.Scene();
-        
+
         fov = 75;
         ratio = window.innerWidth / window.innerHeight;
         zNear = 1;
         zFar = 10000;
+        // console.log(ratio);
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-        camera.position.set(0, 0, 100);
+        camera.position.set( 0, 0, 100);
 
-        // Create renderer
         renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-
-        document.body.appendChild(renderer.domElement);
-
-        // Create and configure lighting
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+        
         ambientLight = new THREE.AmbientLight();
-        scene.add(ambientLight);
+        scene.add( ambientLight );
 
-        light = new THREE.DirectionalLight(0xffffff, 3.0);
-        light.position.set(10, 100, 10);
-        scene.add(light);
+        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        light.position.set( 10, 100, 10 );
+        scene.add( light );
 
-        // Add cubes
-        geometry = new THREE.BoxBufferGeometry(20, 20, 20);
-        material = new THREE.MeshStandardMaterial({color:0x1928ff});
-        cube = new THREE.Mesh(geometry, material);
-        cube.position.set(10, 10, 10);
+        //
+        // The invisible plane
+        //
+        geometry = new THREE.PlaneBufferGeometry( 10000, 10000 );
+        material = new THREE.MeshBasicMaterial( {
+          visible: false
+        });
 
-        material2 = new THREE.MeshStandardMaterial({color: 0x84928});
-        cube2 = new THREE.Mesh(geometry, material2);
-        cube2.position.set(40, 20, 20);
+        invisible_plane = new THREE.Mesh( geometry, material );
 
-        scene.add(cube);
-        scene.add(cube2);
+        scene.add( invisible_plane );
 
-        controls = new THREE.TrackballControls(camera);
+        controls = new THREE.TrackballControls( camera );
 
         animate();
-        
+
+
+        //
+        // ACTION!
+        //
+
+        var i = 0;
+        var count = 0;
+
+        renderer.domElement.onmousemove = function(e) {
+
+          if (!e.shiftKey) {
+            e.preventDefault();
+            return false;
+          }
+
+          console.log('yes! you clicked!');
+
+          pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+
+          console.log('Pixel coordinates', pixel_coords);
+
+          vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
+                                        -( pixel_coords.y / window.innerHeight ) * 2 + 1);
+
+          console.log('Viewport coordinates', vp_coords);
+
+          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+
+          raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(vp_coords_near, camera);
+          intersects = raycaster.intersectObject(invisible_plane);
+
+          console.log('Ray to Invisible Plane', intersects[0].point);
+
+          i = Math.floor(Math.random() * 6);
+
+          var shape = shapePicker(i);
+
+          scene.add(shape);
+          count++;
+          console.log(count);
+          console.log(renderer.info);
+          shape.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);      
+        };
       };
+  
 
       function animate() {
 
         requestAnimationFrame( animate );
 
         controls.update();
-
-		// and here...
-        renderer.render(scene, camera);
+        renderer.render( scene, camera );
 
       };
+
     </script>
   </head>
-  <body>
-    <h1> CS460 Assignment 3</h1>
-    <div id ="logo">
-    <img style="height:60px" 
-    src="gfx/cs460.png"</img>
-    </div>
-  </body>
+  <body></body>
 </html>
