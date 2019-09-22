@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
+
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+    
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+      // this gets called when the site is ready
+
+      // create a new scene and renderer
+      r = new X.renderer3D();
+      r.init();
+
+    for(i = 0; i < 18;i++)
+      {    
+
+        for(j = 0; j < 18; j++)
+        {
+          draw_row([i*i,j*j,(j+i)*10], j,[i/10,j/10,(i+j)/10])
+          
+        }
+      }
+
+      r.camera.position = [0,0,1000];
+
+      // render everything!
+      r.render();
+
+
+    };
+
+    function draw_row(start, howmany, color, keeptrack) {
+
+      var gap=2;
+
+      for (var i=0; i<howmany; i++) {
+
+        c = new X.cube();
+        c.color = color;
+        c.opacity = 0.36
+
+        c.center = [start[0]+i*20+i*5, start[1], start[2]];
+        r.add(c);
+        if (keeptrack) {
+          eyes.push(c);
+        }
+
+      }
+
+    }
+
+    </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
+</html>
