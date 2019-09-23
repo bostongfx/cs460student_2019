@@ -38,10 +38,11 @@
  
  
         // now we add the cube
-        // geometry = new THREE.BoxBufferGeometry( 20, 20, 20);
         // material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        // geometry = new THREE.BoxBufferGeometry(20,20,20);
         // cube = new THREE.Mesh( geometry, material);
-        // scene.add(cube);
+        // cube.position.set(0,0,0);
+         //scene.add(cube);
  
  
         //
@@ -95,6 +96,58 @@
           intersects = raycaster.intersectObject(invisible_plane);
  
           console.log('Ray to Invisible Plane', intersects[0].point);
+
+          var number = Math.floor(Math.random() * 7);
+          console.log(number);
+          var colorrandom = Math.random();
+          console.log(colorrandom);
+          if (number == 1) {
+          	geometry = new THREE.BoxBufferGeometry(20,20,20);
+          	material = new THREE.MeshStandardMaterial({ color: colorrandom * 0xffffff });
+          	cube = new THREE.Mesh( geometry, material );
+          	cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+          	scene.add(cube);
+          }
+          if (number == 2) {
+          	geometry = new THREE.TorusKnotBufferGeometry(20,20,20,20);
+          	material = new THREE.MeshStandardMaterial({ color: colorrandom * 0xffffff });
+          	cube = new THREE.Mesh( geometry, material );
+          	cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+          	scene.add(cube);
+          }
+          if (number == 3) {
+          	geometry = new THREE.SphereBufferGeometry(20,20,20);
+          	material = new THREE.MeshStandardMaterial({ color: colorrandom * 0xffffff });
+          	cube = new THREE.Mesh( geometry, material );
+          	cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+          	scene.add(cube);
+          }
+          if (number == 4) {
+          	geometry = new THREE.OctahedronBufferGeometry(20);
+          	material = new THREE.MeshStandardMaterial({ color: colorrandom * 0xffffff });
+          	cube = new THREE.Mesh( geometry, material );
+          	cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+          	scene.add(cube);
+          }
+          if (number == 5) {
+          	geometry = new THREE.ConeBufferGeometry(20,20);
+          	material = new THREE.MeshStandardMaterial({ color: colorrandom * 0xffffff });
+          	cube = new THREE.Mesh( geometry, material );
+          	cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+          	scene.add(cube);
+          }
+          if (number == 6) {
+          	geometry = new THREE.RingBufferGeometry(20,20,20);
+          	material = new THREE.MeshStandardMaterial({ color: colorrandom * 0xffffff });
+          	cube = new THREE.Mesh( geometry, material );
+          	cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+
+          	scene.add(cube); 
+          }
+          else {
+          	console.log('help please');
+          }
+
  
           // update cube position
           // cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
