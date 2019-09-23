@@ -31,12 +31,21 @@
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( renderer.domElement );
 
-        ambientLight = new THREE.AmbientLight( 0x404040 );
-        scene.add( ambientLight );
+        var ambientLight = new THREE.AmbientLight( 0x000000 );
+  			scene.add( ambientLight );
 
-       light = new THREE.DirectionalLight( 0xffffff, .5 );
-       light.position.set( 10, 100, 10 );
-       scene.add( light );
+  			var lights = [];
+  			lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+  			lights[ 1 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+  			lights[ 2 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+
+  			lights[ 0 ].position.set( 0, 200, 0 );
+  			lights[ 1 ].position.set( 100, 200, 100 );
+  			lights[ 2 ].position.set( - 100, - 200, - 100 );
+
+  			scene.add( lights[ 0 ] );
+  			scene.add( lights[ 1 ] );
+  			scene.add( lights[ 2 ] );
 
        // c is a random color in hex
        // s is a random value between -5 and 5
@@ -52,7 +61,7 @@
         function makeKnot(c, s){
           // now we add the knot
           var geometry = new THREE.TorusKnotBufferGeometry( 10 + s, 3, 100, 16 );
-          var material = new THREE.MeshBasicMaterial( { color: '#' + c } );
+          var material = new THREE.MeshStandardMaterial( { color: '#' + c } );
           var torusKnot = new THREE.Mesh( geometry, material );
           // update position
           torusKnot.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
@@ -61,7 +70,7 @@
         function makeSphere(c, s){
           // now we add the knot
           var geometry = new THREE.SphereBufferGeometry( 6 + s, 32, 32 );
-          var material = new THREE.MeshBasicMaterial( {color: '#' + c} );
+          var material = new THREE.MeshStandardMaterial( {color: '#' + c} );
           var sphere = new THREE.Mesh( geometry, material );
           // update position
           sphere.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
@@ -70,7 +79,7 @@
         function makeOctahedron(c, s){
           // now we add the knot
           var geometry = new THREE.OctahedronBufferGeometry( 10 + s );
-          var material = new THREE.MeshBasicMaterial( {color: '#' + c} );
+          var material = new THREE.MeshStandardMaterial( {color: '#' + c} );
           var octahedron = new THREE.Mesh( geometry, material );
           // update position
           octahedron.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
@@ -79,7 +88,7 @@
         function makeCone(c, s){
           // now we add the knot
           var geometry = new THREE.ConeBufferGeometry( 5+ s, 10 + s, 16 );
-          var material = new THREE.MeshBasicMaterial( {color: '#' + c} );
+          var material = new THREE.MeshStandardMaterial( {color: '#' + c} );
           var cone = new THREE.Mesh( geometry, material );
           // update position
           cone.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
@@ -88,7 +97,7 @@
         function makeRing(c, s){
           // now we add the knot
           var geometry = new THREE.RingBufferGeometry( 1 + s, 5 + s, 16 );
-          var material = new THREE.MeshBasicMaterial( { color: '#' + c, side: THREE.DoubleSide } );
+          var material = new THREE.MeshStandardMaterial( { color: '#' + c, side: THREE.DoubleSide } );
           var mesh = new THREE.Mesh( geometry, material );
           // update position
           mesh.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
