@@ -23,38 +23,93 @@
 		zNear = 1;
 		zFar = 10000;
 		camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-		camera.position.set(0, 0, 100);
+		camera.position.set(0, 0, 150);
 		
 		//Canvas/Renderer setup
 		renderer = new THREE.WebGLRenderer();
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		document.body.appendChild(renderer.domElement);
-		renderer.domElement.onclick = function(e){
 		
+		
+		triCount = new THREE.BoxGeometry(10, 10, 10);
+		console.log("Box: " + triCount.faces.length);
+		triCount = new THREE.TorusKnotGeometry(5, 2, 64, 8);
+		console.log("Torus Knot: " + triCount.faces.length);
+		triCount = new THREE.SphereGeometry(10, 16, 16);
+		console.log("Sphere: " + triCount.faces.length);
+		triCount = new THREE.OctahedronGeometry(10);
+		console.log("Octahedron: " + triCount.faces.length);
+		triCount = new THREE.ConeGeometry(10, 20);
+		console.log("Cone: " + triCount.faces.length);
+		triCount = new THREE.RingGeometry(5, 10, 32);
+		console.log("Ring: " + triCount.faces.length);
+		triCount = new THREE.BoxGeometry(10, 10, 10);
+		
+		
+		objCount = 0;
+		renderer.domElement.onmousemove = function(e){
+			
 		
 			if(!e.shiftKey){
 				e.preventDefault();
 				return false;
 			}
-			pixCord = new THREE.Vector2(e.clientX, e.clientY);
-			console.log("Pixel Coords: ", pixCord);
 			
-			viewCord = new THREE.Vector2((pixCord.x / window.innerWidth) * 2 - 1, -(pixCord.y / window.innerWidth) * 2 + 1);
-			console.log("View Coords: ", viewCord);
+
+			pixCord = new THREE.Vector2(e.clientX, e.clientY);		
+			viewCord = new THREE.Vector2((pixCord.x / window.innerWidth) * 2 - 1, -(pixCord.y / window.innerHeight) * 2 + 1);
+
 			
 			viewCordNear = new THREE.Vector3(viewCord.x, viewCord.y, 0);
-			console.log("View Coords Near: ", viewCordNear);
+
 			
 			raycaster = new THREE.Raycaster();
 			raycaster.setFromCamera(viewCordNear, camera);
 			intersects = raycaster.intersectObject(invisiblePlane);
 			
-			firstIntersection = intersects[0];
-			console.log(firstIntersection.point);
+			newShapePos = intersects[0].point;
+			//console.log('Clicked at', intersects[0].point);
 			
-			cube.position.set(firstIntersection.point.x, firstIntersection.point.y, firstIntersection.point.z);
+			newShapeVal = Math.floor(Math.random() * 6); //Int vals from 0 - 4 for 6 shapes
+			newColor = new THREE.Color(Math.random(), Math.random(), Math.random()); //Colors from 0 - 1
+			
+			switch(newShapeVal){
+				case 0:
+					newShapeGeo = new THREE.BoxBufferGeometry(10, 10, 10);
+					break;
+				case 1:
+					newShapeGeo = new THREE.TorusKnotBufferGeometry(5, 2, 64, 8);
+					break;
+				case 2:
+					newShapeGeo = new THREE.SphereBufferGeometry(10, 16, 16);
+					break;
+				case 3:
+					newShapeGeo = new THREE.OctahedronBufferGeometry(10);
+					break;
+				case 4:
+					newShapeGeo = new THREE.ConeBufferGeometry(10, 20);
+					break;
+				case 5:
+					newShapeGeo = new THREE.RingBufferGeometry(5, 10, 32);
+					break;
+				default:
+					newShapeGeo = new THREE.BoxBufferGeometry(10, 10, 10);
+					break
 			
 			
+			}
+			
+			
+			newShapeMat = new THREE.MeshStandardMaterial({
+				color : newColor,
+				wireframe : false
+			});
+			newShape = new THREE.Mesh(newShapeGeo, newShapeMat);
+			newShape.position.set(newShapePos.x, newShapePos.y, newShapePos.z);
+			//console.log(newShape.position);
+			scene.add(newShape);
+			objCount++;
+			console.log(objCount);
 		}
 
 		
@@ -66,11 +121,6 @@
 		scene.add(light);
 		
 		//Geometry
-		geometry = new THREE.BoxBufferGeometry(20, 20, 20);
-		material = new THREE.MeshStandardMaterial({color : 0xffffff});
-		cube = new THREE.Mesh(geometry, material);
-		scene.add(cube);
-		
 		geometry = new THREE.PlaneBufferGeometry(10000, 10000);
 		material = new THREE.MeshStandardMaterial({
 			visible : false
