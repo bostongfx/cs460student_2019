@@ -1,0 +1,194 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body { 
+        background-color:#000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+      }
+    </style>
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script>
+      window.onload = function() {
+
+        function randomColor(){
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++){
+                color += letters[Math.floor(Math.random()*16)];
+            }
+            return color;
+        }
+
+        function random(){
+            return Math.ceil(Math.random()*6);
+        }
+
+        function random_func(X, Y, Z){
+            var i = random();
+            eval('func' + i + '(' + X + ', ' + Y + ', ' + Z + ')');
+        }
+        // Three.js code goes here
+        
+        scene = new THREE.Scene();
+
+        fov = 75;
+        ratio = window.innerWidth / window.innerHeight;
+        zNear = 1;
+        zFar = 10000;
+        count = 0;
+        // console.log(ratio);
+        camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camera.position.set( 0, 0, 100);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild(renderer.domElement );
+
+        renderer.domElement.onmousemove = function( e ){
+          
+            //console.log(e);
+            
+            //when it's onmousemoves
+            if(!e.shiftKey){
+              e.preventDefault();
+              return false;
+            }
+
+            pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+
+            console.log('Pixel coords', pixel_coords);
+
+            vp_coords = new THREE.Vector2( 
+                        ( pixel_coords.x / window.innerWidth ) * 2 - 1,  //X
+                        -( pixel_coords.y / window.innerHeight ) * 2 + 1) // Y
+
+            console.log('Viewport coords', vp_coords);
+
+            vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+
+            raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(vp_coords_near, camera);
+            intersects = raycaster.intersectObject(invisible_plane);
+            first_intersection = intersects[0];
+            console.log(first_intersection);
+            //random calling the function
+            random_func(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
+            
+            count++;
+            console.log(count);
+
+        };
+
+        function func1(X, Y, Z){   //BoxBufferGeometry
+            //(width, height, depth)
+            geo = new THREE.BoxBufferGeometry(10, 10, 10);
+            mat = new THREE.MeshStandardMaterial({color: randomColor()});
+            mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(X, Y, Z);
+            scene.add(mesh);
+            animate();
+            console.log(1);
+        }
+
+        function func2(X, Y, Z){   //TorusKnotBufferGeometry
+            //(radius, tube, tubularSegament, radiusSegament)
+            geo = new THREE.TorusKnotBufferGeometry(5, 3, 64, 8);
+            mat = new THREE.MeshStandardMaterial({color: randomColor()});
+            mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(X, Y, Z);
+            scene.add(mesh);
+            animate();
+            console.log(2);
+        }
+
+        function func3(X, Y, Z){   //SphereBufferGeometry
+            //(radius, widthSegament > 3, heightSegament > 2)
+            geo = new THREE.SphereBufferGeometry(7, 32, 22);
+            mat = new THREE.MeshStandardMaterial({color: randomColor()});
+            mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(X, Y, Z);
+            scene.add(mesh);
+            animate();
+            console.log(3);
+        }
+
+        function func4(X, Y, Z){   //OctahedronBufferGeometry
+            //(radius)
+            geo = new THREE.OctahedronBufferGeometry(10);
+            mat = new THREE.MeshStandardMaterial({color: randomColor()});
+            mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(X, Y, Z);
+            scene.add(mesh);
+            animate();
+            console.log(4);
+        }
+
+        function func5(X, Y, Z){   //ConeBufferGeometry
+            //(radius, height, radiusSegament)
+            geo = new THREE.ConeBufferGeometry(7, 10, 10);
+            mat = new THREE.MeshStandardMaterial({color: randomColor()});
+            mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(X, Y, Z);
+            scene.add(mesh);
+            animate();
+            console.log(5);
+        }
+
+        function func6(X, Y, Z){   //RingBufferGeometry
+            //(innerRadius, outerRadius, thetaSegament > 3)
+            geo = new THREE.RingBufferGeometry(7, 11, 8);
+            mat = new THREE.MeshStandardMaterial({color: randomColor(), 
+            side: THREE.DoubleSide});
+            mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(X, Y, Z);
+            scene.add(mesh);
+            animate();
+            console.log(6);
+        }
+
+        ambientLight = new THREE.AmbientLight();
+        scene.add( ambientLight );
+
+        light = new THREE.DirectionalLight( 0xffffff, 5.0);
+        light.position.set( 10, 100, 10 );
+        scene.add(light);
+
+        // now we add the cube
+        // geometry = new THREE.BoxBufferGeometry(10, 10, 10);
+        // material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        // cube = new THREE.Mesh( geometry, material);
+        // // cube.position.set(10, 10, 10)
+        // scene.add(cube);
+
+        geometry = new THREE.PlaneBufferGeometry(10000, 10000);
+        material = new THREE.MeshStandardMaterial({visible: false});
+        invisible_plane = new THREE.Mesh(geometry, material);
+        scene.add(invisible_plane);
+
+        controls = new THREE.TrackballControls( camera );
+
+        animate();
+        
+      };
+
+      function animate() {
+
+        requestAnimationFrame( animate );
+
+        // console.log('check');
+
+        controls.update();
+
+        // and here...
+        renderer.render( scene, camera);
+
+      };
+    </script>
+  </head>
+  <body></body>
+</html>
