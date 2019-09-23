@@ -78,7 +78,7 @@
         }
         function makeCone(c, s){
           // now we add the knot
-          var geometry = new THREE.ConeBufferGeometry( 5+ s, 10 + s, 32 );
+          var geometry = new THREE.ConeBufferGeometry( 5+ s, 10 + s, 16 );
           var material = new THREE.MeshBasicMaterial( {color: '#' + c} );
           var cone = new THREE.Mesh( geometry, material );
           // update position
@@ -87,7 +87,7 @@
         }
         function makeRing(c, s){
           // now we add the knot
-          var geometry = new THREE.RingBufferGeometry( 1 + s, 5 + s, 32 );
+          var geometry = new THREE.RingBufferGeometry( 1 + s, 5 + s, 16 );
           var material = new THREE.MeshBasicMaterial( { color: '#' + c, side: THREE.DoubleSide } );
           var mesh = new THREE.Mesh( geometry, material );
           // update position
