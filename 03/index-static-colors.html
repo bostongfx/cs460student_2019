@@ -49,7 +49,7 @@
         // The invisible plane
         //
         geometry = new THREE.PlaneBufferGeometry( 10000, 10000 );
-        material = new THREE.MeshBasicMaterial( {
+        material = new THREE.MeshStandardMaterial( {
           visible: false
         });
 
@@ -177,7 +177,7 @@ break;
         var geometry = new THREE.TorusKnotBufferGeometry(radius, tube, tubularSegments, radialSegments);
         var colorRandom = createGeometry.GetRandomColor().toString();
         createGeometry.previousColor = colorRandom;
-        var material = new THREE.MeshBasicMaterial( {color: colorRandom} );
+        var material = new THREE.MeshStandardMaterial( {color: colorRandom} );
         var torusknot = new THREE.Mesh( geometry, material );
         torusknot.position.set(x,y,z)
         return torusknot;
@@ -193,7 +193,7 @@ break;
         var geometry = new THREE.BoxBufferGeometry( width, height, depth);
         var colorRandom = createGeometry.GetRandomColor().toString();
         createGeometry.previousColor = colorRandom;
-        var material = new THREE.MeshBasicMaterial( {color: colorRandom } );
+        var material = new THREE.MeshStandardMaterial( {color: colorRandom } );
         var box = new THREE.Mesh( geometry, material );
         box.position.set(x,y,z);
         return box;
@@ -207,7 +207,7 @@ break;
         var colorRandom = createGeometry.GetRandomColor().toString();
         createGeometry.previousColor = colorRandom;
         var geometry = new THREE.OctahedronBufferGeometry(radius, detail);
-        var material = new THREE.MeshBasicMaterial( {color: colorRandom } );
+        var material = new THREE.MeshStandardMaterial( {color: colorRandom } );
         var octahedron = new THREE.Mesh( geometry, material );
         octahedron.position.set(x,y,z);
         return octahedron;
@@ -223,7 +223,7 @@ break;
         var geometry = new THREE.ConeBufferGeometry( radius, height, radialSegments );
         var colorRandom = createGeometry.GetRandomColor().toString();
         createGeometry.previousColor = colorRandom;
-        var material = new THREE.MeshBasicMaterial( {color: colorRandom } );
+        var material = new THREE.MeshStandardMaterial( {color: colorRandom } );
         var cone = new THREE.Mesh( geometry, material );
         cone.position.set(x,y,z);
         return cone;
@@ -239,7 +239,7 @@ break;
         var geometry = new THREE.RingBufferGeometry(innerRadius, outerRadius, thetaSegments );
         var colorRandom = createGeometry.GetRandomColor().toString();
         createGeometry.previousColor = colorRandom;
-        var material = new THREE.MeshBasicMaterial( {color: colorRandom } );
+        var material = new THREE.MeshStandardMaterial( {color: colorRandom } );
         var ring = new THREE.Mesh( geometry, material );
         ring.position.set(x,y,z);
         return ring;
@@ -254,7 +254,7 @@ break;
         var geometry = new THREE.SphereBufferGeometry( radius, widthSegments, heightSegments);
         var colorRandom = createGeometry.GetRandomColor().toString();
         createGeometry.previousColor = colorRandom;
-        var material = new THREE.MeshBasicMaterial( {color:  colorRandom } );
+        var material = new THREE.MeshStandardMaterial( {color:  colorRandom } );
         var sphere = new THREE.Mesh( geometry, material );
         sphere.position.set(x, y, z);
         return sphere;

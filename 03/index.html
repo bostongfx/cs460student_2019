@@ -31,7 +31,10 @@
         document.body.appendChild( renderer.domElement );
         
         ambientLight = new THREE.AmbientLight();
+
         scene.add( ambientLight );
+
+
 
         light = new THREE.DirectionalLight( 0xffffff, 5.0 );
         light.position.set( 10, 100, 10 );
@@ -49,7 +52,7 @@
         // The invisible plane
         //
         geometry = new THREE.PlaneBufferGeometry( 10000, 10000 );
-        material = new THREE.MeshBasicMaterial( {
+        material = new THREE.MeshStandardMaterial( {
           visible: false
         });
 
@@ -71,9 +74,37 @@
         // ACTION!
         //
         renderer.domElement.onclick = function(e) {
+
+          if (!e.shiftKey) {
+            e.preventDefault();
+            return false;
+          }
+ 
+          console.log('yes! you clicked!');
+ 
+          pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+ 
+          console.log('Pixel coordinates', pixel_coords);
+ 
+          vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
+                                        -( pixel_coords.y / window.innerHeight ) * 2 + 1);
+ 
+          console.log('Viewport coordinates', vp_coords);
+ 
+          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+ 
+          raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(vp_coords_near, camera);
+          intersects = raycaster.intersectObject(invisible_plane);
+ 
+          console.log('Ray to Invisible Plane', intersects[0].point);
+ 
+          // update cube position
+          // cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+        
         // renderer.domElement.onmousemove = function(e) {
 
-
+/*
           if (!e.shiftKey) {
             e.preventDefault();
             return false;
@@ -102,6 +133,8 @@
           // console.log('Ray to Invisible Plane', intersects[0].point);
 
 console.log('Counter Value',counter);
+
+*/
 
 switch(counter) 
 {
@@ -175,7 +208,7 @@ break;
 
         var geometry = new THREE.TorusKnotBufferGeometry(radius, tube, tubularSegments, radialSegments);
 
-        var material = new THREE.MeshBasicMaterial( { color: "darkgreen" } );
+        var material = new THREE.MeshStandardMaterial( { color: "darkgreen" } );
         var torusknot = new THREE.Mesh( geometry, material );
         torusknot.position.set(x,y,z)
         return torusknot;
@@ -189,7 +222,7 @@ break;
         var depth = createGeometry.globalDepth;
 
         var geometry = new THREE.BoxBufferGeometry( width, height, depth);
-        var material = new THREE.MeshBasicMaterial( {color: "white"} );
+        var material = new THREE.MeshStandardMaterial( {color: "white"} );
         var box = new THREE.Mesh( geometry, material );
         box.position.set(x,y,z);
         return box;
@@ -202,7 +235,7 @@ break;
         var detail = 1;
 
         var geometry = new THREE.OctahedronBufferGeometry(radius, detail);
-        var material = new THREE.MeshBasicMaterial( {color: "yellow"} );
+        var material = new THREE.MeshStandardMaterial( {color: "yellow"} );
         var octahedron = new THREE.Mesh( geometry, material );
         octahedron.position.set(x,y,z);
         return octahedron;
@@ -216,7 +249,7 @@ break;
         var radialSegments = 32;
         
         var geometry = new THREE.ConeBufferGeometry( radius, height, radialSegments );
-        var material = new THREE.MeshBasicMaterial( {color: "darkred"} );
+        var material = new THREE.MeshStandardMaterial( {color: "darkred"} );
         var cone = new THREE.Mesh( geometry, material );
         cone.position.set(x,y,z);
         return cone;
@@ -231,7 +264,7 @@ break;
         var thetaSegments = 32;
         
         var geometry = new THREE.RingBufferGeometry(innerRadius, outerRadius, thetaSegments );
-        var material = new THREE.MeshBasicMaterial( {color: "darkblue"} );
+        var material = new THREE.MeshStandardMaterial( {color: "darkblue"} );
         var ring = new THREE.Mesh( geometry, material );
         ring.position.set(x,y,z);
         return ring;
@@ -245,7 +278,7 @@ break;
         var heightSegments = createGeometry.globalHeight;
 
         var geometry = new THREE.SphereBufferGeometry( radius, widthSegments, heightSegments);
-        var material = new THREE.MeshBasicMaterial( {color: "purple"} );
+        var material = new THREE.MeshStandardMaterial( {color: "purple"} );
         var sphere = new THREE.Mesh( geometry, material );
         sphere.position.set(x, y, z);
         return sphere;
