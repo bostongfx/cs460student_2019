@@ -12,7 +12,6 @@
     </style>
     <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
-    <script src="lodash.js"></script>
     <script>
       function shapePicker(shapeNumber) {
         switch (shapeNumber) {
@@ -22,7 +21,6 @@
             cubeMaterial = new THREE.MeshStandardMaterial();
             cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
             cube.material.color.setHex(Math.random() * 0xffffff);
-            cube.position.set(20, 20, 20);
             return cube;
 
           case(1):
