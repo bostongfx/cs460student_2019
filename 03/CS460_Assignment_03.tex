@@ -93,8 +93,10 @@ Link to your assignment: \url{https://hltdev8642.github.io/cs460student/03/index
 \vspace{.5cm} % add some space
 
 \noindent Part 1 (5 points): Do you observe Z-Fighting? If yes, when?
+
 \\~\\
-Generally no, however it can be observed at an extremely close-up zoom level (see image below).
+Yes.
+It is seen most at the points in the scene that have the highest density of geometries, or regions in which there are many overlapping objects/polygons.
 \vspace{1cm}
 
 
@@ -119,20 +121,44 @@ Generally no, however it can be observed at an extremely close-up zoom level (se
 
 \noindent Part 3 (18 points): Please keep track of the number of placed objects and print the count in the JavaScript console. Now, with the change to \url{window.onmousemove}, after how many objects do you see a slower rendering performance? 
 \\~\\
-YOUR ANSWER
+\noindent I honestly couldn't reach a number that it started to decline. The count I was at however was at 3441 objects and there still was very little noticeable drop in performance.
+
+\vspace{.5cm}
+
+\noindent However I realized through use of the Application/Memory inspector in chrome that my visual assessment of performance was probably not too accurate, as the trace revealed a very well-defined point in the runtime when the performance decreased. 
+
+\vspace{.5cm}
+(***See screenshot below***)
+\vspace{1cm}
+
+
+\begin{center}
+    \includegraphics[width=1.0\textwidth]{gfx/performance-monitor-check-1.png}
+\end{center}
 
 \vspace{1cm}
 
+\clearpage
+
 \noindent What happens if the console is not open during drawing?
 \\~\\
-YOUR ANSWER
-
+\noindent The performance \textit{may} have increased slightly, however it was nothing too significant if any. Also, it would be difficult to use the performance monitor (to check the performance), as this is ironically part of the console/inspector panel...
 \vspace{1cm}
 
 \noindent Can you estimate the total number of triangles drawn as soon as slow-down occurs?
 \\~\\
-YOUR ANSWER
+\noindent A lot....
+\vspace{.5cm}
+
+\noindent Using the console command "renderer.info.render.triangles", I was able to determine that for one of each type of geometry the total number of triangles is \textbf{4164}.
+
+\vspace{.5cm}
 
 
+\noindent If we assume the slowdown happened at 3241 objects (as mentioned prior), that would be:
+\noindent\textbf{4164 triangles per iteration X 3241 / 6 objects per iteration = (3241/6) * 4164}
+\vspace{.5cm}
+
+\noindent\underline{= A GRAND TOTAL OF (APPROX):} \textbf{1750140 triangles}
 
 \end{document}

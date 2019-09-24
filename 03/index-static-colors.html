@@ -31,7 +31,10 @@
         document.body.appendChild( renderer.domElement );
         
         ambientLight = new THREE.AmbientLight();
+
         scene.add( ambientLight );
+
+
 
         light = new THREE.DirectionalLight( 0xffffff, 5.0 );
         light.position.set( 10, 100, 10 );
@@ -71,9 +74,37 @@
         // ACTION!
         //
         renderer.domElement.onclick = function(e) {
+
+          if (!e.shiftKey) {
+            e.preventDefault();
+            return false;
+          }
+ 
+          console.log('yes! you clicked!');
+ 
+          pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+ 
+          console.log('Pixel coordinates', pixel_coords);
+ 
+          vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
+                                        -( pixel_coords.y / window.innerHeight ) * 2 + 1);
+ 
+          console.log('Viewport coordinates', vp_coords);
+ 
+          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+ 
+          raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(vp_coords_near, camera);
+          intersects = raycaster.intersectObject(invisible_plane);
+ 
+          console.log('Ray to Invisible Plane', intersects[0].point);
+ 
+          // update cube position
+          // cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+        
         // renderer.domElement.onmousemove = function(e) {
 
-
+/*
           if (!e.shiftKey) {
             e.preventDefault();
             return false;
@@ -102,6 +133,8 @@
           // console.log('Ray to Invisible Plane', intersects[0].point);
 
 console.log('Counter Value',counter);
+
+*/
 
 switch(counter) 
 {
@@ -164,7 +197,6 @@ break;
         createGeometry.globalHeight = 20;
         createGeometry.globalDepth = 20;
         createGeometry.globalInnerRadius = (createGeometry.globalRadius/2);
-        createGeometry.previousColor = '';
 
         createGeometry.TorusKnot = function (x,y,z)
         {
@@ -175,9 +207,8 @@ break;
         var radialSegments = 16;
 
         var geometry = new THREE.TorusKnotBufferGeometry(radius, tube, tubularSegments, radialSegments);
-        var colorRandom = createGeometry.GetRandomColor().toString();
-        createGeometry.previousColor = colorRandom;
-        var material = new THREE.MeshStandardMaterial( {color: colorRandom} );
+
+        var material = new THREE.MeshStandardMaterial( { color: "darkgreen" } );
         var torusknot = new THREE.Mesh( geometry, material );
         torusknot.position.set(x,y,z)
         return torusknot;
@@ -191,9 +222,7 @@ break;
         var depth = createGeometry.globalDepth;
 
         var geometry = new THREE.BoxBufferGeometry( width, height, depth);
-        var colorRandom = createGeometry.GetRandomColor().toString();
-        createGeometry.previousColor = colorRandom;
-        var material = new THREE.MeshStandardMaterial( {color: colorRandom } );
+        var material = new THREE.MeshStandardMaterial( {color: "white"} );
         var box = new THREE.Mesh( geometry, material );
         box.position.set(x,y,z);
         return box;
@@ -204,10 +233,9 @@ break;
 
         var radius = createGeometry.globalRadius;
         var detail = 1;
-        var colorRandom = createGeometry.GetRandomColor().toString();
-        createGeometry.previousColor = colorRandom;
+
         var geometry = new THREE.OctahedronBufferGeometry(radius, detail);
-        var material = new THREE.MeshStandardMaterial( {color: colorRandom } );
+        var material = new THREE.MeshStandardMaterial( {color: "yellow"} );
         var octahedron = new THREE.Mesh( geometry, material );
         octahedron.position.set(x,y,z);
         return octahedron;
@@ -221,9 +249,7 @@ break;
         var radialSegments = 32;
         
         var geometry = new THREE.ConeBufferGeometry( radius, height, radialSegments );
-        var colorRandom = createGeometry.GetRandomColor().toString();
-        createGeometry.previousColor = colorRandom;
-        var material = new THREE.MeshStandardMaterial( {color: colorRandom } );
+        var material = new THREE.MeshStandardMaterial( {color: "darkred"} );
         var cone = new THREE.Mesh( geometry, material );
         cone.position.set(x,y,z);
         return cone;
@@ -236,10 +262,9 @@ break;
         var innerRadius = createGeometry.globalInnerRadius;
         var outerRadius = createGeometry.globalRadius;
         var thetaSegments = 32;
+        
         var geometry = new THREE.RingBufferGeometry(innerRadius, outerRadius, thetaSegments );
-        var colorRandom = createGeometry.GetRandomColor().toString();
-        createGeometry.previousColor = colorRandom;
-        var material = new THREE.MeshStandardMaterial( {color: colorRandom } );
+        var material = new THREE.MeshStandardMaterial( {color: "darkblue"} );
         var ring = new THREE.Mesh( geometry, material );
         ring.position.set(x,y,z);
         return ring;
@@ -251,200 +276,13 @@ break;
         var radius = createGeometry.globalRadius;
         var widthSegments = createGeometry.globalWidth;
         var heightSegments = createGeometry.globalHeight;
+
         var geometry = new THREE.SphereBufferGeometry( radius, widthSegments, heightSegments);
-        var colorRandom = createGeometry.GetRandomColor().toString();
-        createGeometry.previousColor = colorRandom;
-        var material = new THREE.MeshStandardMaterial( {color:  colorRandom } );
+        var material = new THREE.MeshStandardMaterial( {color: "purple"} );
         var sphere = new THREE.Mesh( geometry, material );
         sphere.position.set(x, y, z);
         return sphere;
       };
-
-      createGeometry.GetRandomColor = function ()
-      {
-     
-
-
-            var CSS_COLOR_NAMES = [
-            'aliceblue',
-            'antiquewhite',
-            'aqua',
-            'aquamarine',
-            'azure',
-            'beige',
-            'bisque',
-            'black',
-            'blanchedalmond',
-            'blue',
-            'blueviolet',
-            'brown',
-            'burlywood',
-            'cadetblue',
-            'chartreuse',
-            'chocolate',
-            'coral',
-            'cornflowerblue',
-            'cornsilk',
-            'crimson',
-            'cyan',
-            'darkblue',
-            'darkcyan',
-            'darkgoldenrod',
-            'darkgray',
-            'darkgrey',
-            'darkgreen',
-            'darkkhaki',
-            'darkmagenta',
-            'darkolivegreen',
-            'darkorange',
-            'darkorchid',
-            'darkred',
-            'darksalmon',
-            'darkseagreen',
-            'darkslateblue',
-            'darkslategray',
-            'darkslategrey',
-            'darkturquoise',
-            'darkviolet',
-            'deeppink',
-            'deepskyblue',
-            'dimgray',
-            'dimgrey',
-            'dodgerblue',
-            'firebrick',
-            'floralwhite',
-            'forestgreen',
-            'fuchsia',
-            'gainsboro',
-            'ghostwhite',
-            'gold',
-            'goldenrod',
-            'gray',
-            'grey',
-            'green',
-            'greenyellow',
-            'honeydew',
-            'hotpink',
-            'indianred',
-            'indigo',
-            'ivory',
-            'khaki',
-            'lavender',
-            'lavenderblush',
-            'lawngreen',
-            'lemonchiffon',
-            'lightblue',
-            'lightcoral',
-            'lightcyan',
-            'lightgoldenrodyellow',
-            'lightgray',
-            'lightgrey',
-            'lightgreen',
-            'lightpink',
-            'lightsalmon',
-            'lightseagreen',
-            'lightskyblue',
-            'lightslategray',
-            'lightslategrey',
-            'lightsteelblue',
-            'lightyellow',
-            'lime',
-            'limegreen',
-            'linen',
-            'magenta',
-            'maroon',
-            'mediumaquamarine',
-            'mediumblue',
-            'mediumorchid',
-            'mediumpurple',
-            'mediumseagreen',
-            'mediumslateblue',
-            'mediumspringgreen',
-            'mediumturquoise',
-            'mediumvioletred',
-            'midnightblue',
-            'mintcream',
-            'mistyrose',
-            'moccasin',
-            'navajowhite',
-            'navy',
-            'oldlace',
-            'olive',
-            'olivedrab',
-            'orange',
-            'orangered',
-            'orchid',
-            'palegoldenrod',
-            'palegreen',
-            'paleturquoise',
-            'palevioletred',
-            'papayawhip',
-            'peachpuff',
-            'peru',
-            'pink',
-            'plum',
-            'powderblue',
-            'purple',
-            'red',
-            'rosybrown',
-            'royalblue',
-            'saddlebrown',
-            'salmon',
-            'sandybrown',
-            'seagreen',
-            'seashell',
-            'sienna',
-            'silver',
-            'skyblue',
-            'slateblue',
-            'slategray',
-            'slategrey',
-            'snow',
-            'springgreen',
-            'steelblue',
-            'tan',
-            'teal',
-            'thistle',
-            'tomato',
-            'turquoise',
-            'violet',
-            'wheat',
-            'white',
-            'whitesmoke',
-            'yellow',
-            'yellowgreen'
-            ];
-                
-        // var randColorIDX = 
-       var colorNew = CSS_COLOR_NAMES[createGeometry.GetRandomInt(148)];
-       if (colorNew == createGeometry.previousColor)
-       {
-        colorNew = CSS_COLOR_NAMES[createGeometry.GetRandomInt(148)];
-       }
-       return colorNew;
-       
-
-
-
-
-      };
-
-
-      createGeometry.GetRandomInt = function (max)
-      {
-        return Math.floor(Math.random() * Math.floor(max));
-
-        console.log(getRandomInt(3));
-        // expected output: 0, 1 or 2
-
-        console.log(getRandomInt(1));
-        // expected output: 0
-
-        console.log(Math.random());
-        // expected output: a number between 0 and 1
-      };
-
-
     };
 
       function animate() {
