@@ -70,6 +70,7 @@
         // ACTION!
         //
 
+        var count = 0;
         
         window.onmousemove = function(e) {
         //renderer.domElement.onclick = function(e) {
@@ -79,16 +80,18 @@
             return false;
           }
 
-          console.log('yes! you clicked!');
+          count = count + 1;
+
+          console.log('count', count);
 
           pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
 
-          console.log('Pixel coordinates', pixel_coords);
+          //console.log('Pixel coordinates', pixel_coords);
 
           vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
                                         -( pixel_coords.y / window.innerHeight ) * 2 + 1);
 
-          console.log('Viewport coordinates', vp_coords);
+          //console.log('Viewport coordinates', vp_coords);
 
           vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
 
@@ -96,7 +99,7 @@
           raycaster.setFromCamera(vp_coords_near, camera);
           intersects = raycaster.intersectObject(invisible_plane);
 
-          console.log('Ray to Invisible Plane', intersects[0].point);
+          //console.log('Ray to Invisible Plane', intersects[0].point);
 
           // randomly generated a geometry
           var random = Math.floor(Math.random() * 5); 
@@ -121,7 +124,7 @@
           }
 
           // random color generator (I google it.)
-          var randomColor = '#' + parseInt(Math.random() * 0xffffff).toString(16);
+          var randomColor = Math.random() * 0xffffff;
 
           // create a new geometry with random color
           material = new THREE.MeshStandardMaterial({ color: randomColor });
