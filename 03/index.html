@@ -70,11 +70,64 @@
         // ACTION!
         //
 
-        renderer.domElement.onclick = function(e) {
+        renderer.domElement.onmousemove = function(e) {
 
           if (!e.shiftKey) {
             e.preventDefault();
             return false;
+          }
+
+          var a = Math.floor(Math.random()*Math.floor(6)); 
+          
+          switch(a){
+            case 0:
+            var geometry = new THREE.BoxBufferGeometry( 5, 5, 5 );
+            var material = new THREE.MeshBasicMaterial( {color: 0x30a9de} );
+            var cube = new THREE.Mesh( geometry, material );
+            scene.add( cube );
+            break;
+            case 1:
+            var geometry = new THREE.TorusBufferGeometry( 10, 3, 16, 100 );
+            var material = new THREE.MeshBasicMaterial( { color: 0x30a9de } );
+            var cube = new THREE.Mesh( geometry, material );
+            scene.add( cube );
+            break;
+            case 2:
+            var x = 0, y = 0;
+
+            var heartShape = new THREE.Shape();
+
+            heartShape.moveTo( x + 5, y + 5 );
+            heartShape.bezierCurveTo( x + 5, y + 5, x + 4, y, x, y );
+            heartShape.bezierCurveTo( x - 6, y, x - 6, y + 7,x - 6, y + 7 );
+            heartShape.bezierCurveTo( x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19 );
+            heartShape.bezierCurveTo( x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7 );
+            heartShape.bezierCurveTo( x + 16, y + 7, x + 16, y, x + 10, y );
+            heartShape.bezierCurveTo( x + 7, y, x + 5, y + 5, x + 5, y + 5 );
+
+            var geometry = new THREE.ShapeBufferGeometry( heartShape );
+            var material = new THREE.MeshBasicMaterial( { color: 0xe53a40 } );
+            var cube = new THREE.Mesh( geometry, material ) ;
+            scene.add( cube );
+            break;
+            case 3:
+            var geometry = new THREE.ConeBufferGeometry( 5, 20, 32 );
+            var material = new THREE.MeshBasicMaterial( {color: 0x75d701} );
+            var cube = new THREE.Mesh( geometry, material );
+            scene.add( cube );
+            break;
+            case 4:
+            var geometry = new THREE.RingBufferGeometry( 1, 5, 32 );
+            var material = new THREE.MeshBasicMaterial( { color: 0x5c196b, side: THREE.DoubleSide } );
+            var cube = new THREE.Mesh( geometry, material );
+            scene.add( cube );
+            break;
+            case 5:
+            var geometry = new THREE.OctahedronBufferGeometry( 5 );;
+            var material = new THREE.MeshBasicMaterial( { color: 0xfc913a} );
+            var cube = new THREE.Mesh( geometry, material );
+            scene.add( cube );
+            break;
           }
 
           console.log('yes! you clicked!');
@@ -94,10 +147,11 @@
           raycaster.setFromCamera(vp_coords_near, camera);
           intersects = raycaster.intersectObject(invisible_plane);
 
+
           console.log('Ray to Invisible Plane', intersects[0].point);
 
           // update cube position
-          // cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+          cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
         
         };
 
