@@ -43,6 +43,8 @@
   <script>
 
     // VARIABLE DECLARATIONS
+    var c,gl;
+    var v_shader,f_shader,shaderprogram
 
     window.onload = function() {
       
@@ -51,16 +53,26 @@
       //
       // INITIALIZE WEBGL
       //
-
-
-
+      
+      c = docoment.getElementById('c');
+      c.width =window.innerWidth;
+      c.height= window.innerHeight;
+      gl = c.getContext('WebGL')
 
       //************************************************************//
       //
       // SHADERS
       //
-    
+      v_shader = gl.createShader( gl, VERTEX_SHADER);
+      f_shader = gl.createShader( gl,FRAGMENT_SHADER);
 
+      gl.shadersource(v_shader, docoment, getElementById ('vertexshader'),InnerText );
+      gl.compileShader(v_shader);
+
+      gl.shadersource(f_shader, docoment, getElementById ('fragmentshader'),InnerText );
+      gl.compileShader(f_shader);
+
+      if (gl.)
 
 
       //************************************************************//
