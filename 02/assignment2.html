@@ -1,0 +1,109 @@
+<html>
+  <head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+   <style>
+	body {
+		color: white;
+		background-color: black;
+		font-family: sans-serif;
+	}
+
+	#logo {
+		position: absolute;
+		right: 10px;
+		top: 10px;
+	}
+    </style>
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+    <script type="text/javascript">
+	window.onload = function() {
+		var green =  [0, 1, 0];
+		var yellow = [1, 1, 0];	
+
+		// new XDK renderer
+		r = new X.renderer3D();
+		// initialize renderer
+		r.init();
+
+		// was pretty lazy at first ngl
+		c = new X.cube();
+		c.color = green;
+		r.add(c);
+
+		c2 = new X.cube(); c2.color = green;
+		c2.center = [-25, 0, -25];
+		r.add(c2);
+
+		c3 = new X.cube(); c3.color = green;
+		c3.center = [0, 0, -25];
+		r.add(c3);
+
+		c4 = new X.cube(); c4.color = green;
+		c4.center = [25, 0, -25];
+		r.add(c4);
+
+		c5 = new X.cube(); c5.color = green;
+		c5.center = [-25, 0, -50];
+		r.add(c5);
+
+		c6 = new X.cube(); c6.color = green;
+		c6.center = [0, 0, -50];
+		r.add(c6);
+
+		c7 = new X.cube(); c7.color = green;
+		c7.center = [25, 0, -50];
+		r.add(c7);
+
+		// ... but then I got tired and decided to do this instead lol
+		for (var x = -75; x <= 75; x += 25) {
+			for (var y = -75; y >= -150; y -= 25) {
+				var cx = new X.cube();
+				cx.color = green;
+				cx.center = [x, 0, y];
+				console.log(cx);
+				r.add(cx);
+			}
+		}
+
+		// side leaves
+		c8 = new X.cube(); c8.color = green;
+		c8.center = [-100, 0, -125];
+		r.add(c8);
+
+		c9 = new X.cube(); c9.color = green;
+		c9.center = [-100, 0, -150];
+		r.add(c9);
+
+		c10 = new X.cube(); c10.color = green;
+		c10.center = [100, 0, -125];
+		r.add(c10);
+
+		c11 = new X.cube(); c11.color = green;
+		c11.center = [100, 0, -150];
+		r.add(c11);
+
+		// stump
+		for (var x = -25; x <= 25; x += 25) {
+			for (var y = -175; y >= -200; y -= 25) {
+				var cx = new X.cube();
+				cx.color = green;
+				cx.center = [x, 0, y];
+				r.add(cx);
+			}
+		}
+
+
+		r.render();
+	}
+    </script>
+    <body>
+	<h1>CS460 Assignment 2</h1>
+	<div id="logo">
+		<img style="height:60px" src="gfx/cs460.png" />
+	</div>
+	<div id="output">
+	</div>
+    </body>
+  </head>
+</html>
