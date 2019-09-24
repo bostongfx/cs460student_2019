@@ -44,6 +44,8 @@
 
     // VARIABLE DECLARATIONS
 
+    var c, gl;
+    var v_shader, f_shader, sharderprogram;
     window.onload = function() {
       
 
@@ -53,16 +55,51 @@
       //
 
 
+        c = document.getElementById( 'c' );
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
 
+        gl = c.getContext( 'webgl' );
+        gl.viewport(0, 0, c.width, c.height);
 
       //************************************************************//
       //
       // SHADERS
       //
-    
+        v_shader = gl.createShader( gl.VERTEX_SHADER);
+
+        f_shader = gl.createShader( gl.FRAGMENT_SHADER);
+
+        //compile vertex shader
+
+        gl.shaderSource( v_shader, document.getElementById( 'vertexshader' ).innerText );
+
+        gl.compileShader( v_shader );
+
+        if (!gl.getShaderParameter(v_shader, gl.COMPILE_STATUS )) {
+          console.log(gl.getShaderInfoLog( v_shader ));
+        }
 
 
+        //compile fragment shader
 
+        gl.shaderSource( f_shader, document.getElementById( 'fragmentshader' ).innerText );
+
+        gl.compileShader( f_shader );
+
+        if (!gl.getShaderParameter(f_shader, gl.COMPILE_STATUS )) {
+          console.log(gl.getShaderInfoLog( f_shader ));
+        }
+
+
+        // attach and link shaders
+
+        shaderprogram = gl.createProgram();
+        gl.attachShader = ( shaderprogram, v_shader );
+        gl.attachShader = ( shaderprogram, f_shader );
+
+        gl.linkProgram( shaderprogram );
+        gl.useProgram( shaderprogram );
       //************************************************************//
       //
       // CREATE GEOMETRY
