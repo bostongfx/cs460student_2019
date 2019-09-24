@@ -1,0 +1,181 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body { 
+        background-color:#000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+      }
+    </style>
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script>
+      window.onload = function() {
+
+        scene = new THREE.Scene();
+
+        fov = 75;
+        ratio = window.innerWidth / window.innerHeight;
+        zNear = 1;
+        zFar = 10000;
+        // console.log(ratio);
+        camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camera.position.set( 0, 0, 100);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+        
+        ambientLight = new THREE.AmbientLight();
+        scene.add( ambientLight );
+
+        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        light.position.set( 10, 100, 10 );
+        scene.add( light );
+
+
+        // now we add the cube
+        // geometry = new THREE.BoxBufferGeometry( 20, 20, 20);
+        // material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        // cube = new THREE.Mesh( geometry, material);
+        // scene.add(cube);
+
+
+        //
+        // The invisible plane
+        //
+        geometry = new THREE.PlaneBufferGeometry( 10000, 10000 );
+        material = new THREE.MeshBasicMaterial( {
+          visible: false
+        });
+
+        invisible_plane = new THREE.Mesh( geometry, material );
+
+        scene.add( invisible_plane );
+        //
+        //
+        //
+
+
+
+        controls = new THREE.TrackballControls( camera );
+
+        animate();
+
+
+        //
+        // ACTION!
+        //
+
+        renderer.domElement.onmousemove = function(e) {
+
+          if (!e.shiftKey) {
+            e.preventDefault();
+            return false;
+          }
+          
+
+
+          console.log('yes! you clicked!');
+
+          pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+
+          console.log('Pixel coordinates', pixel_coords);
+
+          vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
+                                        -( pixel_coords.y / window.innerHeight ) * 2 + 1);
+
+          console.log('Viewport coordinates', vp_coords);
+
+          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+
+          raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(vp_coords_near, camera);
+          intersects = raycaster.intersectObject(invisible_plane);
+          //matrix = new THREE.Matrix4().makeRotation(1.57)
+        
+
+          console.log('Ray to Invisible Plane', intersects[0].point);
+          var pick = Math.floor((Math.random() * 6) + 1);
+          var letters = "0123456789ABCDEF";
+          var color = '#';
+          for(var i = 0; i < 6; i++){
+            color += letters[(Math.floor(Math.random() * 16))];
+          }
+          console.log('PICK', pick);
+          if(pick == 1){
+            geometry = new THREE.BoxBufferGeometry( 20, 20, 20);
+            material = new THREE.MeshToonMaterial({ color: color });
+            cube = new THREE.Mesh( geometry, material);
+            scene.add(cube);
+            
+          } else if(pick == 2){
+            geometry = new THREE.TorusKnotBufferGeometry(10, 3, 100, 16);
+            material = new THREE.MeshToonMaterial({ color: color });
+            torus = new THREE.Mesh(geometry, material);
+            scene.add(torus);
+          } else if(pick == 3){
+            geometry = new THREE.SphereBufferGeometry(5, 16, 16);
+            material = new THREE.MeshToonMaterial({ color: color });
+            sphere = new THREE.Mesh(geometry, material);
+            scene.add(sphere);
+          } else if(pick == 4){
+            geometry = new THREE.OctahedronBufferGeometry(5);
+            material = new THREE.MeshToonMaterial({ color: color });
+            octo = new THREE.Mesh(geometry, material);
+            scene.add(octo);
+          } else if(pick == 5){
+            geometry = new THREE.ConeBufferGeometry(5, 10);
+            material = new THREE.MeshToonMaterial({ color: color });
+            cone = new THREE.Mesh(geometry, material);
+            scene.add(cone);
+          } else{
+            geometry = new THREE.RingBufferGeometry(1, 5, 32);
+            material = new THREE.MeshToonMaterial({ color: color });
+            ring = new THREE.Mesh(geometry, material);
+            scene.add(ring);
+            }
+
+          // update geometry position
+          if(pick == 1){
+          cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+          }
+          else if(pick == 2){
+          torus.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+          }
+          else if(pick == 3){
+          sphere.position .set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+          }
+          else if(pick == 4){
+          octo.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+          }
+          else if(pick == 5){
+          cone.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+          }
+          else{
+          ring.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+          }
+        
+        };
+
+        
+
+
+      };
+
+      function animate() {
+
+        requestAnimationFrame( animate );
+
+        controls.update();
+        renderer.render( scene, camera );
+
+      };
+
+    </script>
+  </head>
+  <body></body>
+</html>
