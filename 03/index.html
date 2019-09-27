@@ -1,0 +1,196 @@
+<!-- Saurav Paudyal -->
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body {
+        background-color:#000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
+    </style>
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script>
+      window.onload = function() {
+
+		   // Three.js code goes here
+       //first we need schene
+       scene = new THREE.Scene();
+
+       //first setup the fov, ratio and
+       fov = 75;
+       ratio = window.innerWidth / window.innerHeight;
+       zNear = 1;
+       zFar = 10000;
+       count = 0;
+        //console.log(ratio)
+
+       //now we create a perspective camera
+       camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+       camera.position.set( 0,0, 100);
+
+       //after camera we setup the renderer
+       renderer = new THREE.WebGLRenderer();
+
+       renderer.setSize( window.innerWidth, window.innerHeight);
+       document.body.appendChild(renderer.domElement);
+
+
+
+       //now we add light
+       ambientLight = new THREE.AmbientLight();
+       scene.add(ambientLight);
+
+       //one ambienlight and multiple spot light/ directional AmbientLight
+       light = new THREE.DirectionalLight( 0xffffff,5.0);
+
+       //here the light sits at 0,0,0
+       light.position.set(10, 100, 10);
+       scene.add(light);
+
+       //geometry of the plane thats going to struck ray
+       //and adding it to the scene
+       geometry = new THREE.PlaneBufferGeometry(10000,10000);
+       material = new THREE.MeshStandardMaterial({visible:false});
+       invisible_plane = new THREE.Mesh(geometry, material);
+       scene.add(invisible_plane);
+
+
+       //now we need the controls.
+       controls = new THREE.TrackballControls(camera);
+
+       //this keeps calling itself 60 frames down.
+        animate();
+
+        //domElement is canvas
+        //this is listening for the cllicks and every time there is a mouse
+        //cllick
+        //e is event
+        renderer.domElement.onmousemove = function(e){
+
+          //shift modifier
+          if (!e.shiftKey){
+            e.preventDefault();
+            return false;
+          }
+
+          // console.log('lado lado!');
+
+          //for event
+          //console.log(e);
+
+          pixel_coords = new THREE.Vector2(e.clientX, e.clientY);
+
+          //view ports coords from pixel coords
+          vp_coords = new THREE.Vector2(
+                      (pixel_coords.x / window.innerWidth) * 2 - 1,
+                      - ( pixel_coords.y / window.innerHeight) * 2 + 1 );
+
+
+          //for zNearPlane
+          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+
+          //console.log(vp_coords_near);
+
+          //Adding the raycaster
+          raycaster = new THREE.Raycaster;
+          raycaster.setFromCamera(vp_coords_near,camera);
+
+          //gives us back lists of
+          intersects = raycaster.intersectObject(invisible_plane);
+
+
+          //first intersection and gives us the point
+          //
+          first_intersection = intersects[0];
+
+          //for hw we want to add a new geometry,
+          shape = randGeometry();
+          scene.add(shape);
+
+          shape.position.set(first_intersection.point.x,
+          first_intersection.point.y,
+          first_intersection.point.z);
+          console.log('count ' + count++);
+
+
+        };
+
+      };//onload
+
+      function animate() {
+
+        requestAnimationFrame( animate );
+
+        //always before renderer
+        controls.update();
+
+		    // and here...
+        renderer.render( scene, camera);
+
+      };
+
+      //returns a random color.
+      //source : https://www.paulirish.com/2009/random-hex-color-code-snippets/
+      function randColor() {
+        return '#'+Math.floor(Math.random()*16777215).toString(16);
+      };
+
+      //returns a random geotmetry
+      function randGeometry() {
+        var shapes = [];
+
+        //cube
+        geometry = new THREE.BoxBufferGeometry( 20, 20, 20);
+        material = new THREE.MeshStandardMaterial({color : randColor()});
+        cube = new THREE.Mesh(geometry,material);
+
+        //TOrusKnot
+        geometry = new THREE.TorusKnotBufferGeometry( 10, 3, 100, 16 );
+        material = new THREE.MeshBasicMaterial( { color: randColor()} );
+        torusKnot = new THREE.Mesh( geometry, material );
+
+        //sphere
+        geometry = new THREE.SphereBufferGeometry( 5, 32, 32 );
+        material = new THREE.MeshBasicMaterial( {color: randColor()} );
+        sphere = new THREE.Mesh( geometry, material );
+
+        //octahedron
+        geometry = new THREE.OctahedronBufferGeometry(20);
+        material = new THREE.MeshBasicMaterial( {color: randColor()} );
+        octahedron = new THREE.Mesh( geometry, material );
+
+        //Cone
+        geometry = new THREE.ConeBufferGeometry( 10, 30, 32 );
+        material = new THREE.MeshBasicMaterial( {color: randColor()} );
+        cone = new THREE.Mesh( geometry, material );
+
+        //ringBuffer
+        geometry = new THREE.RingBufferGeometry( 5, 20, 32 );
+        material = new THREE.MeshBasicMaterial( { color: randColor(),
+                                           side: THREE.DoubleSide } );
+        mesh = new THREE.Mesh( geometry, material );
+
+
+        shapes[0] = cube;
+        shapes[1] = torusKnot;
+        shapes[2] = sphere;
+        shapes[3] = octahedron;
+        shapes[4] = cone;
+        shapes[5] = mesh;
+
+
+        return shapes[Math.floor((Math.random() * 6) + 1) - 1 ];
+
+
+      };
+
+
+    </script>
+  </head>
+  <body></body>
+</ht
