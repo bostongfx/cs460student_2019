@@ -26,7 +26,21 @@
         font-size: 1.5em;
         font-weight:600;
         top: 10px;
-        right: 10px;
+        right: 115px;
+        padding: 3px;
+      }
+
+      #controls {
+        position: absolute;
+        font-size: 1.5em;
+        font-weight:600;
+        top: 10px;
+        left: 20px;
+        padding: 3px;
+        display:flex;
+        flex-wrap: wrap;
+        justify-content: center ;
+        align-items : center
       }
 
       #retry{
@@ -38,7 +52,7 @@
         width: 100px;
         height: 36px;
         padding: 8px;
-        top: 40px;
+        top: 10px;
         right: 10px;
         border-radius: 2px;
         border: none;
@@ -145,7 +159,7 @@
 
       gl.useProgram( shaderprogram );
 
-
+      lv = 1;
       // create multiple objects
       objects = [];
       objects.push( createAirplane());
@@ -159,7 +173,7 @@
       objects.push( createObstacle());
       objects.push( createObstacle());
       objects.push( createPowerUp());
-      objects.push( createLazer());
+      objects.push( createLazer(lv));
 
 
 
@@ -229,15 +243,15 @@
 
     }
 
-    function createLazer() {
+    function createLazer(lv) {
 
-      var vertices = new Float32Array( [ -0.1, -0.01, 0.0,
-                                         0.1, -0.01, 0.0,
-                                         0.1, 0.01, 0.0,
+      var vertices = new Float32Array( [ -0.1, -0.01*lv, 0.0,
+                                         0.1, -0.01*lv, 0.0,
+                                         0.1, 0.01*lv, 0.0,
 
-                                         0.1, 0.01, 0.0,
-                                         -.1, 0.01, 0.0,
-                                         -0.1, -0.01, 0.0 ]);
+                                         0.1, 0.01*lv, 0.0,
+                                         -.1, 0.01*lv, 0.0,
+                                         -0.1, -0.01*lv, 0.0 ]);
       var v_buffer = gl.createBuffer(); // create
       gl.bindBuffer( gl.ARRAY_BUFFER, v_buffer ); // bind
       gl.bufferData( gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW ); // put data in
@@ -333,24 +347,6 @@
       return collision;
 
     }
-
-    function detectSpriteCollision(bbox, otherBox) {
-
-      var collision = false;
-
-      if (otherBox[0] >= bbox[0] && otherBox[0] <= bbox[1]) {
-        if (otherBox[2] >= bbox[2] && otherBox[2] <= bbox[3]) {
-          if (otherBox[3] >= bbox[3] && otherBox[3] <= bbox[2]) {
-
-            collision = true;
-
-          }
-        }
-      }
-      console.log('sprite', collision);
-      return collision;
-
-    }
     //
     // Part 3 Ends
     //
@@ -365,25 +361,30 @@
         // player pressed up
         step_y = .01;
         direction_y = 1;
+        document.getElementById('up').style.color = "white";
 
       } else if (e.keyCode == 40 ) {
         // player pressed down
         step_y = .01;
         direction_y = -1;
+        document.getElementById('down').style.color = "white";
 
       } else if (e.keyCode == 37 ) {
         // player pressed left
         step_x = .01;
         direction_x = -1;
+        document.getElementById('left').style.color = "white";
 
       } else if (e.keyCode == 39 ) {
         // player pressed right
         step_x = .01;
         direction_x = 1;
+        document.getElementById('right').style.color = "white";
 
       }
       else if (e.keyCode == 32){
-        objects[objects.length-1] = createLazer();
+        objects[objects.length-1] = createLazer(lv);
+        document.getElementById('space').style.color = "white";
 
       }
     };
@@ -392,18 +393,22 @@
       if ( e.keyCode == 38 ) {
         // player pressed up
         step_y = .0;
+        document.getElementById('up').style.color = "black";
 
       } else if (e.keyCode == 40 ) {
         // player pressed down
         step_y = .0;
+        document.getElementById('down').style.color = "black";
 
       } else if (e.keyCode == 37 ) {
         // player pressed left
         step_x = .0;
+        document.getElementById('left').style.color = "black";
 
       } else if (e.keyCode == 39 ) {
         // player pressed right
         step_x = .0;
+        document.getElementById('right').style.color = "black";
 
       }
     };
@@ -430,6 +435,8 @@
         scalar += .001;
 
         framecounter = 0;
+
+        objects[objects.length - 2] = createPowerUp();
 
 
 
@@ -479,15 +486,12 @@
 
             current_offset[0] += .1;
 
-        }
-      } else if (current_objecttype == 'powerup'){
+       } else if (current_objecttype == 'powerup'){
 
             current_offset[0] -= .02;
             if (detectCollision(bbox_plane, current_offset)) {
-
-
-              return;
-
+              lv +=1;
+              document.getElementById('level').innerHTML = "Lv. " + lv;
             }
 
         } else if (current_objecttype == 'obstacle') {
@@ -506,8 +510,8 @@
           var bbox_lazer = calculateBoundingBox( objects[objects.length - 1][2], objects[objects.length - 1][3] );
 
           if (detectCollision(bbox_lazer, current_offset)) {
-            console.log('current offset ', current_offset);
             objects[o] = createObstacle();
+            document.getElementById('scoreboard').innerHTML = parseInt(document.getElementById('scoreboard').innerHTML) + 10;
           }
 
           // collision detection using the bounding box of this airplane
@@ -570,5 +574,13 @@
     <canvas id="c"></canvas>
     <div id="scoreboard">0</div>
     <button id ="retry" onclick="window.location.reload()">RETRY</button>
+    <div id="controls">
+    [<div id="left"> < </div>]
+    [<div id="right"> > </div>]
+    [<div id="up"> ^ </div>]
+    [<div id="down"> v </div>]
+    [<div id="space"> sp </div>]
+    [<div id ="level">Lv. 1</div>]
+  </div>
   </body>
 </html>
