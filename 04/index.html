@@ -212,6 +212,7 @@
       return ['obstacle', v_buffer, vertices, offset, color, gl.POINTS];
     }
 
+    // with the space bar lazer can shoot obstacles to protect the ship and score points
     function createLazer(lv) {
       var vertices = new Float32Array( [ -0.1, -0.01*lv, 0.0,//0- v1 , v6
                                           0.1, -0.01*lv, 0.0,//1- v2
@@ -238,6 +239,7 @@
       return ['lazer', v_buffer, vertices, offset, color, gl.TRIANGLES, i_buffer, indices];
     }
 
+    // powerups are star shaped objects which increase the lazer's size
     function createPowerUp() {
 
       var vertices = new Float32Array( [ -0.03,  0.01,  0.0,//0- v1
@@ -300,9 +302,7 @@
         maxz = Math.max( maxz, currentz );
 
       }
-
       return [minx, maxx, miny, maxy, minz, maxz];
-
     }
 
     function detectCollision(bbox, point) {
@@ -337,7 +337,7 @@
 
     //
     // Part 4 Starts
-    //
+    // 
     window.onkeydown = function(e) {
 
       if ( e.keyCode == 38 ) {
