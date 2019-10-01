@@ -29,21 +29,25 @@
 				c = new X.cube();	// create a new cube
 				//c.opacity = 1; // transparency
 				r.add(c); // add the cube to the renderer
-				r.camera.position = [0,0,300];
+				r.camera.position = [0,0,500];
 				
 				//Left Eye
 				c1 = new X.cube();	// create a new cube
 				c1.center = [-pos, -pos, 0];
+				lightB(c1);
 				r.add(c1);
 				c2 = new X.cube();	// create a new cube
 				c2.center = [-pos*2, -pos, 0];
+				lightB(c2);
 				r.add(c2);
 				//RightEye
 				c3 = new X.cube();	// create a new cube
 				c3.center = [pos, -pos, 0];
+				lightB(c3);
 				r.add(c3);
 				c4 = new X.cube();	// create a new cube
 				c4.center = [pos*2, -pos, 0];
+				lightB(c4);
 				r.add(c4);
 				
 				//Face
@@ -54,7 +58,7 @@
 
 				r.render(); // start rendering
 
-				var i = 0;
+				var i = 1;
 				setInterval(function() 
 				{
 					
@@ -62,7 +66,7 @@
 						lightB(c1); lightB(c2); lightB(c3); lightB(c4);
 						i = 1;
 					}
-					else if (i==1) {
+					else {
 						White(c1); White(c2); White(c3); White(c4);
 						i = 0;
 					}
@@ -75,11 +79,11 @@
 						r.add(temp);
 					}
 				}
-				function Down(x,y){
+				function Down(x,y){ // only used once
 					for(var i = 1; i <= y; i++) {
 						var temp = new X.cube();
 						temp.center = [pos*x,-pos*i,0]; // [x, y, z]
-						if(i==4) temp.color = [1,0,0];  //Special case for the mouth
+						if(x==0 && i==4) temp.color = [1,0,0];  //Special case for the mouth
 						r.add(temp);
 					}
 				}
