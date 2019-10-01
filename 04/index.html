@@ -28,7 +28,13 @@
     </style>
   </head>
   <script type="text/javascript" src="https://cs460.org/js/glmatrix.js"></script>
-  
+	<audio autoplay loop id = HMS> 
+		<source src="HMS.mp3">  //Harvest Moon (Spring)
+	</audio>
+	<script>
+		var audio = document.getElementById("HMS");
+		audio.volume = 0.05;
+	</script>
   <script id="vertexshader" type="glsl">
     attribute vec3 a_position;
 
@@ -41,7 +47,7 @@
       final_position.y += u_offset.y;
       final_position.z += u_offset.z;
     
-      gl_Position = vec4( final_position, 1.);
+      gl_Position = vec4( final_position, .9);
 	  gl_PointSize = 10.;
     
     }
@@ -65,12 +71,11 @@
     var v_shader, f_shader, shaderprogram;
     var vertices, indices, v_buffer, i_buffer;
 
-    var step_x = 0.0;
-    var step_y = 0.0;
+    var step_x = 0.07;
+    var step_y = 0.07;
     var obstacle_factor = 3; // Hint for the bonus!
     var direction_y = 0;
     var direction_x = 0;
-
 
     window.onload = function() {
 
@@ -118,7 +123,6 @@
 
       gl.useProgram( shaderprogram );
 
-
       // create multiple objects
       objects = [];
       objects.push( createAirplane());
@@ -131,100 +135,68 @@
       objects.push( createObstacle());
       objects.push( createObstacle());
       objects.push( createObstacle());
-
+	  
       animate();
 
     };
 
-
-
     function createAirplane() {
-
       //
       // Part 1 Starts
       //
 		var vertices;
 		vertices = new Float32Array( [
-				-0.4,   0.02,  0,		//v0
-				-0.4,  -0.02,  0,		//v1
-				-0.35,  0.0,  0,		//v2
+				-0.45,   0.029,  0,		//v0
+				-0.45,  -0.026,  0,		//v1
+				-0.37,  0.0,  0,			//v2
 				 
-				 
-				-0.4,   0.01,  0,		//v3
-				-0.35,   0.01,  0,		//v4
-				-0.35,   0.0,  0,		//v5
-				 
-				 -0.35,   0.0,  0,		//v6
-				 -0.35,   0.01,  0,		//v7
-				 -0.34,   0.0,  0,		//v8				 
+				-0.44,   0.017,  0,		//v3
+				 -0.37,   0.017,  0,		//v4
+				 -0.34,   0.0,  0,		//v5			 
 				 
                                     ] );
 
-		//indices = new Uint8Array( [
-       //                         0, 1, 2, 
-		//						2, 3, 4,
-		//						2, 4, 5,
-       //       
-
-
-		var v_buffer; 
-		v_buffer = gl.createBuffer();
-
+		var v_buffer = gl.createBuffer();
          // Bind appropriate array buffer to it
          gl.bindBuffer(gl.ARRAY_BUFFER, v_buffer);
          // Pass the vertex data to the buffer
          gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
          // Unbind the buffer
          gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-
-
-
+		 
       //
       // Part 1 Ends
       //
 
       var offset = [0.,0.,0.];
       var color = [0.,0.,0.,1.];
-
       //
       // Bonus Part 3!
       //
       return ['airplane', v_buffer, vertices, offset, color, gl.TRIANGLES];
-
     }
-
-
 
     function createObstacle() {
 
       var vertices = new Float32Array( [ 0.0, 0.0, 0.0 ]);
-
       var v_buffer = gl.createBuffer(); // create
       gl.bindBuffer( gl.ARRAY_BUFFER, v_buffer ); // bind
       gl.bufferData( gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW ); // put data in
       gl.bindBuffer( gl.ARRAY_BUFFER, null ); // unbind
-
       //
       // Part 2 Starts
       //
-      var offset = [Math.random(), Math.random(), 0.];
-
-      
-
-
-
+	  var min=-1; 
+	  var max=1;  
+	  var random = Math.random() * (+max - +min) + +min;
+      var offset = [Math.random(), random, 0.];
       //
       // Part 2 Ends
       //
-
       var color = [Math.random(),Math.random(),Math.random(),1.];
 
       return ['obstacle', v_buffer, vertices, offset, color, gl.POINTS];
-
     }
-
-
 
     //
     // Part 3 Starts (no coding required, just explanations in PDF)
@@ -239,7 +211,6 @@
       var maxz = -1000;
 
       for (var v=0; v<vertices.length; v+=3) {
-
         var currentx = vertices[v] + offset[0];
         var currenty = vertices[v+1] + offset[1];
         var currentz = vertices[v+2] + offset[2];
@@ -251,13 +222,9 @@
         maxx = Math.max( maxx, currentx );
         maxy = Math.max( maxy, currenty );
         maxz = Math.max( maxz, currentz );
-
       }
-
       return [minx, maxx, miny, maxy, minz, maxz];
-
     }
-
     function detectCollision(bbox, point) {
 
       var collision = false;
@@ -279,32 +246,32 @@
     // Part 3 Ends
     //
 
-
-
     //
     // Part 4 Starts
     //
-    window.onkeyup = function(e) {
-
-      if ( e.keyCode == 38 ) {
+	
+	//document.onkeyup = function (event) {
+//		if (event.which == 38 || event.keyCode == 40) {
+	//		alert("Wooohoo");
+	//	}
+	//}
+    window.onkeydown = function(e) {
+	
+      if ( e.keyCode == 38 ) {		//Up
         // player pressed up
-
-
-
-      } else if (e.keyCode == 40 ) {
+		direction_y = .1;
+sound.pause();
+sound.currentTime = 0;
+      } else if (e.keyCode == 40 ) {	//Down
         // player pressed down
+		direction_y = -.1;
 
+      } else if (e.keyCode == 37 ) { //Left
+		direction_x = -.1;
 
-
-      } else if (e.keyCode == 37 ) {
-        // player pressed left
-
-
-
-      } else if (e.keyCode == 39 ) {
+      } else if (e.keyCode == 39 ) {	//Right
         // player pressed right
-
-
+		direction_x = .1;
 
       }
 
@@ -313,11 +280,8 @@
     // Part 4 Ends
     //
 
-
-
-
     var framecounter = 0;
-
+	var speed = .002;
     function animate() {
 
       framecounter += 1;
@@ -328,20 +292,16 @@
 
         // update score
         document.getElementById('scoreboard').innerHTML = parseInt(document.getElementById('scoreboard').innerHTML) + 100;
-
+		speed += .001;
         //
         // Bonus Part 2!
         //
 
-
         framecounter = 0;
-
       }
 
       gl.clearColor( 0., 0., 0., 0.)
       gl.clear( gl.COLOR_BUFFER_BIT );
-
-
 
       for( var o = 0; o < objects.length; o++ ) {
 
@@ -351,64 +311,70 @@
         var current_offset = objects[o][3];
         var current_color = objects[o][4];
         var current_drawtype = objects[o][5];
+		//var current_i_buffer = objects[o][6];
+		
+        indices = new Uint8Array( [
+                                0, 1, 2, 
+								2, 3, 4,
+								2, 4, 5,
+                                ] );
 
+  		var i_buffer = gl.createBuffer(); // create
+		gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, i_buffer ); // bind
+		gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW ); // put data in
+		gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, null ); // unbind
         var current_v_count = current_vertices.length;
         
         if (current_objecttype == 'airplane') {
-
+		//current_offset[0] += .005;
           // update offsets
           if ( current_offset[0] <= -1. ) {
             // bumped into left end of screen
-            direction_x = 1;
-          } else if ( current_offset[0] >= 1. ) {
+            direction_x = .2;
+          } else if ( current_offset[0] >= 1.4 ) {
             // bumped into right end of screen
-            direction_x = -1;
+            direction_x = -.2;
           }
           current_offset[0] += direction_x*step_x;
 
           if ( current_offset[1] <= -1. ) {
             // bumped into left end of screen
-            direction_y = 1;
+            direction_y = .2;
           } else if ( current_offset[1] >= 1. ) {
             // bumped into right end of screen
-            direction_y = -1;
+            direction_y = -.2;
           }
+		  
           current_offset[1] += direction_y*step_y;
-
 
           // get the bounding box of this airplane
           var bbox_plane = calculateBoundingBox( current_vertices, current_offset);
 
-
         } else if (current_objecttype == 'obstacle') {
-
-
+				current_offset[0] -= speed;
+			if ( current_offset[0] <= -1. ) {
+				// bumped into left end of screen
+				current_offset[0] = 1;
+			}
           //
           // Bonus Part 1!
           //
 
-
           // collision detection using the bounding box of this airplane
           if (detectCollision(bbox_plane, current_offset)) {
-
             document.getElementById('scoreboard').innerHTML += ' AND...GAME OVER!'
-
             return;
-
           }
-
-
         }
-
 
         //************************************************************//
         //
         // CONNECT SHADER WITH GEOMETRY
         //
-        
+
         gl.bindBuffer( gl.ARRAY_BUFFER, current_v_buffer );
 
-        // gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, current_i_buffer );
+        gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, i_buffer );
 
         // find the attribute in the shader source
         var a_position = gl.getAttribLocation( shaderprogram, 'a_position' );
@@ -435,9 +401,11 @@
         // Bonus Part 3!
         //
         gl.drawArrays( current_drawtype, 0, current_v_count/3, 0 );
-		//gl.drawElements( gl.POINTS, 9, gl.UNSIGNED_BYTE, 0);
+		//gl.drawArrays( gl.LINE_LOOP, 0, 6);
+		//gl.drawArrays( gl.TRIANGLE_STRIP, 0, 6);
+		// gl.drawElements( current_drawtype, 6, gl.UNSIGNED_BYTE, 0);
+		 gl.drawElements( current_drawtype, 9, gl.UNSIGNED_BYTE, 0);
       }
-
 
       requestAnimationFrame(animate);
 
