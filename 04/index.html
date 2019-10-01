@@ -42,6 +42,7 @@
       final_position.z += u_offset.z;
     
       gl_Position = vec4( final_position, 1.);
+
       gl_PointSize = 10.;
 
     
@@ -66,8 +67,8 @@
     var v_shader, f_shader, shaderprogram;
     var vertices, indices, v_buffer, i_buffer;
 
-    var step_x = 0.0;
-    var step_y = 0.0;
+    var step_x = 0.09;
+    var step_y = 0.09;
     var obstacle_factor = 3; // Hint for the bonus!
     var direction_y = 0;
     var direction_x = 0;
@@ -145,21 +146,17 @@
       // Part 1 Starts
       //
       var vertices;
-      vertices = new Float32Array( [
-                                        0.0,  0.0225, 0.0,
-                                        0.0, -0.0225, 0.0,
-                                        0.045, 0.0, 0.0
-                                       ] );
-
-
+      vertices = new Float32Array([
+                  0.0, 0.0225, 0.0,
+                  0.0, -0.0225, 0.0,
+                  0.045, 0.0, 0.0
+              ]);
 
       var v_buffer;
-      v_buffer =  gl.createBuffer(); // create
-      gl.bindBuffer( gl.ARRAY_BUFFER, v_buffer ); // bind
-      gl.bufferData( gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW ); // put data in
-      gl.bindBuffer( gl.ARRAY_BUFFER, null ); // unbind
-
-
+      v_buffer = gl.createBuffer(); // create
+      gl.bindBuffer(gl.ARRAY_BUFFER, v_buffer); // bind
+      gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW); // put data in
+      gl.bindBuffer(gl.ARRAY_BUFFER, null); // unbind
 
       //
       // Part 1 Ends
@@ -189,12 +186,11 @@
       //
       // Part 2 Starts
       //
-      var randomX = getRandomArbitrary(-1,1);
-      var randomY = getRandomArbitrary(-1,1);
-      var randomZ = getRandomArbitrary(-1,1);
-      var offset = [randomX, randomY, randomZ];
-
-      ``
+      // var offset = [0., 0., 0.];
+      var randomX = getRandomArbitrary(-1.0,1.0);
+      var randomY = getRandomArbitrary(-1.0,1.0);
+      var randomZ = getRandomArbitrary(-1.0,1.0);
+      var offset = [randomX, randomY, 0.];     
 
 
 
@@ -203,7 +199,7 @@
       //
 
       var color = [Math.random(),Math.random(),Math.random(),1.];
-// var color = [1.0,0.0,1.0,1.];
+
       return ['obstacle', v_buffer, vertices, offset, color, gl.POINTS];
 
     }
@@ -272,21 +268,27 @@
 
       if ( e.keyCode == 38 ) {
         // player pressed up
-
+  direction_y += 0.09;
+        step_y = 0.09
 
 
       } else if (e.keyCode == 40 ) {
         // player pressed down
-
+        direction_y += -0.09;
+        step_y = 0.09
 
 
       } else if (e.keyCode == 37 ) {
         // player pressed left
-
+        direction_x += -0.09;
+        step_x = 0.09
 
 
       } else if (e.keyCode == 39 ) {
         // player pressed right
+        direction_x += 0.09;
+        step_x = 0.09
+
 
 
 
@@ -312,6 +314,11 @@
 
         // update score
         document.getElementById('scoreboard').innerHTML = parseInt(document.getElementById('scoreboard').innerHTML) + 100;
+
+
+        // step_x += .01
+        // step_y += .01
+        // framecounter+=30
 
         //
         // Bonus Part 2!
@@ -426,10 +433,13 @@
       requestAnimationFrame(animate);
 
     };
-//gets random number between min and max, and converts to float
+
+  </script>
+  <script>
+    //gets random number between min and max, and converts to float
 function getRandomArbitrary(min, max) {
  // /*debug*/ console.log('rand:',parseFloat(Math.random() * (max - min) + min))
-  return parseFloat(Math.random() * (max - min) + min);
+  return Math.random() * (max - min) + min;
 }
   </script>
   <body>
