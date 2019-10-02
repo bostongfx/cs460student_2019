@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		html, body { 
+  background-color:#000;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden !important;  
+}
+	</style>
+	<script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+	<script type="text/javascript" src="https://get.goXTK.com/xtk_xdat.gui.js"></script>
+
+	<script type="text/javascript">
+
+		var r,c;
+
+		window.onload = function() {
+
+			var r = new X.renderer3D();
+			r.init();
+
+			var c = new X.cube();
+
+			r.add(c);
+			
+			r.render();
+
+		}
+	</script>
+</head>
+<body>
+
+</body>
+</html>

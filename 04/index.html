@@ -277,7 +277,9 @@
     //
     // Part 4 Starts
     //
-    window.onkeyup = function(e) {
+
+    //ASK window.onkeyup for continuous movement
+    window.onkeydown = function(e) {
       var current_offset = objects[0][3];
 
       if ( e.keyCode == 38 ) {
