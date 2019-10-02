@@ -64,7 +64,7 @@
     var v_shader, f_shader, shaderprogram;
     var vertices, indices, v_buffer, i_buffer;
 
-    var step_x = 0.0;
+    var step_x = 0.0625;
     var step_y = 0.0625;
     var obstacle_factor = 3; // Hint for the bonus!
     var direction_y = 0;
@@ -288,7 +288,7 @@
     //
     // Part 4 Starts
     //
-    window.onkeyup = function(e) {
+    window.onkeydown = function(e) {
 
       if ( e.keyCode == 38 ) {
         // player pressed up
@@ -298,12 +298,7 @@
       } else if (e.keyCode == 40 ) {
         // player pressed down
         direction_y = -1;
-
-
-      } else {
-        direction_y = 0;
       }
-
 
       if (e.keyCode == 37 ) {
         // player pressed left
@@ -318,6 +313,12 @@
       }
 
     };
+
+    // halt all movement (makes the ship easier to control)
+    window.onkeyup = function(e) {
+      direction_x = 0;
+      direction_y = 0;
+    }
     //
     // Part 4 Ends
     //
@@ -395,11 +396,7 @@
           //
           // Bonus Part 1!
           //
-          if ( direction_x == 1 ) {
-              current_offset[0] -= box_speed;
-          } else if ( direction_x == -1) {
-              current_offset[0] += box_speed;
-          }
+          current_offset[0] -= box_speed;
 
           // randomize y-value so that the player can't just go straight
           if ( current_offset[0] < -1.5 ) {
