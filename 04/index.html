@@ -137,8 +137,6 @@
 
     };
 
-
-
     function createAirplane() {
 
       //
@@ -156,6 +154,7 @@
         -0.015, -0.025, 0.0,// V8
         -0.04, 0.0, 0.0, // V9
          ]);
+
       indices = new Uint8Array( [
         0, 1, 2,
         0, 2, 3,
@@ -164,7 +163,6 @@
         0, 6, 7,
         0, 7, 8,
         0, 8, 9
-
         ] );
 
       var v_buffer = gl.createBuffer(); // create
@@ -192,8 +190,6 @@
 
     }
 
-
-
     function createObstacle() {
 
       var vertices = new Float32Array( [ 0.0, 0.0, 0.0 ]);
@@ -218,7 +214,6 @@
       var color = [Math.random(),Math.random(),Math.random(),1.];
 
       return ['obstacle', v_buffer, vertices, offset, color, gl.POINTS];
-
     }
 
     //
@@ -278,10 +273,7 @@
     // Part 4 Starts
     //
 
-    //ASK window.onkeyup for continuous movement
     window.onkeyup = function(e) {
-      var current_offset = objects[0][3];
-
       if ( e.keyCode == 38 ) {
         // player pressed up
         direction_y = 1;
@@ -297,7 +289,6 @@
       } else if (e.keyCode == 39 ) {
         // player pressed right
         direction_x = 1;
-
       }
 
     };
@@ -321,8 +312,7 @@
         //
         // Bonus Part 2!
         //
-        speed += 0.001;
-        console.log("speed = " + speed);
+        speed += 0.002;
 
         framecounter = 0;
 
