@@ -282,25 +282,25 @@
       if ( e.keyCode == 38 ) {
         // player pressed up
         direction_y = 1;
-        step_y = step_y + 0.01;
+        step_y = 0.01;
 
 
       } else if (e.keyCode == 40 ) {
         // player pressed down
         direction_y = -1;
-        step_y = step_y +0.01;
+        step_y = 0.01;
 
 
       } else if (e.keyCode == 37 ) {
         // player pressed left
-        x_direction = -1;
-        step_x = step_x + 0.01;
+        direction_x = -1;
+        step_x =  0.01;
 
 
       } else if (e.keyCode == 39 ) {
         // player pressed right
-        x_direction = 1;
-        step_x = step_x + 0.01;
+        direction_x = 1;
+        step_x =  0.01;
 
 
       }
@@ -362,7 +362,7 @@
             direction_x = -1;
           }
           current_offset[0] += direction_x * step_x;
-
+          
           if ( current_offset[1] <= -1. ) {
             // bumped into left end of screen
             direction_y = 1;
