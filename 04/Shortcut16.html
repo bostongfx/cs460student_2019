@@ -42,7 +42,6 @@
       final_position.z += u_offset.z;
     
       gl_Position = vec4( final_position, 1.);
-      gl_PointSize = 20.;
     
     }
   </script>
@@ -70,7 +69,6 @@
     var obstacle_factor = 3; // Hint for the bonus!
     var direction_y = 0;
     var direction_x = 0;
-    var speed = 0.01;
 
 
     window.onload = function() {
@@ -144,51 +142,22 @@
       //
       // Part 1 Starts
       //
-      var vertices = new Float32Array( [ 
-        0.0, 0.0, 0.0,    // V0 
-        -0.0225, 0.0, 0.0, // V1
-        -0.0125,0.025, 0.0, // V2
-        0.0,0.03, 0.0,   // V3
-        0.0125,0.025, 0.0,  // V4
-        0.0225, 0.0, 0.0,  // V5
-        0.04, 0.0, 0.0,  // V6
-        0.015, -0.025, 0.0, // V7
-        -0.015, -0.025, 0.0,// V8
-        -0.04, 0.0, 0.0, // V9
-         ]);
-      indices = new Uint8Array( [
-        0, 1, 2,
-        0, 2, 3,
-        0, 3, 4,
-        0, 4, 5,
-        0, 6, 7,
-        0, 7, 8,
-        0, 8, 9
+      var vertices;
 
-        ] );
 
-      var v_buffer = gl.createBuffer(); // create
-      gl.bindBuffer( gl.ARRAY_BUFFER, v_buffer ); // bind
-      gl.bufferData( gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW ); // put data in
-      gl.bindBuffer( gl.ARRAY_BUFFER, null ); // unbind
 
-      var i_buffer = gl.createBuffer(); // create
-      gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, i_buffer ); // bind
-      gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW ); // put data in
-      gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, null ); // unbind
-
+      var v_buffer;
       //
       // Part 1 Ends
       //
 
       var offset = [0.,0.,0.];
-      
       var color = [0.,0.,0.,1.];
 
       //
       // Bonus Part 3!
       //
-      return ['airplane', v_buffer, vertices, offset, color, gl.TRIANGLES, i_buffer];
+      return ['airplane', v_buffer, vertices, offset, color, gl.TRIANGLES];
 
     }
 
@@ -206,10 +175,9 @@
       //
       // Part 2 Starts
       //
-      var randomX = (Math.random() * 2) - 1 ;
-      var randomY = (Math.random() * 2) - 1 ;
+      var offset = [0., 0., 0.];
 
-      var offset = [randomX, randomY, 0.0];
+      
 
       //
       // Part 2 Ends
@@ -220,6 +188,8 @@
       return ['obstacle', v_buffer, vertices, offset, color, gl.POINTS];
 
     }
+
+
 
     //
     // Part 3 Starts (no coding required, just explanations in PDF)
@@ -274,27 +244,32 @@
     // Part 3 Ends
     //
 
+
+
     //
     // Part 4 Starts
     //
-    window.onkeydown = function(e) {
-      var current_offset = objects[0][3];
+    window.onkeyup = function(e) {
 
       if ( e.keyCode == 38 ) {
         // player pressed up
-        current_offset[1] += 0.05;
+
+
 
       } else if (e.keyCode == 40 ) {
         // player pressed down
-        current_offset[1] -= 0.05;
+
+
 
       } else if (e.keyCode == 37 ) {
         // player pressed left
-        current_offset[0] -= 0.05;
+
+
 
       } else if (e.keyCode == 39 ) {
         // player pressed right
-        current_offset[0] += 0.05;
+
+
 
       }
 
@@ -302,6 +277,9 @@
     //
     // Part 4 Ends
     //
+
+
+
 
     var framecounter = 0;
 
@@ -319,16 +297,16 @@
         //
         // Bonus Part 2!
         //
-        speed += 0.001;
-        console.log("speed = " + speed);
+
 
         framecounter = 0;
 
       }
 
-
       gl.clearColor( 0., 0., 0., 0.)
       gl.clear( gl.COLOR_BUFFER_BIT );
+
+
 
       for( var o = 0; o < objects.length; o++ ) {
 
@@ -338,7 +316,6 @@
         var current_offset = objects[o][3];
         var current_color = objects[o][4];
         var current_drawtype = objects[o][5];
-        var current_i_buffer = objects[o][6];
 
         var current_v_count = current_vertices.length;
         
@@ -363,22 +340,18 @@
           }
           current_offset[1] += direction_y*step_y;
 
+
           // get the bounding box of this airplane
           var bbox_plane = calculateBoundingBox( current_vertices, current_offset);
 
+
         } else if (current_objecttype == 'obstacle') {
+
 
           //
           // Bonus Part 1!
           //
-          // current_offset[0] -= 0.01;
-          current_offset[0] -= speed;
 
-          if (current_offset[0] <= -1) {
-            var randomN = (Math.random() * 2) - 1 ;
-            current_offset[0] = 1;
-            current_offset[1] = randomN;
-          }
 
           // collision detection using the bounding box of this airplane
           if (detectCollision(bbox_plane, current_offset)) {
@@ -389,7 +362,9 @@
 
           }
 
+
         }
+
 
         //************************************************************//
         //
@@ -398,7 +373,7 @@
         
         gl.bindBuffer( gl.ARRAY_BUFFER, current_v_buffer );
 
-        gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, current_i_buffer );
+        // gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, current_i_buffer );
 
         // find the attribute in the shader source
         var a_position = gl.getAttribLocation( shaderprogram, 'a_position' );
@@ -424,12 +399,10 @@
         //
         // Bonus Part 3!
         //
-        
         gl.drawArrays( current_drawtype, 0, current_v_count/3, 0 );
-        
-        gl.drawElements( gl.TRIANGLES, 21, gl.UNSIGNED_BYTE, 0 );
 
       }
+
 
       requestAnimationFrame(animate);
 
