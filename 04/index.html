@@ -209,8 +209,13 @@
       //
       // Part 2 Ends
       //
+      var randomR = getRandomArbitrary(0.0,1.0);
+      var randomG = getRandomArbitrary(0.0,1.0);
+      var randomB = getRandomArbitrary(0.0,1.0);
 
-      var color = [Math.random(),Math.random(),Math.random(),1.];
+
+      var color = [randomR, randomG,randomB,1.];	
+      // var color = [Math.random(),Math.random(),Math.random(),1.];
 
       return ['obstacle', v_buffer, vertices, offset, color, gl.POINTS];
 
@@ -320,16 +325,17 @@
 
         // roughly every five seconds with 30 FPS
 
+      /*
         // update score
         document.getElementById('scoreboard').innerHTML = parseInt(document.getElementById('scoreboard').innerHTML) + 100;
         score += 100;
+        */
 
         // /*debug score*/ console.log('score: ', score)
         
         //increase number of obstacles for next level (new level every frame)
         //uses score to determine how many obstacles to add per frame
         
-        level += (score/100)
 
          /*debug level*/ console.log('level: ', level)
 
@@ -384,6 +390,9 @@
               {
                 objects.push( createObstacle());
               }
+              //update score (see description @ function declaration (at bottom))
+                updateScore();
+
 
           }
 
@@ -475,6 +484,27 @@
 function getRandomArbitrary(min, max) {
  // /*debug*/ console.log('rand:',parseFloat(Math.random() * (max - min) + min))
   return Math.random() * (max - min) + min;
+}
+
+//update score for each new frame (user makes it to right side)
+function updateScore ()
+{
+	  // update score
+        document.getElementById('scoreboard').innerHTML = parseInt(document.getElementById('scoreboard').innerHTML) + 100;
+        score += 100;
+
+
+        // /*debug score*/ console.log('score: ', score)
+        
+        //increase number of obstacles for next level (new level every frame)
+        //uses score to determine how many obstacles to add per frame
+        
+        level += (score/100)
+
+         // /*debug level*/ console.log('level: ', level)
+
+
+
 }
   </script>
   <body>
