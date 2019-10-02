@@ -70,6 +70,8 @@
     var direction_y = 0;
     var direction_x = 0;
 
+    // initial box speed, we multiply this by 1.25 every 3 seconds
+    var box_speed = 0.03125;
 
     window.onload = function() {
 
@@ -339,7 +341,7 @@
         //
         // Bonus Part 2!
         //
-
+        box_speed *= 1.25;
 
         framecounter = 0;
 
@@ -394,12 +396,16 @@
           // Bonus Part 1!
           //
           if ( direction_x == 1 ) {
-              current_offset[0] -= 0.0625;
+              current_offset[0] -= box_speed;
           } else if ( direction_x == -1) {
-              current_offset[0] += 0.0625;
+              current_offset[0] += box_speed;
           }
 
+          // randomize y-value so that the player can't just go straight
           if ( current_offset[0] < -1.5 ) {
+              current_offset[0] *= -1;
+              current_offset[1] = grn();
+          } else if ( current_offset[0] > 1.5 ) {
               current_offset[0] *= -1;
               current_offset[1] = grn();
           }
