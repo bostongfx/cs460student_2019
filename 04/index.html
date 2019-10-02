@@ -384,24 +384,7 @@
           //
           // Bonus Part 1!
           //
-          // update offsets
-          if ( current_offset[0] <= -1. ) {
-            // bumped into left end of screen
-            direction_x = 1;
-          } else if ( current_offset[0] >= 1. ) {
-            // bumped into right end of screen
-            direction_x = -1;
-          }
-          current_offset[0] += Math.random();
-
-          if ( current_offset[1] <= -1. ) {
-            // bumped into left end of screen
-            direction_y = 1;
-          } else if ( current_offset[1] >= 1. ) {
-            // bumped into right end of screen
-            direction_y = -1;
-          }
-          current_offset[1] += Math.random();
+     
 
           // collision detection using the bounding box of this airplane
           if (detectCollision(bbox_plane, current_offset)) {
