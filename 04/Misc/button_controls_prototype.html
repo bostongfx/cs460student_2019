@@ -1,0 +1,26 @@
+<script>
+
+    function btnFuncs(e)
+{
+  switch (e) {
+    case "r":
+    alert("right");
+    break;
+    case "l": 
+    alert("left");
+    break;
+    case "u":
+    alert("up");
+    break;
+    case "d":
+    alert("down");
+    break;
+    }
+}
+</script>
+        <div>
+    <button type="button" id="right" onclick="btnFuncs(`r`)">⫸</button>
+    <button type="button" id="left" onclick="btnFuncs(`l`)">⫷</button>
+    <button type="button" id="up" onclick="btnFuncs(`u`)">⩓</button>
+    <button type="button" id="down" onclick="btnFuncs(`d`)">⩔</button>
+</div>
