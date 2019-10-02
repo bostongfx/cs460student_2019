@@ -4,12 +4,12 @@
     <meta content="utf-8" http-equiv="encoding">
     <title>Vanilla WebGL!</title>
     <style>
-      html, body { 
+      html, body {
         background-color:#000;
         margin: 0;
         padding: 0;
         height: 100%;
-        overflow: hidden !important;  
+        overflow: hidden !important;
         background-image: url(https://cs460.org/gfx/bg.gif);
         background-repeat: no-repeat;
         background-size: 100% 100%;
@@ -28,7 +28,7 @@
     </style>
   </head>
   <script type="text/javascript" src="https://cs460.org/js/glmatrix.js"></script>
-  
+
   <script id="vertexshader" type="glsl">
     attribute vec3 a_position;
 
@@ -40,15 +40,15 @@
       final_position.x += u_offset.x;
       final_position.y += u_offset.y;
       final_position.z += u_offset.z;
-    
+
       gl_Position = vec4( final_position, 1.);
 
-      gl_PointSize = 10.;
+      gl_PointSize = 36.;
 
-    
+
     }
   </script>
-  
+
   <script id="fragmentshader" type="glsl">
     precision mediump float;
 
@@ -60,7 +60,7 @@
 
     }
   </script>
-  
+
   <script>
 
     var c, gl;
@@ -72,6 +72,8 @@
     var obstacle_factor = 3; // Hint for the bonus!
     var direction_y = 0;
     var direction_x = 0;
+    var level = 1;
+    var score = 0;
 
 
     window.onload = function() {
@@ -94,7 +96,7 @@
       //
       v_shader = gl.createShader( gl.VERTEX_SHADER );
       f_shader = gl.createShader( gl.FRAGMENT_SHADER );
-      
+
       // compile vertex shader
       gl.shaderSource( v_shader, document.getElementById( 'vertexshader' ).innerText );
       gl.compileShader( v_shader );
@@ -123,7 +125,11 @@
 
       // create multiple objects
       objects = [];
+
+      //generate plane
       objects.push( createAirplane());
+
+      //generate obstacles
       objects.push( createObstacle());
       objects.push( createObstacle());
       objects.push( createObstacle());
@@ -186,11 +192,13 @@
       //
       // Part 2 Starts
       //
-      // var offset = [0., 0., 0.];
-      var randomX = getRandomArbitrary(-1.0,1.0);
-      var randomY = getRandomArbitrary(-1.0,1.0);
-      var randomZ = getRandomArbitrary(-1.0,1.0);
-      var offset = [randomX, randomY, 0.];     
+
+      //get random X and Y values
+      var randomX = getRandomArbitrary(-1,1);
+      var randomY = getRandomArbitrary(-1,1);
+
+      //set offset of obstacle
+      var offset = [randomX, randomY, 0.];
 
 
 
@@ -288,10 +296,6 @@
         // player pressed right
         direction_x += 0.09;
         step_x = 0.09
-
-
-
-
       }
 
     };
@@ -306,7 +310,7 @@
 
     function animate() {
 
-      framecounter += 1;
+      framecounter++
 
       if (framecounter > 150) {
 
@@ -314,16 +318,21 @@
 
         // update score
         document.getElementById('scoreboard').innerHTML = parseInt(document.getElementById('scoreboard').innerHTML) + 100;
+        score += 100;
 
+        // /*debug score*/ console.log('score: ', score)
         
-        // step_x += .01
-        // step_y += .01
-        // framecounter+=30
+        //increase number of obstacles for next level (new level every frame)
+        //uses score to determine how many obstacles to add per frame
+        
+        level += (score/100)
+
+         /*debug level*/ console.log('level: ', level)
+
 
         //
         // Bonus Part 2!
         //
-
 
         framecounter = 0;
 
@@ -344,26 +353,44 @@
         var current_drawtype = objects[o][5];
 
         var current_v_count = current_vertices.length;
-        
+
         if (current_objecttype == 'airplane') {
 
           // update offsets
           if ( current_offset[0] <= -1. ) {
             // bumped into left end of screen
-            direction_x = 1;
+            // direction_x = 1;
+            current_offset[0] = 1;
+
           } else if ( current_offset[0] >= 1. ) {
             // bumped into right end of screen
-            direction_x = -1;
+            current_offset[0] = -1;
+
+            // remove all existing obstacles 
+            for(i = 0; i <= objects.length - 1; i++)
+            {
+              objects.pop()
+            }
+            
+
+            //generate new obstacles with increased count (level variable)
+            for(i = 0; i <= level; i++)
+              {
+                objects.push( createObstacle());
+              }
+
           }
+
           current_offset[0] += direction_x*step_x;
 
           if ( current_offset[1] <= -1. ) {
             // bumped into left end of screen
-            direction_y = 1;
-
+            // direction_y = 1;
+            current_offset[1] = 1
           } else if ( current_offset[1] >= 1. ) {
             // bumped into right end of screen
-            direction_y = -1;
+            // direction_y = -1;
+            current_offset[1] = -1
           }
           current_offset[1] += direction_y*step_y;
 
@@ -397,7 +424,7 @@
         //
         // CONNECT SHADER WITH GEOMETRY
         //
-        
+
         gl.bindBuffer( gl.ARRAY_BUFFER, current_v_buffer );
 
         // gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, current_i_buffer );
@@ -415,7 +442,7 @@
         gl.uniform3fv( u_offset, current_offset)
 
         var u_color = gl.getUniformLocation( shaderprogram, 'u_color' );
-        
+
         gl.uniform4fv( u_color, new Float32Array(current_color) );
 
         //************************************************************//
