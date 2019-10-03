@@ -24,10 +24,50 @@
         position: absolute;
         top: 10px;
         right: 10px;
+        border-radius: 6px;
+
         font-family: monospace;
         background: white;
         font-size: 27;
         text-shadow: silver;
+        padding-left: 1px;
+        padding-bottom: 1px;
+        padding-top: 1px;
+        padding-right: 1px;
+      }
+
+      .tooltiptext {
+        visibility: hidden;
+        width: 450px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+
+        /* Position the tooltip */
+        position: absolute;
+        z-index: 1;
+      }
+
+      .tooltip {
+        background-color: #fff;
+        color: black;
+        text-align: center;
+        border-radius: 6px;
+        position: absolute;
+        font-family: monospace;
+        background: white;
+        text-shadow: silver;
+        padding-left: 1px;
+        padding-bottom: 1px;
+        padding-top: 1px;
+        padding-right: 1px;
+
+      }
+
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
       };
     </style>
   </head>
@@ -81,6 +121,7 @@
 
 
     window.onload = function() {
+     
 
       //************************************************************//
       //
@@ -427,6 +468,8 @@
           {
             
             document.getElementById('scoreboard').innerHTML += ' AND...GAME OVER!'
+            message
+            location.reload();
 
             return;
 
@@ -508,7 +551,12 @@ function updateScore ()
 }
   </script>
   <body>
+
+<div class="tooltip"><h1> ⓘ </h1>
+  <span class="tooltiptext">Instructions: Use right/left/up/down directional arrows to increase or decrease throttle. To gain a higher score make your way to the right. When you hit the right side the next scene will automatically appear. (Think original sidescroller super mario bros!!). Each frame you progress gains more points, but the obstacles also increase in numbers!!Good Luck.</span>
+</div>
     <canvas id="c"></canvas>
     <div id="scoreboard">0</div>
+
   </body>
 </html>
