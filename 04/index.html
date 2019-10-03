@@ -469,11 +469,10 @@
             
             document.getElementById('scoreboard').innerHTML += ' AND...GAME OVER!'
 
-             setTimeout(function() {             location.reload();
-             }, 1233);
 
+            //reload page after a small timeout
+            setTimeout(function() {location.reload();}, 1233);
             return;
-
           }
 
 
@@ -554,7 +553,7 @@ function updateScore ()
   <body>
 
 <div class="tooltip"><h1> ⓘ </h1>
-  <span class="tooltiptext">Instructions: Use right/left/up/down directional arrows to increase or decrease throttle. To gain a higher score make your way to the right. When you hit the right side the next scene will automatically appear. (Think original sidescroller super mario bros!!). Each frame you progress gains more points, but the obstacles also increase in numbers!!Good Luck.</span>
+  <span class="tooltiptext">Instructions: Use right/left/up/down directional arrows to increase or decrease throttle. To gain a higher score make your way to the right. When you hit the right side the next scene will automatically appear. (Think original sidescroller super mario bros!!). Each frame you progress gains more points, but the obstacles also increase in numbers!! Good Luck.</span>
 </div>
     <canvas id="c"></canvas>
     <div id="scoreboard">0</div>
