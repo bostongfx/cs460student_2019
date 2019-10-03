@@ -25,6 +25,7 @@
         top: 10px;
         right: 10px;
       };
+    
     </style>
   </head>
   <script type="text/javascript" src="https://cs460.org/js/glmatrix.js"></script>
@@ -202,7 +203,7 @@
       // Bonus Part 3!
       //
       return ['airplane', v_buffer, vertices, offset, color, gl.TRIANGLES];
-
+      
     }
 
 
@@ -317,21 +318,19 @@
         // player pressed down
         step_y = 0.01 ;
         direction_y = -1;
-        // direction_x = -1;
+
 
 
       } else if (e.keyCode == 37 ) {
         // player pressed left
-        step_x = 0.01 ;
-        // direction_x = 1;
-        // direction_y = 1;
+         step_x = 0.01 ;
+         direction_x = -1;
+
 
       } else if (e.keyCode == 39 ) {
         // player pressed right
 
-        step_x = 0.01 ;
-
-        // direction_y = -1;
+         step_x = 0.01 ;
          direction_x = 1;
 
       }
@@ -345,6 +344,7 @@
 
 
     var framecounter = 0;
+    var count = 0;
 
     function animate() {
 
@@ -353,15 +353,18 @@
       if (framecounter > 150) {
 
         // roughly every five seconds with 30 FPS
-
+       
         // update score
         document.getElementById('scoreboard').innerHTML = parseInt(document.getElementById('scoreboard').innerHTML) + 100;
-         // document.getElementById('vertexshader').innerHTML = parseInt(document.getElementById('vertexshader').innerHTML) + 100;
-        //
+
+
+
+
         // Bonus Part 2!
-        //
+         requestAnimationFrame(animate);
 
 
+		
         framecounter = 0;
 
       }
@@ -416,7 +419,9 @@
           //
           // Bonus Part 1!
           //
+
 			current_offset[0] -= .01;
+
            // update offsets
         if (current_offset[0] < -1) {
          		 current_offset[0] = 1;          
@@ -426,8 +431,9 @@
 
           // collision detection using the bounding box of this airplane
           if (detectCollision(bbox_plane, current_offset)) {
-
-            document.getElementById('scoreboard').innerHTML += ' AND...GAME OVER!'
+          
+ 
+            document.getElementById('scoreboard').innerHTML += ' AND...GAME OVER!';
 
             return;
 
