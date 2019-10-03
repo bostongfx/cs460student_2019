@@ -83,9 +83,16 @@ In class we learned about bounding boxes. The starter code includes collision de
 
 \vspace{.5cm}
 
-YOUR ANSWER
+\noindent\textbf{calculateBoundingBox():}
+\newline
+This function creates a space in which any particular object in the scene will occupy in space (in the scene "space"). This space is computed through using a \textcolor{red}{(1x3) matrix} that contains the \textcolor{red}{x, y, and z coordinates} of the object, of which is simplified from a complex geometry (the object could be odd-shaped) into a \textcolor{red}{simple primitive space} that it occupies.
+\newline
 
-\vspace{5cm}
+\noindent\textbf{detectCollision():}
+\newline
+This function determines when any particular object (parameter 1), has the same coordinates as another object (parameter 2).For this particular project, parameter 1 was the \textcolor{red}{bounding box}, and parameter 2 was any of the  \textcolor{red}{obstacles (points)} that were placed throughout the scene. In this instance the objects sharing the  "same coordinates" were \textcolor{red}{the ship} (the ship's bounding box) and \textcolor{red}{any of the obstacles}, which would determine that a collision had occurred (thus ending the game).
+
+\vspace{.5cm}
 
 \noindent\textbf{Part 4 Coding: Extend the \url{window.onkeyup} callback. (20 point)}
 
@@ -99,7 +106,7 @@ We want to allow the player to use the arrow keys to move the airplane. Please t
 
 \vspace{.5cm}
 
-Link to your assignment: \url{YOUR_GITHUB_PAGES_URL}
+Link to your assignment: \url{https://hltdev8642.github.io/cs460student/04/index.html}
 
 
 \clearpage
@@ -109,10 +116,14 @@ Link to your assignment: \url{YOUR_GITHUB_PAGES_URL}
 \vspace{.5cm} % add some space
 
 \noindent\textbf{Part 1 (11 points): Please add code to move the obstacles!} Flying the airplane around static obstacles is half the fun. The obstacles should really move! Please write code to move the obstacles every frame. The obstacles should just move in \url{x} direction from right to left to create a flying illusion for the airplane. This can be done with little code by modifying the offsets accordingly at the right place!
+\newline
+\textcolor{green}{The plane in mine moves (with directional key throttle). You can stop, speed up, slow down, or loop from the top to the bottom of the frame (but not from the left side, similar to a side-scroller video game like the original super mario bros). Also cannot cheat by staying still, as the only way for the scoreboard to increase points, is if you advance to the next frame.}
 
 \vspace{1cm}
 
 \noindent \textbf{Part 2 (11 points): Make the obstacles move faster the longer the game is played!} Right now, the game is not very hard and a skilled pilot can play it for a very long time. Currently, the scoreboard updates roughly every 5 seconds. What if we also increase the speed of the obstacles every 5 seconds? Please write code to do so. This can be done in one line-of-code!
+\newline
+\textcolor{green}{I programmed the of objects to increase with each frame. Also you can increase/decrease speed using the directional keys (each time you press it, the speed in that direction is "stepped up")}
 
 \vspace{1cm}
 
