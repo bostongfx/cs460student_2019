@@ -34,27 +34,6 @@
         r.render();
 
 
-        // build gui
-        var transformer = {
-        	'rotateX': function() {
-        		c.transform.rotateX(20);
-        	},
-        	'rotateY': function() {
-        		c.transform.rotateY(20);
-        	}
-        };
-
-        var gui = new dat.GUI();
-        var cube1 = gui.addFolder('cube' );
-        cube1.add( c , 'visible' );
-        cube1.add( c, 'opacity', 0, 1 );
-        cube1.addColor( c, 'color' );
-        cube1.add( c, 'magicmode');
-        cube1.add(transformer, 'rotateX');
-        cube1.add(transformer, 'rotateY');
-        cube1.open();
-
-
       };
 
     </script>
