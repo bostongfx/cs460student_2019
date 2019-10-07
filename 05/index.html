@@ -109,17 +109,16 @@
 
           'add new': function() {
             // TODO ADD NEW CUBES HERE
-            // TODO FIX Three.js camera
 
             // XTK Cube
-            c = new X.cube();
-            c.center = [50,50,50];
-            r.add(c);
+            c2 = new X.cube();
+            c2.center = [50,50,50];
+            r.add(c2);
 
             // Three.js Cube
-            cube = new THREE.Mesh( geometry, material );
-            scene.add( cube );
-            cube.position.set(50,50,50);
+            newCube = new THREE.Mesh( geometry, material );
+            scene.add( newCube );
+            newCube.position.set(50,50,50);
           }
 
 
