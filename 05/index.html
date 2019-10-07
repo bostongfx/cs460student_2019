@@ -38,10 +38,10 @@
 			window.onload = function() {
 			    r = new X.renderer3D();
 				r.init();
+				r.container = 'r1';
 
 				
 				c = new X.cube();
-				c.center = [0,0,0];
 				r.add(c);
 
 
@@ -96,7 +96,7 @@
         	}
         };
         var gui = new dat.GUI();
-        var cubextk = gui.addFolder(c);
+        var cubextk = gui.addFolder('cubextk');
         cubextk.add(c, 'visible');
         cubextk.add(c, 'opacity');
         cubextk.addColor(c, 'color');
