@@ -43,7 +43,7 @@
         r.init();
 
         c = new X.cube();
-        c.center = [110,0,0]
+        c.center = [0,0,0]
         r.add(c);
 
         r.render();
@@ -61,7 +61,10 @@
         zFar = 10000;
 
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-        camera.position.set( 0, 50, 0);
+        camera.position.set( 0, -50, 0);
+
+        // camera positioning and lighting issue
+        // camera.position.set( 0, -50, 0);
 
         renderer = new THREE.WebGLRenderer({antialias:true});
         renderer.setSize( r2.clientWidth, r2.clientHeight );
@@ -78,8 +81,8 @@
 
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );
-        light = new THREE.DirectionalLight( 0xffffff, 5.0);
-        light.position.set( 10, 100, 10 );
+        light = new THREE.DirectionalLight( 0xffffff, 3.0);
+        light.position.set( 10, 10, 10 );
         scene.add(light);
 
         animate();
@@ -92,17 +95,33 @@
           'rotateX': function() {
             c.transform.rotateX(20);
             cube.rotateX(20);
-            },
+          },
 
           'rotateY': function() {
             c.transform.rotateY(20);
             cube.rotateY(20);
-            },
+          },
 
           'rotateZ': function() {
             c.transform.rotateZ(20);
             cube.rotateZ(20);
+          },
+
+          'add new': function() {
+            // TODO ADD NEW CUBES HERE
+            // TODO FIX Three.js camera
+
+            // XTK Cube
+            c = new X.cube();
+            c.center = [50,50,50];
+            r.add(c);
+
+            // Three.js Cube
+            cube = new THREE.Mesh( geometry, material );
+            scene.add( cube );
+            cube.position.set(50,50,50);
           }
+
 
           };
 
@@ -128,6 +147,8 @@
         both.add(controller, 'rotateX');
         both.add(controller, 'rotateY');
         both.add(controller, 'rotateZ');
+        // Part 8 here
+        both.add(controller, 'add new');
         both.open();
 
       };
