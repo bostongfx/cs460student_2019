@@ -72,7 +72,6 @@
     var direction_x = 0;
     var speed = 0.01;
 
-
     window.onload = function() {
 
       //************************************************************//
@@ -119,7 +118,6 @@
 
       gl.useProgram( shaderprogram );
 
-
       // create multiple objects
       objects = [];
       objects.push( createAirplane());
@@ -136,8 +134,6 @@
       animate();
 
     };
-
-
 
     function createAirplane() {
 
@@ -325,7 +321,6 @@
         framecounter = 0;
 
       }
-
 
       gl.clearColor( 0., 0., 0., 0.)
       gl.clear( gl.COLOR_BUFFER_BIT );
