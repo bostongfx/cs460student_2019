@@ -61,7 +61,7 @@
         zFar = 10000;
 
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-        camera.position.set( 0, 0, 50);
+        camera.position.set( 0, 50, 0);
 
         renderer = new THREE.WebGLRenderer({antialias:true});
         renderer.setSize( r2.clientWidth, r2.clientHeight );
@@ -84,7 +84,54 @@
 
         animate();
 
+
+        var controller = {
+
+          'threejs_color': 0xffffff,
+
+          'rotateX': function() {
+            c.transform.rotateX(20);
+            cube.rotateX(20);
+            },
+
+          'rotateY': function() {
+            c.transform.rotateY(20);
+            cube.rotateY(20);
+            },
+
+          'rotateZ': function() {
+            c.transform.rotateZ(20);
+            cube.rotateZ(20);
+          }
+
+          };
+
+        // build gui
+        var gui = new dat.GUI();
+        var cube1 = gui.addFolder( 'XTK Cube' );
+        cube1.add( c , 'visible' );
+        cube1.add( c, 'opacity', 0, 1 );
+        cube1.addColor( c, 'color' );
+        cube1.open();
+
+        var threejsUI = gui.addFolder( 'Three.js Cube' );
+        threejsUI.add( cube, 'visible' );
+        threejsUI.add( cube.material, 'opacity', 0, 1 ).onChange( function() {
+          cube.material.transparent = true;
+          } );
+        threejsUI.addColor( controller, 'threejs_color' ).onChange( function() {
+          cube.material.color.set( controller.threejs_color ); 
+          } );
+        threejsUI.open();
+
+        var both = gui.addFolder('Both Cubes');
+        both.add(controller, 'rotateX');
+        both.add(controller, 'rotateY');
+        both.add(controller, 'rotateZ');
+        both.open();
+
       };
+
 
       function animate() {
 
