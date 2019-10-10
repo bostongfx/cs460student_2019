@@ -15,19 +15,21 @@
     <script>
       window.onload = function() {
 
+        var r2 = document.getElementById('r2');
+
         scene = new THREE.Scene();
 
         fov = 75;
-        ratio = window.innerWidth / window.innerHeight;
+        var ratio = r2.clientWidth / r2.clientHeight;
         zNear = 1;
         zFar = 10000;
         // console.log(ratio);
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
         camera.position.set( 0, 0, 100);
 
-        renderer = new THREE.WebGLRenderer();
-        renderer.setSize( window.innerWidth, window.innerHeight );
-        document.body.appendChild( renderer.domElement );
+        renderer = new THREE.WebGLRenderer({antialias:true});
+        renderer.setSize( r2.clientWidth, r2.clientHeight );
+        r2.appendChild( renderer.domElement );
         
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );

@@ -1,0 +1,200 @@
+<html>
+    <style>
+        html, body {
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden !important;
+        }
+        #r1 {
+            width: 50%;
+            height: 100%;
+            float: left;
+        }
+        #r2 {
+            width: 50%;
+            height: 100%;
+            float: right;
+        }
+        </style>
+    <div id="r1"></div>
+    <div id="r2"></div>
+
+    
+            <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+            <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+            <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+            <script type="text/javascript" src="https://get.goXTK.com/xtk_xdat.gui.js"></script>
+
+            <script type="text/javascript">
+                var r,c;
+                
+
+        window.onload = function(){
+
+
+            var xtkData = loadXTKLeft();
+            var threeData = loadTHREERight();
+
+            var xtkCube =  xtkData[0];
+            
+            var threeCube = threeData[0];
+
+            gui = new dat.GUI();
+
+            var controller = {
+                'threejs_color': 0xffffff,
+
+                'rotateX' :  function() {
+                    xtkCube.transform.rotateX(20);
+                    threeCube.rotateX(20);
+                },
+
+                'rotateY' : function() {
+                    xtkCube.transform.rotateY(20);
+                    threeCube.rotateY(20);
+                },
+
+                'rotateZ' : function() {
+                    xtkCube.transform.rotateZ(20);
+                    threeCube.rotateZ(20);   
+                },
+
+                'add new' : function(){
+                    xtkCubeNew = new X.cube();
+                    xtkCubeNew.center = [50,50,50];
+                    r.add(xtkCubeNew);
+                    r.render();
+
+
+                    geometry = new THREE.BoxBufferGeometry( 10, 10, 10 );
+                    var c = [0, 1, 1];  
+                    material = new THREE.MeshStandardMaterial({ color: c });
+                    threeCubeNew = new THREE.Mesh( geometry, material);
+                    threeCubeNew.position.set(50, 50, 50);
+                    scene.add(threeCubeNew);
+                }
+            };
+
+
+            // xtk gui time
+            var cube1 = gui.addFolder('cube');
+            cube1.add(xtkCube, 'visible');
+            cube1.add(xtkCube, 'opacity', 0, 1);
+            cube1.addColor(xtkCube, 'color');
+            cube1.open();
+
+
+
+            //three gui time
+            var threejsUI = gui.addFolder('Three.js Cube');
+            threejsUI.add(threeCube, 'visible');
+
+            threejsUI.add(threeCube.material, 'opacity', 0, 1 )
+            .onChange(function() {
+                threeCube.material.transparent = true;//three js wont allow opacity changes without this
+            });
+
+            threejsUI.addColor(controller, 'threejs_color').
+            onChange( function(){
+                threeCube.material.color.set(controller.threejs_color);
+            });
+            
+            threejsUI.open();
+
+            //both gui time
+            var bothUI = gui.addFolder('Both Cubes');
+            bothUI.add(controller, 'rotateX');
+            bothUI.add(controller, 'rotateY');
+            bothUI.add(controller, 'rotateZ');
+
+            bothUI.add(controller, 'add new');
+            bothUI.open();
+        };
+
+
+        
+        
+        function animate() {
+        
+        requestAnimationFrame( animate );
+        
+        controls.update();
+        renderer.render( scene, camera );
+        
+        };
+
+
+        function loadXTKLeft(){
+            //xtk time
+            r = new X.renderer3D();
+            r.container='r1';
+            r.init();
+        
+            xtkCube = new X.cube();
+            xtkCube.center = [110,0,0]
+            r.add(xtkCube);
+        
+            r.render();
+
+            return [xtkCube, r];
+        };
+
+
+        function loadTHREERight(){
+            var r2 = document.getElementById('r2');
+
+            scene = new THREE.Scene();
+
+            fov = 75;
+            var ratio = r2.clientWidth / r2.clientHeight;
+            zNear = 1;
+            zFar = 10000;
+            // console.log(ratio);
+            camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+            camera.position.set( 0, 0, 150);
+
+            renderer = new THREE.WebGLRenderer({antialias:true});
+            renderer.setSize( r2.clientWidth, r2.clientHeight );
+            r2.appendChild( renderer.domElement );
+
+            ambientLight = new THREE.AmbientLight();
+            scene.add(ambientLight);
+
+            light = new THREE.DirectionalLight(0xffffff, 5.0);
+            light.position.set(60, 100, 20);
+            scene.add(light);
+
+            nObjects = 0;
+            triangleEstimate = 0;
+
+            geometry = new THREE.PlaneBufferGeometry(10000, 10000);
+            material = new THREE.MeshBasicMaterial({
+                visible: false
+            });
+
+            invisible_plane = new THREE.Mesh(geometry, material);
+
+            scene.add(invisible_plane);
+
+            controls = new THREE.TrackballControls(camera, r2);
+
+            geometry = new THREE.BoxBufferGeometry( 10, 10, 10 );
+            var c = [0, 1, 1];  
+            material = new THREE.MeshStandardMaterial({ color: c });
+            threeCube = new THREE.Mesh( geometry, material);
+            threeCube.position.set(0, 0, 110);
+            scene.add(threeCube);
+
+            animate();
+
+            return [threeCube, scene];
+        };
+
+                
+                </script> 
+        
+        
+        
+</html>
