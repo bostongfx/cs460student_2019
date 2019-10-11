@@ -47,18 +47,7 @@
     'rotateY' : function () {c.transform.rotateY(20)},
     'rotateZ' : function () {c.transform.rotateZ(20)},
     };
-    var gui = new dat.GUI();
-    var cube1 = gui.addFolder('cube');
-    cube1.add(c, "visible");
-    cube1.add(c, "opacity", 0, 1);
-    cube1.addColor(c, "color");
-    cube1.open();
-    cube1.add(c, "magicmode");
-    cube1.open();
-    cube1.add(transformer, 'rotateX');
-    cube1.add(transformer, 'rotateY');
-    cube1.add(transformer, 'rotateZ');
-    cube1.open();
+   
 
 
     //threejs cube
@@ -71,7 +60,7 @@
     var zFar = 10000;
 
 
-    var camera = new THREE.WebGLRenderer({antialias:true});
+    var renderer = new THREE.WebGLRenderer({antialias:true});
     renderer.setSize(r2.clientWidth, r2.clientHeight); // again use the container
     r2.appendChild(renderer.domElement); // and append the domElement to the container
 
@@ -87,6 +76,11 @@
         animate();
 
     };
+
+    var controller = 
+    {
+      'threejs_color' : 0xffffff
+    }
 
 
     /*
@@ -130,6 +124,19 @@
       both.open();
     }
 */
+
+ var gui = new dat.GUI();
+    var cube1 = gui.addFolder('cube');
+    cube1.add(c, "visible");
+    cube1.add(c, "opacity", 0, 1);
+    cube1.addColor(c, "color");
+    cube1.open();
+    cube1.add(c, "magicmode");
+    cube1.open();
+    cube1.add(transformer, 'rotateX');
+    cube1.add(transformer, 'rotateY');
+    cube1.add(transformer, 'rotateZ');
+    cube1.open();
 
     var threejsUI = gui.addFolder('Three.js Cube');
     threejsUI.add(cube, 'visible');
