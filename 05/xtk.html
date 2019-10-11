@@ -1,32 +1,84 @@
 <html>
-	<head>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
 
-		<script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
-		<script type ="text/javascript" src = hhht://get.goXTK.com/xtk_xdat.gui.js></script>
-		<script type="text/javascript">
-			window.onload = function() {
+    <style>
+      html, body { 
+        background-color: #000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+      }
+    </style>
 
-				var r = new X.renderer3D();
-				r.init
-
-				var c = new X.cube();
-				var.add(c);
-				r.render();
-
-
-
-
-			}
-
-		
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_xdat.gui.js"></script>
 
 
+    <script type="text/javascript">
 
-	</head>>
-	<body>
-		
+      var r,c;
+
+      window.onload = function() {
+
+        r = new X.renderer3D();
+        r.init();
 
 
-	</body>>
+        c = new X.cube();
+        c.center = [110,0,0]
+        r.add(c);
+
+        r.render();
+
+        //build gui
+
+        var transformer = {
+        	'rotateX' : function(){
+        		c.transform.rotateX( 20 );
+        	}
+        	//'rotateY' : function(){
+        	//	c.transform.rotateY( 20 );
+        	//}
+        }
+
+
+        var gui = new dat.GUI();
+        var cube1 = gui.addFolder('cube');
+        cube1.add( c, 'visible' );
+        cube1.add( c, 'opacity', 0, 1 );
+        cube1.addColor( c, 'color' );
+        cube1.add( c, 'magicmode' );
+        cube1.add(transformer, 'rotateX');
+        cube1.add(transformer, 'rotateY');
+        cube1.open();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      };
+
+    </script>
+
+
+  </head>
+
+  <body>
+
+  </body>
 
 </html>
