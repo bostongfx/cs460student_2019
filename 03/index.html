@@ -14,9 +14,7 @@
     <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
     <script>
       window.onload = function() {
-
         scene = new THREE.Scene();
-
         fov = 75;
         ratio = window.innerWidth / window.innerHeight;
         zNear = 1;
@@ -24,26 +22,20 @@
         // console.log(ratio);
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
         camera.position.set( 0, 0, 100);
-
         renderer = new THREE.WebGLRenderer();
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( renderer.domElement );
         
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );
-
         light = new THREE.DirectionalLight( 0xffffff, 5.0 );
         light.position.set( 10, 100, 10 );
         scene.add( light );
-
-
         // now we add the cube
         // geometry = new THREE.BoxBufferGeometry( 20, 20, 20);
         // material = new THREE.MeshStandardMaterial({ color: 0xffffff });
         // cube = new THREE.Mesh( geometry, material);
         // scene.add(cube);
-
-
         //
         // The invisible plane
         //
@@ -51,32 +43,22 @@
         material = new THREE.MeshBasicMaterial( {
           visible: false
         });
-
         invisible_plane = new THREE.Mesh( geometry, material );
-
         scene.add( invisible_plane );
         //
         //
         //
-
-
-
         controls = new THREE.TrackballControls( camera );
-
         animate();
-
-
         //
         // ACTION!
         //
         var count = 0;
         renderer.domElement.onmousemove = function(e) {
-
           if (!e.shiftKey) {
             e.preventDefault();
             return false;
           }
-
           var a = Math.floor(Math.random()*Math.floor(6)); 
           
           switch(a){
@@ -94,9 +76,7 @@
             break;
             case 2:
             var x = 0, y = 0;
-
             var heartShape = new THREE.Shape();
-
             heartShape.moveTo( x + 5, y + 5 );
             heartShape.bezierCurveTo( x + 5, y + 5, x + 4, y, x, y );
             heartShape.bezierCurveTo( x - 6, y, x - 6, y + 7,x - 6, y + 7 );
@@ -104,7 +84,6 @@
             heartShape.bezierCurveTo( x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7 );
             heartShape.bezierCurveTo( x + 16, y + 7, x + 16, y, x + 10, y );
             heartShape.bezierCurveTo( x + 7, y, x + 5, y + 5, x + 5, y + 5 );
-
             var geometry = new THREE.ShapeBufferGeometry( heartShape );
             var material = new THREE.MeshBasicMaterial( { color: 0xe53a40 } );
             var cube = new THREE.Mesh( geometry, material ) ;
@@ -129,27 +108,17 @@
             scene.add( cube );
             break;
           }  
-
           console.log('yes! you clicked!');
-
           pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
-
           console.log('Pixel coordinates', pixel_coords);
-
           vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
                                         -( pixel_coords.y / window.innerHeight ) * 2 + 1);
-
           console.log('Viewport coordinates', vp_coords);
-
           vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
-
           raycaster = new THREE.Raycaster();
           raycaster.setFromCamera(vp_coords_near, camera);
           intersects = raycaster.intersectObject(invisible_plane);
-
-
           console.log('Ray to Invisible Plane', intersects[0].point);
-
           
           count = count + 1;
           console.log(count);
@@ -157,21 +126,13 @@
           cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
         
         };
-
         
-
-
       };
-
       function animate() {
-
         requestAnimationFrame( animate );
-
         controls.update();
         renderer.render( scene, camera );
-
       };
-
     </script>
   </head>
   <body></body>
