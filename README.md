@@ -1,2 +1,3 @@
-# cs460student
-The assignments for the CS460 Computer Graphics course at UMass Boston.
+# CS460 Assignment 5
+
+Transformations with XTK and Three.js!
