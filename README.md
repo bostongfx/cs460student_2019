@@ -5,5 +5,6 @@ The assignments for the CS460 Computer Graphics course at UMass Boston.
 [Assignment 2](https://zenitopires.github.io/cs460student/02/)  
 [Assignment 3](https://zenitopires.github.io/cs460student/03/)  
 [Assignment 4](https://zenitopires.github.io/cs460student/04/)
+[Assignment 5](https://zenitopires.github.io/cs460student/05/)
 
 https://zenitopires.github.io/cs460student/
