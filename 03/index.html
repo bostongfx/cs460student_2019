@@ -174,12 +174,128 @@
      };
 
      function animate() {
-
-      requestAnimationFrame( animate );
-
-      controls.update();
-      renderer.render( scene, camera );
-
+ 
+      framecounter += 1;
+ 
+      if (framecounter > 150) {
+ 
+        // roughly every five seconds with 30 FPS
+ 
+        // update score
+        document.getElementById('scoreboard').innerHTML = parseInt(document.getElementById('scoreboard').innerHTML) + 100;
+ 
+        //
+        // Bonus Part 2!
+        //
+ 
+ 
+        framecounter = 0;
+ 
+      }
+ 
+      gl.clearColor( 0., 0., 0., 0.)
+      gl.clear( gl.COLOR_BUFFER_BIT );
+ 
+ 
+ 
+      for( var o = 0; o < objects.length; o++ ) {
+ 
+        var current_objecttype = objects[o][0];
+        var current_v_buffer = objects[o][1];
+        var current_vertices = objects[o][2];
+        var current_offset = objects[o][3];
+        var current_color = objects[o][4];
+        var current_drawtype = objects[o][5];
+ 
+        var current_v_count = current_vertices.length;
+        
+        if (current_objecttype == 'airplane') {
+ 
+          // update offsets
+          if ( current_offset[0] <= -1. ) {
+            // bumped into left end of screen
+            direction_x = 1;
+          } else if ( current_offset[0] >= 1. ) {
+            // bumped into right end of screen
+            direction_x = -1;
+          }
+          current_offset[0] += direction_x*step_x;
+ 
+          if ( current_offset[1] <= -1. ) {
+            // bumped into left end of screen
+            direction_y = 1;
+          } else if ( current_offset[1] >= 1. ) {
+            // bumped into right end of screen
+            direction_y = -1;
+          }
+          current_offset[1] += direction_y*step_y;
+ 
+ 
+          // get the bounding box of this airplane
+          var bbox_plane = calculateBoundingBox( current_vertices, current_offset);
+ 
+ 
+        } else if (current_objecttype == 'obstacle') {
+ 
+          current_offset[0] -= 0.1;
+          //
+          // Bonus Part 1!
+          //
+ 
+ 
+          // collision detection using the bounding box of this airplane
+          if (detectCollision(bbox_plane, current_offset)) {
+ 
+            document.getElementById('scoreboard').innerHTML += ' AND...GAME OVER!'
+ 
+            return;
+ 
+          }
+ 
+ 
+        }
+ 
+ 
+        //************************************************************//
+        //
+        // CONNECT SHADER WITH GEOMETRY
+        //
+        
+        gl.bindBuffer( gl.ARRAY_BUFFER, current_v_buffer );
+ 
+        // gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, current_i_buffer );
+ 
+        // find the attribute in the shader source
+        var a_position = gl.getAttribLocation( shaderprogram, 'a_position' );
+ 
+        gl.vertexAttribPointer( a_position, 3, gl.FLOAT, false, 0, 0 );
+ 
+        gl.enableVertexAttribArray ( a_position );
+ 
+        // find the uniform in the shader source
+        var u_offset = gl.getUniformLocation( shaderprogram, 'u_offset' );
+ 
+        gl.uniform3fv( u_offset, current_offset)
+ 
+        var u_color = gl.getUniformLocation( shaderprogram, 'u_color' );
+        
+        gl.uniform4fv( u_color, new Float32Array(current_color) );
+ 
+        //************************************************************//
+        //
+        // DRAW!
+        //
+ 
+        //
+        // Bonus Part 3!
+        //
+        gl.drawArrays( current_drawtype, 0, current_v_count/3, 0 );
+ 
+      }
+ 
+ 
+      requestAnimationFrame(animate);
+ 
     };
 
   </script>
