@@ -1,0 +1,174 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+
+    <style>
+        html, body {
+        background-color: #000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+        }
+        #r1 {
+            width:50%;
+            height:100%;
+            float: left;
+        }
+        #r2 {
+            width:50%;
+            height:100%;
+            float:left;
+        }
+    </style>
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_xdat.gui.js"></script>
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+      var r,c;
+
+      window.onload = function() {
+
+        // XTK side
+        r = new X.renderer3D();
+        r.container = 'r1';
+        r.init();
+
+
+        c = new X.cube();
+        c.center = [110,0,0]
+        r.add(c);
+
+        r.render();
+
+        // XTK dat.gui
+        var transformer = {
+            'Rotate X': function() {
+                c.transform.rotateX(20);
+            },
+            'Rotate Y': function() {
+                c.transform.rotateY(20);
+            }
+        };
+
+        var gui = new dat.GUI();
+        var cube1 = gui.addFolder('Cube');
+        cube1.add(c, 'visible');
+        cube1.add(c, 'opacity', 0, 1);
+        cube1.addColor(c, 'color');
+        cube1.add(transformer, 'Rotate X');
+        cube1.add(transformer, 'Rotate Y');
+        cube1.open();
+
+      
+
+      // Three.js side
+      scene = new THREE.Scene();
+      var r2 = document.getElementById('r2');
+
+      camera = new THREE.PerspectiveCamera(75, r2.clientWidth/r2.clientHeight
+                                            ,1 , 1000);
+      
+      camera.position.set(0, 0, 100);
+
+      renderer = new THREE.WebGLRenderer({antialias:true});
+      renderer.setSize( r2.clientWidth, r2.clientHeight ); // again use the container
+      r2.appendChild( renderer.domElement ); // and append the domElement to the container
+
+      ambientLight = new THREE.AmbientLight();
+      scene.add(ambientLight);
+
+      light = new THREE.DirectionalLight(0xffffff, 5, 0);
+      light.position.set(10, 100, 10);
+      scene.add(light);
+
+      controls = new THREE.TrackballControls(camera, r2);
+
+      var material = new THREE.MeshStandardMaterial();
+      var geometry = new THREE.BoxBufferGeometry(20, 20, 20);
+      var cube = new THREE.Mesh(geometry, material);
+
+      scene.add(cube);
+
+      geometry = new THREE.PlaneBufferGeometry(10000, 10000);
+      material = new THREE.MeshStandardMaterial({visible: false});
+      invisible_plane = new THREE.Mesh(geometry, material);
+
+      // Helper object for dat.GUI
+      var controller = {
+          'Three.js Color': 0xfffff,
+
+          'Rotate X': function() {
+              c.transform.rotateX(20);
+              cube.rotateX(20);
+          },
+
+          'Rotate Y': function() {
+              c.transform.rotateY(20);
+              cube.rotateY(20);
+          },
+          'Rotate Z': function() {
+              c.transform.rotateZ(20);
+              cube.rotateZ(20);
+          },
+          'Add new': function() {
+              var new_cube_xtk = new X.cube();
+              new_cube_xtk.center = [50, 50, 50];
+              r.add(new_cube_xtk);
+
+              r.render();
+
+              material = new THREE.MeshStandardMaterial();
+              geometry = new THREE.BoxBufferGeometry(20, 20, 20);
+              new_cube_js = new THREE.Mesh(geometry, material);
+              new_cube_js.position.set(50, 50, 50);
+
+              scene.add(new_cube_js);
+          }
+      };
+
+      // Three.js dat gui
+      var three_dat_gui = gui.addFolder('Three.js cube');
+      three_dat_gui.add(cube, 'visible');
+      three_dat_gui.add(cube.material, 'opacity', 0, 1).onChange(
+          function() {
+              cube.material.transparent = true;
+          });
+      three_dat_gui.addColor(controller, 'Three.js Color').onChange(
+          function() {
+              cube.material.color.set(controller.threejs_color);
+          });
+      three_dat_gui.open();
+
+      var xtk_and_three = gui.addFolder('Both cubes');
+      xtk_and_three.add(controller, 'Rotate X');
+      xtk_and_three.add(controller, 'Rotate Y');
+      xtk_and_three.add(controller, 'Rotate Z');
+      xtk_and_three.add(controller, 'Add new');
+      xtk_and_three.open();
+
+      animate();
+      };
+
+      function animate() {
+          requestAnimationFrame(animate);
+          controls.update();
+          renderer.render(scene, camera);
+      };
+      
+    </script>
+  </head>
+
+  <body>
+      // XTK side is r1
+      <div id='r1'></div>
+      // Three.js side is r2
+      <div id='r2'></div>
+
+  </body>
+
+</html>
