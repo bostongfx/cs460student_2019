@@ -34,15 +34,66 @@
 
       window.onload = function() {
         //xtk
-        r = new X.renderer3D();
-        r.init();
+        var r1 = new X.renderer3D();
+        r1.container = document.getElementById("r1");
+        r1.init();
 
 
-        c = new X.cube();
+        var c = new X.cube();
         c.center = [110,0,0]
-        r.add(c);
+        r1.add(c);
 
-        r.render();
+        r1.render();
+
+
+        //three.js
+        var r2 = document.getElementById('r2');
+        scene = new THREE.Scene();
+
+        fov = 75;
+        ratio = r2.clientWidth / r2.clientHeight;
+        zNear = 1;
+        zFar = 10000;
+        
+        camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camera.position.set( 0, 0, 100);
+
+        renderer = new THREE.WebGLRenderer({antialias: true});
+        renderer.setSize( r2.clientWidth, r2.clientHeight );
+        r2.appendChild( renderer.domElement);
+
+        
+        ambientLight = new THREE.AmbientLight();
+        scene.add( ambientLight );
+
+        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        light.position.set( 10, 100, 10 );
+        scene.add( light );
+
+
+        //now we add the cube
+        var geometry = new THREE.BoxBufferGeometry(20, 20, 20);
+        var material = new THREE.MeshStandardMaterial({ color: 0xffffff});
+        cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
+
+        //
+        // The invisible plane
+        //
+        geometry = new THREE.PlaneBufferGeometry( 10000, 10000 );
+        material = new THREE.MeshBasicMaterial( {
+          visible: false
+        });
+
+        invisible_plane = new THREE.Mesh( geometry, material );
+
+        scene.add( invisible_plane );
+        //
+        //
+        //
+
+        controls = new THREE.TrackballControls( camera, r2 );
 
 
         var controller = {
@@ -67,6 +118,7 @@
           
         };
 
+
         var gui = new dat.GUI(); 
 
         var cube1 = gui.addFolder('XTK cube');
@@ -77,9 +129,10 @@
 
         var threejsUI = gui.addFolder('Three.js Cube');
         threejsUI.add( c, 'visible');
-        threejsUI.add( c, 'opacity', 0, 1);
+        threejsUI.add( c, 'opacity', 0, 1)
         //.onChange(function(){ c.material.transparent = true; });
-        threejsUI.addColor( controller, 'threejs_color' ).onChange( function() { c.material.color.set( controller.threejs_color);});
+        threejsUI.addColor( controller, 'threejs_color' )
+        //.onChange( function() { c.material.color.set( controller.threejs_color);});
         threejsUI.open();
 
 
@@ -87,64 +140,11 @@
         both.add(controller, 'rotateX');
         both.add(controller, 'rotateY');
         both.add(controller, 'rotateZ');
-        both.open();
-        
         both.add(controller, 'add new');
         both.open();
-
-
-        //three.js
-        scene = new THREE.Scene();
-        var r2 = document.getElementById('02');
-
-        fov = 75;
-        var ratio = r2.clientWidth / r2.clientHeight;
-        zNear = 1;
-        zFar = 10000;
         
-        camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-        camera.position.set( 0, 0, 100);
-
-        renderer = new THREE.WebGLRenderer({antialias: true});
-        renderer.setSize( r2.clientWidth, r2.clientHeight );
-        r2.appendChild( renderer.domElement);
-
-        
-        ambientLight = new THREE.AmbientLight();
-        scene.add( ambientLight );
-
-        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
-        light.position.set( 10, 100, 10 );
-        scene.add( light );
-
-
-        //now we add the cube
-        var geometry = new THREE.BoxBufferGeometry(20, 20, 20);
-        var material = new THREE.MeshStandardMaterial({ color: Math.random() * 0xffffff , wireframe:false});
-        cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
-
-
-        //
-        // The invisible plane
-        //
-        geometry = new THREE.PlaneBufferGeometry( 10000, 10000 );
-        material = new THREE.MeshBasicMaterial( {
-          visible: false
-        });
-
-        invisible_plane = new THREE.Mesh( geometry, material );
-
-        scene.add( invisible_plane );
-        //
-        //
-        //
-
-        controls = new THREE.TrackballControls( camera, r2 );
-
         animate();
-
-        
+                
       };
 
 
@@ -163,8 +163,8 @@
   </head>
 
   <body>
-    <div id ="01" name = "r1"></div>
-    <div id ="02" name = "r2"></div>
+    <div id ="r1"></div>
+    <div id ="r2"></div>
   </body>
 
 </html>
