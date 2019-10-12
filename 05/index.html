@@ -63,9 +63,6 @@
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
         camera.position.set( 90, 0, 0);
 
-        // camera positioning and lighting issue
-        // camera.position.set( 0, -50, 0);
-
         renderer = new THREE.WebGLRenderer({antialias:true});
         renderer.setSize( r2.clientWidth, r2.clientHeight );
         r2.appendChild( renderer.domElement );
@@ -108,7 +105,6 @@
           },
 
           'add new': function() {
-            // TODO ADD NEW CUBES HERE
 
             // XTK Cube
             c2 = new X.cube();
