@@ -37,7 +37,7 @@
 	  
 		//XTK
 		r1 = new X.renderer3D();
-		// .. attach the renderer to a <div> container using its id
+		// attach the renderer to a <div> container using its id
         r1.container = 'r1';
 		r1.init();
 		c = new X.cube();	// create a new cube
@@ -81,26 +81,53 @@
  
  
         // build gui
-        var transformer = {
-          'rotateX': function() {
-            c.transform.rotateX( 20 );
-          },
-          'rotateY': function() {
-            c.transform.rotateY( 20 );
-          }
-        };
-        var gui = new dat.GUI();
-        var cube1 = gui.addFolder('cube');
+
+		var controller = {
+			'threejs_color': 0xffffff,
+			
+			'rotateX': function() {
+				c.transform.rotateX(20);
+				cube.rotateX(20);
+			},
+			'rotateY': function() {
+				c.transform.rotateY(20);
+				cube.rotateY(20);
+			},
+			'rotateZ': function() {
+				c.transform.rotateZ(20);
+				cube.rotateZ(20);
+			}
+			'add new': function() {
+			
+			}
+		};
 		
-        cube1.add( c, 'visible' );
-        cube1.add( c, 'opacity', 0, 1 );
-        cube1.addColor( c, 'color' );
-        cube1.add(c, 'magicmode');
-        cube1.add(transformer, 'rotateX');
-        cube1.add(transformer, 'rotateY');
-        cube1.open();
+        var gui = new dat.GUI();
+		var cube1 = gui.addFolder('XTK Cube');
+        cube1.add( c, 'visible' ); 			
+        cube1.add( c, 'opacity', 0, 1 ); 
+        cube1.addColor( c, 'color' );  		
+        //cube1.add(c, 'magicmode');
+		cube1.open(); 
+		
+		var threejsUI = gui.addFolder('Three.js Cube');
+		threejsUI.add(cube, 'visible');
+		threejsUI.add(cube.material, 'opacity', 0, 1).onChange( 
+			function() {cube.material.transparent = true;});
+		threejsUI.addColor(controller, 'threejs_color').onChange( 
+			function() {cube.material.color.set( controller.threejs_color );} );
+		threejsUI.open();
+		
+		var both = gui.addFolder('Both Cubes');
+		both.add(controller, 'rotateX');
+		both.add(controller, 'rotateY');
+		both.add(controller, 'rotateZ');
+		both.add(controller, 'add new');
+		both.open();
 		
 		animate();
+		
+		
       };
 
 	function animate() {
