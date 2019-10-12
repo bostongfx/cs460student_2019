@@ -55,7 +55,7 @@
         zNear = 1;
         zFar = 10000;
 		camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-        camera.position.set( 0, 0, 100);
+        camera.position.set( 0, 0, 50);
 		
 		renderer = new THREE.WebGLRenderer({antialias:true});
 		renderer.setSize( r2.clientWidth, r2.clientHeight );
@@ -72,13 +72,8 @@
         material = new THREE.MeshStandardMaterial({ color: 0xffffff });
         cube = new THREE.Mesh( geometry, material);
         scene.add(cube);
- 
- 
+
 		controls = new THREE.TrackballControls( camera );
- 
- 
- 
- 
  
         // build gui
 
@@ -96,9 +91,15 @@
 			'rotateZ': function() {
 				c.transform.rotateZ(20);
 				cube.rotateZ(20);
-			}
+			},
 			'add new': function() {
-			
+				c = new X.cube();	// create a new cube
+				c.center = [50,50,50];
+				r1.add(c); // add the cube to the renderer
+				cube = new THREE.Mesh( geometry, material);
+				cube.position.set(50,50,50);
+				camera.position.set( 0, 0, 150);
+				scene.add(cube);
 			}
 		};
 		
