@@ -32,7 +32,7 @@
 
     <script type="text/javascript">
 
-      var r1,c;
+      var r1;
 
       window.onload = function() {
 
@@ -78,10 +78,9 @@
 
         var controls = new THREE.TrackballControls( camera, r2 ); // pass the container to the camera
 
-    animate();
-
         // Part 4 to Part 7: DAT GUI 
 
+        
         var transformer = {
 
           'rotateX': function() {
@@ -95,37 +94,31 @@
           }
         };
 
-        function animate() {
-        requestAnimationFrame( animate );
-        controls.update();
-        renderer.render( scene, camera );
-        };
-
         var controller = {
-        'threejs_color': 0xffffff,
-        
-        'rotateX': function() {
-            c.transform.rotateX(20);
-            cube.rotateX(20);
-        },
-        'rotateY': function() {
-            c.transform.rotateY(20);
-            cube.rotateY(20);
-        },
-        'rotateZ': function() {
-            c.transform.rotateZ(20);
-            cube.rotateZ(20);
-        },
-        'add new': function() {
-            // 2nd XTK cube
-            var c2 = new X.cube();
-            c2.center = [50, 50, 50];
-            r1.add(c2);
-            // 2nd THREE.js cube
-            cube2 = new THREE.Mesh( geometry, material );
-            cube2.position.set(50, 50, 50);
-            scene.add( cube2 );            
-        }
+            'threejs_color': 0xffffff,
+            
+            'rotateX': function() {
+                c.transform.rotateX(20);
+                cube.rotateX(20);
+            },
+            'rotateY': function() {
+                c.transform.rotateY(20);
+                cube.rotateY(20);
+            },
+            'rotateZ': function() {
+                c.transform.rotateZ(20);
+                cube.rotateZ(20);
+            },
+            'add new': function() {
+                // 2nd XTK cube
+                var c2 = new X.cube();
+                c2.center = [50, 50, 50];
+                r1.add(c2);
+                // 2nd THREE.js cube
+                cube2 = new THREE.Mesh( geometry, material );
+                cube2.position.set(50, 50, 50);
+                scene.add( cube2 );            
+            }
         };
 
         var gui = new dat.GUI();
@@ -156,16 +149,17 @@
         both.add(controller, 'add new');
         both.open();
 
+        animate();
 
+        function animate() {
+        requestAnimationFrame( animate );
+        controls.update();
+        renderer.render( scene, camera );
         };
 
-
-
+      };
     </script>
-
-
   </head>
-
   <body>
     <div id = "r1"></div>
     
