@@ -47,7 +47,21 @@
             c.transform.rotateZ(20);
             cube.rotateZ(20);
           }, 
-        }
+          'add new': function(){
+            //XTK
+            c2 = new X.cube();
+            c2.center = [50, 50, 50];
+            r.add(c2);
+            r.render();
+
+            geometry = new THREE.BoxBufferGeometry(10, 10, 10);
+            material = new THREE.MeshStandardMaterial();
+            cube2 = new THREE.Mesh(geometry, material);
+            cube2.position.set(50, 50, 50);
+            scene.add(cube2);
+            animate();
+          }
+        };
         //XTK GUI
         var gui = new dat.GUI();
         var cube1 = gui.addFolder('cube');
@@ -103,7 +117,7 @@
         both.add(controller, 'rotateX');
         both.add(controller, 'rotateY');
         both.add(controller, 'rotateZ');
-        //both.add(controller, 'add new');
+        both.add(controller, 'add new');
         both.open();
 
         
