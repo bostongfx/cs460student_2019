@@ -62,15 +62,21 @@
 
         controls = new THREE.TrackballControls( camera );
 
+
+
+        // Robot
+
         r = new Robot();
 
-
         rGroup = new THREE.Group();
+
         rGroup.add(r.head);
 
         scene.add(rGroup);
 
         helper = new THREE.SkeletonHelper(rGroup);
+
+        scene.add(helper);
 
         animate();
 
