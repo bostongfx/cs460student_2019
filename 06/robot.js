@@ -13,21 +13,22 @@ this.torso.position.y = -10;
 
 this.neck.add(this.torso);
 
+
+//left arm
 this.left_upper_arm = new THREE.Bone();
 this.left_upper_arm.position.x = 10;
 
-this.left_lower_arm = null;
+this.left_lower_arm = new THREE.Bone();
 
-
-this.left_hand = null;
+this.left_hand = new THREE.Bone();
 
 // TODO right arm
 
-this.left_upper_leg = null;
+this.left_upper_leg = new THREE.Bone();
 
-this.left_lower_leg = null;
+this.left_lower_leg = new THREE.Bone();
 
-this.left_foot = null;
+this.left_foot = new THREE.Bone();
 
 // TODO right leg
 
