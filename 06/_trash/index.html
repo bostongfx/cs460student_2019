@@ -9,12 +9,11 @@
         height: 100%;
         overflow: hidden !important;
 
-        background-image: url("sky.jpg");
+        background-image: url("sky_alt.jpg");
         background-repeat: no-repeat;
         background-size: 100% 100%;
       }
     </style>
-    <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
     <script src="js/robot.js" type="text/javascript"></script>
     <script src="js/three.min.js" type="text/javascript"></script>
     <script src="js/TrackballControls.js" type="text/javascript"></script>
@@ -29,7 +28,7 @@
 
         scene = new THREE.Scene();
 
-        var fov = 90;
+        var fov = 60;
         var ratio = window.innerWidth / window.innerHeight;
         var zNear = 1;
         var zFar = 10000;
@@ -48,7 +47,7 @@
         scene.add( light );
 
 
-        var floorTexture = new THREE.TextureLoader().load( 'marble.jpg' );
+        // var floorTexture = new THREE.TextureLoader().load( 'marble.jpg' );
         var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
         var floorMaterial = new THREE.MeshBasicMaterial( {
           map: floorTexture,
@@ -59,39 +58,8 @@
         floor.rotateX(-30);
         scene.add( floor );
 
-        //create robot object
-        var r = new Robot();
+        controls = new THREE.TrackballControls( camera );
 
-        var rGroup = new THREE.Group();
-        rGroup.add(r.head);
-        helper = new THREE.SkeletonHelper( rGroup );
-        scene.add(helper);
-        scene.add(rGroup);
-
-        var controller = {
-        anaglyph: false
-        }
-
-
-        //configure menu system (dat.gui) 
-        //and anaglyph rendering
-        var gui = new dat.GUI();
-        
-        var rendering = gui.addFolder( "Rendering" );
-        rendering.add( controller, 'anaglyph' );
-        rendering.open();
-
-        //sliders for xyz movement
-        var moving = gui.addFolder( "Movement" );
-        moving.add( r.head.position, "x", -1000, 1000 );
-        // ... add y and z
-        moving.add( r.head.position, "y", -1000, 1000 );
-        moving.add( r.head.position, "z", -1000, 1000 );
-        moving.open();
-
-        //fix for slider bug
-        controls = new THREE.TrackballControls( camera, renderer.domElement );
-        
         animate();
 
 
