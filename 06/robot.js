@@ -132,10 +132,10 @@ Robot.prototype.raise_left_arm = function() {
 	this.movement = 'raise left arm';
 	console.log("This was raise left arm");
 	T = Math.PI;
-	r.left_upper_arm.quaternion.x = Math.sin(T/2)
+	r.left_upper_arm.quaternion.x = Math.sin(T/2) // 1
 	r.left_upper_arm.quaternion.y = 0
 	r.left_upper_arm.quaternion.z = 0
-	r.left_upper_arm.quaternion.w = Math.cos(T/2)
+	r.left_upper_arm.quaternion.w = Math.cos(T/2) // 0
 
 	this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(
 		x,
@@ -148,11 +148,11 @@ Robot.prototype.raise_left_arm = function() {
 Robot.prototype.lower_left_arm = function() {
 	this.movement = 'lower left arm';
 	console.log("This was lower left arm");
-	T = Math.PI;
-	r.left_upper_arm.quaternion.x = Math.sin(T/2)
+	T = 2 * Math.PI;
+	r.left_upper_arm.quaternion.x = Math.sin(T/2) // 1
 	r.left_upper_arm.quaternion.y = 0
 	r.left_upper_arm.quaternion.z = 0
-	r.left_upper_arm.quaternion.w = Math.cos(-T/2)
+	r.left_upper_arm.quaternion.w = Math.cos(T/2) // 1
 
 	this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(
 		x,
