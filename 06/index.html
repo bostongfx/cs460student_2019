@@ -24,7 +24,7 @@
 
       var scene, camera, renderer, ambientLight, light, controls;
       var floor;
-
+        var r = new Robot(0,-55,0);
       window.onload = function() {
 
         scene = new THREE.Scene();
@@ -60,11 +60,12 @@
         scene.add( floor );
 
         //create robot object
-        var r = new Robot();
+    //    var r = new Robot(0,-55,0);
 
         var rGroup = new THREE.Group();
         rGroup.add(r.head);
         helper = new THREE.SkeletonHelper( rGroup );
+        helper.material.linewidth = 6;
         scene.add(helper);
         scene.add(rGroup);
 
@@ -91,8 +92,9 @@
 
         //fix for slider bug
         controls = new THREE.TrackballControls( camera, renderer.domElement );
-        
+        r.show(scene)
         animate();
+        
 
 
       };
@@ -100,12 +102,11 @@
       function animate() {
 
         requestAnimationFrame( animate );
-
+        r.onAnimate();
         controls.update();
         renderer.render( scene, camera );
 
       };
-
     </script>
   </head>
   <body></body>
