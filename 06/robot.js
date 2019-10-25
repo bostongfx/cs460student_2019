@@ -115,14 +115,40 @@ Robot.prototype.onAnimate = function() {
 
 	if (this.movement == 'raise left arm') {
 		console.log("RLA");
-		// ... TODO slerping
-		// Move left arm up
+		var T = -Math.PI;
+		this.left_upperarm.quaternion.slerp( new THREE.Quaternion(
+		Math.sin(T/2),   // x
+        0,               // y
+        0,               // z
+        Math.cos(T/2)),  // w
+        0.1 );
 	} else if (this.movement == 'lower left arm') {
 		console.log("LLA");
 		// ... TODO slerping
 		// Move left arm down
 	} else if (this.movement == 'kick') {
 		console.log("KICK");
+		// check if slerp reached almost the end
+		if (this.right_upperleg.quaternion.w < 0.72) {
+			// signal that the kick is done and the leg should move back
+			this.movement = 'kick done';
+ 
+    } else {
+ 
+      var T = -Math.PI/2;
+      this.right_upperleg.quaternion.slerp( new THREE.Quaternion( 
+      Math.sin( T / 2 ),   // x
+      0,                   // y
+      0,                   // z
+      Math.cos( T / 2 ) ), // w
+      0.1 );
+                                      
+    }
+ 
+  } else if (this.movement == 'kick done') {
+ 
+    // reset leg back to identity
+    this.right_upperleg.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
 		// ... TODO slerping and check once it is done for a backwards slerp
 		// you can use the identity quaternion for a backwards slerp
 	}
@@ -131,35 +157,35 @@ Robot.prototype.onAnimate = function() {
 Robot.prototype.raise_left_arm = function() {
 	this.movement = 'raise left arm';
 	console.log("This was raise left arm");
-	T = Math.PI;
-	r.left_upper_arm.quaternion.x = Math.sin(T/2) // 1
-	r.left_upper_arm.quaternion.y = 0
-	r.left_upper_arm.quaternion.z = 0
-	r.left_upper_arm.quaternion.w = Math.cos(T/2) // 0
+	// T = Math.PI;
+	// r.left_upper_arm.quaternion.x = Math.sin(T/2) // 1
+	// r.left_upper_arm.quaternion.y = 0
+	// r.left_upper_arm.quaternion.z = 0
+	// r.left_upper_arm.quaternion.w = Math.cos(T/2) // 0
 
-	this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(
-		x,
-		y,
-		z,
-		w
-	), 0.1 )
+	// this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(
+	// 	Math.sin(T/2),
+	// 	y,
+	// 	z,
+	// 	Math.cos(T/2)
+	// ), 0.1 )
 	};
 
 Robot.prototype.lower_left_arm = function() {
 	this.movement = 'lower left arm';
 	console.log("This was lower left arm");
-	T = 2 * Math.PI;
-	r.left_upper_arm.quaternion.x = Math.sin(T/2) // 1
-	r.left_upper_arm.quaternion.y = 0
-	r.left_upper_arm.quaternion.z = 0
-	r.left_upper_arm.quaternion.w = Math.cos(T/2) // 1
+	// T = 2 * Math.PI;
+	// r.left_upper_arm.quaternion.x = Math.sin(T/2) // 1
+	// r.left_upper_arm.quaternion.y = 0
+	// r.left_upper_arm.quaternion.z = 0
+	// r.left_upper_arm.quaternion.w = Math.cos(T/2) // 1
 
-	this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(
-		x,
-		y,
-		z,
-		w
-	), 0.1 )
+	// this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(
+	// 	x,
+	// 	y,
+	// 	z,
+	// 	w
+	// ), 0.1 )
 	};
 
 Robot.prototype.kick = function() {
