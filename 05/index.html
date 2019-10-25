@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
     <style>
     	html, body {
@@ -39,7 +39,6 @@
     		r = new X.renderer3D();
     		r.container='r1';
     		r.init();
-
     		c = new X.cube();
     		c.color = [ 0.4, 0.6, 0.1 ];
     		r.add(c);
@@ -52,7 +51,6 @@
     		var r2 = document.getElementById('r2'); // get the div container
 
     		scene = new THREE.Scene();
-
     		var fov = 75;
     		var ratio = r2.clientWidth / r2.clientHeight; //use the container's clientWidth and client Height rather than window.innerWidth and window.innerHeight
     		var zNear = 1;
@@ -67,7 +65,6 @@
 
     		var ambientLight = new THREE.AmbientLight();
     		scene.add( ambientLight );
-
     		var light = new THREE.DirectionalLight( 0xffffff, 1.3 );
     		light.position.set( 10, 10, 40 );
     		scene.add( light );
@@ -117,7 +114,7 @@
     		};
 
     		/////// -- Rotate both cubes folder -- here
-			var gui = new dat.GUI();
+            var gui = new dat.GUI();
     		var both = gui.addFolder( 'Both Cubes' );
 			both.add( controller, 'rotateX' );
 			both.add( controller, 'rotateY' );
@@ -128,10 +125,8 @@
     		/////// --- Three.js Cube folder --- here
     		var threejsUI = gui.addFolder( 'Three.js Cube' );
     		threejsUI.add( meshcube, 'visible' );
-    		threejsUI.add( meshcube.material, 'opacity', 0, 1 ).onChange( function() {
-    			meshcube.material.transparent = true; } );
-    		threejsUI.addColor( controller, 'threejs_color' ).onChange( function() {
-    			meshcube.material.color.set( controller.threejs_color ); } );
+    		threejsUI.add( meshcube.material, 'opacity', 0, 1 ).onChange( function() { meshcube.material.transparent = true; } );
+    		threejsUI.addColor( controller, 'threejs_color' ).onChange( function() { meshcube.material.color.set( controller.threejs_color ); } );
     		threejsUI.open();
 
 
@@ -145,17 +140,16 @@
 
     	function animate() {
     		requestAnimationFrame( animate );
-
     		controls.update();
-
     		renderer.render( scene, camera );
+
+
     	};
     </script>
-	<title></title>
+    <title></title>
 </head>
 <body>
 	<div id="r1"></div>
 	<div id="r2"></div>
-
 </body>
 </html>
