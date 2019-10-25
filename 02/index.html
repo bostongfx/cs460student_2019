@@ -21,20 +21,19 @@
       }
     </style>
     
-    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
-
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
     <script type="text/javascript">
 
     window.onload = function() {
 
-      // this gets called when the site is ready
+      // This gets called when the site is ready
 
-      // create a new scene and renderer
+      // Create a new scene and renderer
       r = new X.renderer3D();
       r.init();
 
-      // create a cube and add it!
-      // tip of tree
+      // Create a cube and add it!
+      // Tip of tree
       // 0
       tip = new X.cube();
       tip.center = [0, 100, 0]
@@ -89,10 +88,10 @@
         }
       }
 
-      // set camera further away!
+      // Set camera further away!
       r.camera.position = [0, 0, 400];
 
-      // render everything!
+      // Render everything!
       r.render();
 
       // Animate my tree
