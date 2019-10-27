@@ -195,7 +195,7 @@ Robot = function(x,y,z){
             var w = Math.cos(T/2);
 
             if (kicking){
-                this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(x,y,z,w), 0.05);   
+                this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(x,y,z,w), 0.2);   
                 if (this.left_upper_leg.quaternion.angleTo(new THREE.Quaternion(x,y,z,w)) < 0.3){
                     kicking = false;
                 }            
@@ -206,7 +206,7 @@ Robot = function(x,y,z){
                 var y = Math.sin(T/2)*0;
                 var z = Math.sin(T/2)*0;
                 var w = Math.cos(T/2);
-                this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(x,y,z,w), 0.05);
+                this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(x,y,z,w), 0.2);
             }
         }
     }
