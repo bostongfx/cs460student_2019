@@ -8,7 +8,7 @@
         padding: 0;
         height: 100%;
         overflow: hidden !important;
-        background-image: url("sky_alt.jpg");
+        background-image: url("gfx/sky_alt.jpg");
         background-repeat: no-repeat;
         background-size: 100% 100%;
       }
@@ -34,7 +34,7 @@
         var zNear = 1;
         var zFar = 10000;
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-        camera.position.set( 0, 0, 500);
+        camera.position.set( 0, 250, 1000);
 
         renderer = new THREE.WebGLRenderer({ alpha: true });
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -48,7 +48,7 @@
         scene.add( light );
 
 
-        floorTexture = new THREE.TextureLoader().load( 'magic_carpet.jpg' );
+        floorTexture = new THREE.TextureLoader().load( 'gfx/magic_carpet.jpg' );
         floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
         floorMaterial = new THREE.MeshBasicMaterial( {
           map: floorTexture,
@@ -92,10 +92,17 @@
         moving.open();
 
         var actions = gui.addFolder("Actions");
-        actions.add(r, "wave", r.wave())
-        actions.add(r, "raiseLeftArm", r.raiseLeftArm())
-        actions.add(r, "lowerLeftArm", r.lowerLeftArm())
-        actions.add(r, "kick", r.kick())
+        actions.add(r, "wave", r.wave());
+        actions.add(r, "raiseLeftArm", r.raiseLeftArm());
+        actions.add(r, "lowerLeftArm", r.lowerLeftArm());
+        actions.add(r, "raiseRightArm", r.raiseRightArm());
+        actions.add(r, "lowerRightArm", r.lowerRightArm());
+        actions.add(r, "raiseRightLeg", r.raiseRightLeg());
+        actions.add(r, "lowerRightLeg", r.lowerRightLeg());
+        actions.add(r, "raiseLeftLeg", r.raiseLeftLeg());
+        actions.add(r, "lowerLeftLeg", r.lowerLeftLeg());
+        actions.add(r, "kick", r.kick());
+        actions.add(r, "dance", r.dance());
         actions.open();
 
         //fix for slider bug

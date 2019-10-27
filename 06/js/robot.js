@@ -67,6 +67,55 @@ this.lowerLeftArm = function ()
 
 }
 
+
+this.raiseRightArm = function () 
+{
+
+    this.movement = 'raise right arm';
+
+}
+
+this.lowerRightArm = function () 
+
+{
+
+    this.movement = 'lower right arm';
+
+}
+
+this.raiseLeftLeg = function () 
+
+{
+
+    this.movement = 'raise left leg';
+
+}
+
+this.lowerLeftLeg = function () 
+
+{
+
+    this.movement = 'lower left leg';
+
+}
+
+
+this.raiseRightLeg = function () 
+
+{
+
+    this.movement = 'raise right leg';
+
+}
+
+this.lowerRightLeg = function () 
+
+{
+
+    this.movement = 'lower right leg';
+
+}
+
 this.kick = function () 
 
 {
@@ -83,28 +132,21 @@ this.kickDone = function ()
 
 }
 
+this.dance = function ()
+{
+  this.movement = 'dance';
+}
+
 this.wave = function ()
 {
- //  var atemp = this;
- //  atemp.movement = 'raise left arm';
- //  atemp.onAnimate();
- // setTimeout(function(){
- //   atemp.movement = 'lower left arm';
- //  atemp.onAnimate();}, 200);
-  
-
- // setTimeout(function(){
- // atemp.movement = 'raise left arm';
- //  atemp.onAnimate();
- //  setTimeout(function(){
- //   atemp.movement = 'lower left arm';
- //  atemp.onAnimate();}, 200);
- //  },300)
  this.movement = 'wave';
 }
 
+
+
 this.onAnimate = function() 
 {
+
 
   if (this.movement == 'raise left arm') 
   {
@@ -126,26 +168,104 @@ this.onAnimate = function()
     this.left_upper_arm.quaternion.slerp(new THREE.Quaternion(x, y, z, w), 0.1);
   }
 
+ else if (this.movement == 'raise left leg')
+  {
+      var T = -Math.PI/2;
+      var x = Math.sin(T/2);
+      var y = 0;
+      var z = 0;
+      var w = Math.cos(T/2);
+    this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(x, y, z, w), 0.1);
+  }
+
+
+
+ else if (this.movement == 'lower left leg')
+  {
+    var x = 0;
+    var y = 0;
+    var z = 0;
+    var w = 1;
+
+    this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(x, y, z, w), 0.1);
+  }
+
+ else if (this.movement == 'raise right leg')
+  {
+      var T = -Math.PI/2;
+      var x = Math.sin(T/2);
+      var y = 0;
+      var z = 0;
+      var w = Math.cos(T/2);
+    this.right_upper_leg.quaternion.slerp(new THREE.Quaternion(x, y, z, w), 0.1);
+  }
+
+
+
+ else if (this.movement == 'lower right leg')
+  {
+    var x = 0;
+    var y = 0;
+    var z = 0;
+    var w = 1;
+
+    this.right_upper_leg.quaternion.slerp(new THREE.Quaternion(x, y, z, w), 0.1);
+  }
+
+  else if (this.movement == 'raise right arm') 
+  {
+    var T = -Math.PI;
+    var x = Math.sin(T/2);
+    var y = 0;
+    var z = 0;
+    var w = Math.cos(T/2);
+
+    this.right_upper_arm.quaternion.slerp(new THREE.Quaternion(x, y, z, w), 0.1);
+  }
+  else if (this.movement == 'lower right arm')
+  {
+    var x = 0;
+    var y = 0;
+    var z = 0;
+    var w = 1;
+
+    this.right_upper_arm.quaternion.slerp(new THREE.Quaternion(x, y, z, w), 0.1);
+  }
+
+
+else if (this.movement == 'dance')
+{
+  var danceMove = this;
+  setTimeout(function (){
+  danceA(danceMove);
+  setTimeout(function(){
+      danceB(danceMove);
+  },300)
+  },450)
+}
 
 else if (this.movement == 'wave')
 {
+  var waveTemp = this;
+  waveTemp.movement = 'raise left arm';
   var atemp = this;
-  atemp.movement = 'raise left arm';
-  atemp.onAnimate();
+  // atemp.movement = 'raise left arm';
+  // atemp.onAnimate();
  setTimeout(function(){
-   atemp.movement = 'lower left arm';
-  atemp.onAnimate();}, 200);
-  
-
+  waveTemp.movement = 'lower left arm';
+  waveTemp.onAnimate();}, 200);
+ 
  setTimeout(function(){
- atemp.movement = 'raise left arm';
-  atemp.onAnimate();
+ waveTemp.movement = 'raise left arm';
+  // atemp.onAnimate();
   setTimeout(function(){
-   atemp.movement = 'lower left arm';
-  atemp.onAnimate();}, 200);
+   waveTemp.movement = 'lower left arm';
+  waveTemp.onAnimate();}, 200);
   },300)
 
 }
+
+
   else if (this.movement == 'kick') 
   {
 
@@ -202,6 +322,45 @@ else if (this.movement == 'wave')
     }
 
     this.parent.add(this.object);
+}
+
+function danceA (object)
+{
+   var danceTemp = object;
+  setTimeout(function()
+    {
+      danceTemp.raiseLeftArm();
+      setTimeout(function(){
+        danceTemp.raiseRightArm();
+        setTimeout(function(){
+          danceTemp.lowerLeftArm()
+          setTimeout(function(){
+            danceTemp.lowerRightArm();
+          },600)
+        },600)
+      },600)
+    },600)
+  return;
+}
+
+
+function danceB (object)
+{
+   var danceTemp = object;
+  setTimeout(function()
+    {
+      danceTemp.raiseLeftLeg();
+      setTimeout(function(){
+        danceTemp.lowerLeftLeg();
+        setTimeout(function(){
+          danceTemp.raiseRightLeg()
+          setTimeout(function(){
+            danceTemp.lowerRightLeg();
+          },600)
+        },600)
+      },600)
+    },600)
+  return;
 }
 
 }
