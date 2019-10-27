@@ -1,5 +1,5 @@
 Robot = function( x , y , z ) {
-// head
+// head and behind of head
 this.head = new THREE.Bone();
 this.head.position.set( x, y, z );
 
@@ -78,8 +78,6 @@ this.torso.position.y = -25;
 
 this.neck.add(this.torso);
 
-// TODO add left shoulders?
-
 // left arm
 this.left_shoulder = new THREE.Bone();
 this.left_shoulder.position.x = 6;
@@ -129,11 +127,16 @@ this.right_hand.position.y = -5;
 this.right_lower_arm.add(this.right_hand);
 
 // left leg
+this.left_hip = new THREE.Bone();
+this.left_hip.position.x = 3;
+
+this.torso.add(this.left_hip);
+
 this.left_upper_leg = new THREE.Bone();
 this.left_upper_leg.position.x = 5;
 this.left_upper_leg.position.y = -17;
 
-this.torso.add(this.left_upper_leg);
+this.left_hip.add(this.left_upper_leg);
 
 this.left_lower_leg = new THREE.Bone();
 this.left_lower_leg.position.x = 4;
@@ -147,11 +150,16 @@ this.left_foot.position.z = 6;
 this.left_lower_leg.add(this.left_foot);
 
 // right leg
+this.right_hip = new THREE.Bone();
+this.right_hip.position.x = -3;
+
+this.torso.add(this.right_hip);
+
 this.right_upper_leg = new THREE.Bone();
 this.right_upper_leg.position.x = -5;
 this.right_upper_leg.position.y = -17;
 
-this.torso.add(this.right_upper_leg);
+this.right_hip.add(this.right_upper_leg);
 
 this.right_lower_leg = new THREE.Bone();
 this.right_lower_leg.position.x = -4;
@@ -184,7 +192,6 @@ Robot.prototype.show = function(scene) {
 Robot.prototype.onAnimate = function() {
 
 	if (this.movement == 'raise left arm') {
-
 		console.log("RLA");
 		var T = -Math.PI;
 		this.left_shoulder.quaternion.slerp( new THREE.Quaternion(
@@ -202,17 +209,16 @@ Robot.prototype.onAnimate = function() {
         0,               // z
         Math.cos(T/2)),  // w
         0.1 );
-	}  else if (this.movement == 'kick') {
-		console.log("KICK");
+	}  else if (this.movement == 'right kick') {
 		// check if slerp reached almost the end
-		if (this.right_upper_leg.quaternion.w < 0.72) {
+		if (this.right_hip.quaternion.w < 0.72) {
 			// signal that the kick is done and the leg should move back
-			this.movement = 'kick done';
+			this.movement = 'right kick done';
  
     } else {
- 
+      // Kicks Ball
       var T = -Math.PI/2;
-      this.right_upper_leg.quaternion.slerp( new THREE.Quaternion( 
+      this.right_hip.quaternion.slerp( new THREE.Quaternion( 
       Math.sin( T / 2 ),   // x
       0,                   // y
       0,                   // z
@@ -221,10 +227,31 @@ Robot.prototype.onAnimate = function() {
                                       
     }
  
-  } else if (this.movement == 'kick done') {
+  }  else if (this.movement == 'left kick') {
+		// check if slerp reached almost the end
+		if (this.left_hip.quaternion.w < 0.72) {
+			// signal that the kick is done and the leg should move back
+			this.movement = 'left kick done';
  
+    } else {
+      // Kicks Ball
+      var T = -Math.PI/2;
+      this.left_hip.quaternion.slerp( new THREE.Quaternion( 
+      Math.sin( T / 2 ),   // x
+      0,                   // y
+      0,                   // z
+      Math.cos( T / 2 ) ), // w
+      0.1 );
+                                      
+    }
+ 
+  } else if (this.movement == 'left kick done') {
     // reset leg back to identity
-    this.right_upper_leg.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
+    this.left_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
+	}
+	else if (this.movement == 'right kick done') {
+    // reset leg back to identity
+    this.right_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
 	}
 };
 
@@ -238,7 +265,17 @@ Robot.prototype.lower_left_arm = function() {
 	console.log("This was lower left arm");
 	};
 
-Robot.prototype.kick = function() {
-	this.movement = 'kick';
-	console.log("This was a kick");
+Robot.prototype.right_kick = function() {
+	this.movement = 'right kick';
+	console.log("This was a right kick");
+	};
+
+Robot.prototype.left_kick = function() {
+	this.movement = 'left kick';
+	console.log("This was a left kick");
+	};
+
+Robot.prototype.dance = function() {
+	this.movement = 'time2dance';
+	console.log("It's Party Time");
 	};

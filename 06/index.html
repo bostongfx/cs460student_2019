@@ -69,11 +69,18 @@
         effect = new THREE.AnaglyphEffect( renderer );
         effect.setSize( window.innerWidth, window.innerHeight );
 
-        // Robot
+        // Make new Robot Function
 
-        r = new Robot(0,0,0);
+        function newRobot(){
 
-        r.show(scene);
+          r = new Robot(0,0,0);
+          r.show(scene);
+
+        }
+
+        newRobot();
+
+        // r.show(scene);
 
         // Gui
 
@@ -112,11 +119,49 @@
 
         animation.add( r, "lower_left_arm" );
 
-        animation.add( r, "kick" );
+        animation.add( r, "right_kick" );
+
+        animation.add( r, "left_kick" );
 
         animation.open();
 
         animate();
+
+        renderer.domElement.onclick = function( e ){
+
+            if (!e.shiftKey) {
+                e.preventDefault();
+                return false;
+            }
+          
+            console.log('Yay! We clicked!');
+
+            pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+
+            console.log('Pixel coords', pixel_coords);
+
+            vp_coords = new THREE.Vector2( 
+                        ( pixel_coords.x / window.innerWidth ) * 2 - 1,  //X
+                        -( pixel_coords.y / window.innerHeight ) * 2 + 1) // Y
+
+            console.log('Viewport coords', vp_coords);
+
+            vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+
+            raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(vp_coords_near, camera);
+            intersects = raycaster.intersectObject(floor);
+
+            first_intersection = intersects[0];
+
+            console.log('3D point' + first_intersection.point);
+
+            newRobot();
+
+            r.head.position.set(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
+
+
+          };
 
 
       };
