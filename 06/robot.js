@@ -216,7 +216,7 @@ Robot.prototype.onAnimate = function() {
 			this.movement = 'right kick done';
  
     } else {
-      // Kicks Ball
+      // Kicks Ball 
       var T = -Math.PI/2;
       this.right_hip.quaternion.slerp( new THREE.Quaternion( 
       Math.sin( T / 2 ),   // x
@@ -246,12 +246,41 @@ Robot.prototype.onAnimate = function() {
     }
  
   } else if (this.movement == 'left kick done') {
-    // reset leg back to identity
+    // reset left leg back to identity
     this.left_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
 	}
 	else if (this.movement == 'right kick done') {
-    // reset leg back to identity
+    // reset right leg back to identity
     this.right_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
+	}
+	else if (this.movement == 'time2dance') {
+	// It is time2dance!
+	console.log("time2dance");
+	var T = -Math.PI;
+	this.left_shoulder.quaternion.slerp( new THREE.Quaternion(
+	0,   // x
+    Math.sin(T/2),               // y
+    0,               // z
+    Math.cos(T/2)),  // w
+    0.1 );
+
+    if (this.left_shoulder.quaternion.w < 0.01){
+    	this.left_shoulder.quaternion.slerp( new THREE.Quaternion(Math.sin(T/2),0,0,1), 0.01 );
+    }
+    var G = Math.PI;
+    this.right_shoulder.quaternion.slerp( new THREE.Quaternion(
+	0,   // x
+    Math.sin(G/2),               // y
+    0,               // z
+    Math.cos(G/2)),  // w
+    0.1 );
+
+    if (this.right_shoulder.quaternion.w < 0.01){
+    	this.right_shoulder.quaternion.slerp( new THREE.Quaternion(Math.sin(G/2),0,0,1), 0.01 );
+    }
+
+    
+
 	}
 };
 
