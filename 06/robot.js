@@ -192,7 +192,6 @@ Robot.prototype.show = function(scene) {
 Robot.prototype.onAnimate = function() {
 
 	if (this.movement == 'raise left arm') {
-		console.log("RLA");
 		var T = -Math.PI;
 		this.left_shoulder.quaternion.slerp( new THREE.Quaternion(
 		Math.sin(T/2),   // x
@@ -201,7 +200,6 @@ Robot.prototype.onAnimate = function() {
         Math.cos(T/2)),  // w
         0.1 );
 	}  else if (this.movement == 'lower left arm') {
-		console.log("LLA");
 		var T = 2*Math.PI;
 		this.left_shoulder.quaternion.slerp( new THREE.Quaternion(
 		Math.sin(T/2),   // x
@@ -216,7 +214,7 @@ Robot.prototype.onAnimate = function() {
 			this.movement = 'right kick done';
  
     } else {
-      // RIGHT Kicks Ball 
+      // RIGHT Kicks
       var T = -Math.PI/2;
       this.right_hip.quaternion.slerp( new THREE.Quaternion( 
       Math.sin( T / 2 ),   // x
@@ -233,7 +231,7 @@ Robot.prototype.onAnimate = function() {
 			this.movement = 'left kick done';
  
     } else {
-      // LEFT Kicks Ball
+      // LEFT Kicks
       var T = -Math.PI/2;
       this.left_hip.quaternion.slerp( new THREE.Quaternion( 
       Math.sin( T / 2 ),   // x
@@ -253,7 +251,10 @@ Robot.prototype.onAnimate = function() {
 	}
 
 
-	// dance start with left hand
+	// MOVE YOUR HANDS
+	//
+	//
+
 	else if (this.movement == 'time2dance') {
 		// It is time2dance!
 		if (this.left_shoulder.quaternion.w < 0.32){
@@ -323,10 +324,10 @@ Robot.prototype.onAnimate = function() {
 
 	else if (this.movement == 'right_hip') {
 		if (this.right_hip.quaternion.w < 0.72){
-			// this.right_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
     	this.movement = 'right_hip done';
     } else {
-	// RIGHT HIP
+
+	  // RIGHT HIP
       var T = -Math.PI/2;
       this.right_hip.quaternion.slerp( new THREE.Quaternion( 
       Math.sin( T / 2 ),   // x
@@ -348,7 +349,6 @@ Robot.prototype.onAnimate = function() {
     	this.movement = 'reset_right_hip done';
     } else {
 		this.right_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.05 );
-		console.log(this.right_hip.quaternion.w)
     	}
     } else if (this.movement == 'reset_right_hip done'){
     	this.movement = 'move_left_hip';
@@ -380,7 +380,6 @@ Robot.prototype.onAnimate = function() {
     	this.movement = 'reset_left_hip done';
     } else {
 		this.left_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.05 );
-		console.log(this.right_hip.quaternion.w)
     	}
     } else if (this.movement == 'reset_left_hip done'){
     	this.movement = 'time2dance';
@@ -390,25 +389,21 @@ Robot.prototype.onAnimate = function() {
 
 Robot.prototype.raise_left_arm = function() {
 	this.movement = 'raise left arm';
-	console.log("This was raise left arm");
 	};
 
 Robot.prototype.lower_left_arm = function() {
 	this.movement = 'lower left arm';
-	console.log("This was lower left arm");
 	};
 
 Robot.prototype.right_kick = function() {
 	this.movement = 'right kick';
-	console.log("This was a right kick");
 	};
 
 Robot.prototype.left_kick = function() {
 	this.movement = 'left kick';
-	console.log("This was a left kick");
 	};
 
 Robot.prototype.dance = function() {
 	this.movement = 'time2dance';
-	console.log("It's Party Time");
+	console.log("It's Party Time!");
 	};

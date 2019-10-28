@@ -36,7 +36,7 @@
         var zNear = 1;
         var zFar = 10000;
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-        camera.position.set( 0, 0, 500);
+        camera.position.set( 0, 0, 300);
 
         renderer = new THREE.WebGLRenderer({ alpha: true });
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -48,7 +48,6 @@
         light = new THREE.DirectionalLight( 0xffffff, 5.0 );
         light.position.set( 10, 100, 10 );
         scene.add( light );
-
 
         var floorTexture = new THREE.TextureLoader().load( 'marble.jpg' );
         var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
@@ -63,14 +62,11 @@
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
 
-
         // Effect
-
         effect = new THREE.AnaglyphEffect( renderer );
         effect.setSize( window.innerWidth, window.innerHeight );
 
-        // Make new Robot Function
-
+        // Make new Robot
         r = new Robot(0,0,0);
 
         r.show(scene);
@@ -104,6 +100,7 @@
 
         animate();
 
+        // Onclick and Raycaster using "floor"
         renderer.domElement.onclick = function( e ){
 
             if (!e.shiftKey) {
@@ -113,13 +110,9 @@
           
             pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
 
-            console.log('Pixel coords', pixel_coords);
-
             vp_coords = new THREE.Vector2( 
                         ( pixel_coords.x / window.innerWidth ) * 2 - 1,
                         -( pixel_coords.y / window.innerHeight ) * 2 + 1) 
-
-            console.log('Viewport coords', vp_coords);
 
             vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
 
@@ -133,31 +126,22 @@
             r.head.position.set(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
           };
       };
-
       
-
       function animate() {
 
         requestAnimationFrame( animate );
-
         controls.update();
-
         r.onAnimate();
 
         if (controller.anaglyph == true) {
-
-          renderer.setClearAlpha(1);
-
-          effect.render( scene, camera );
+          renderer.setClearAlpha( 1 );
+          effect.render( scene , camera );
         }
 
         else {
-
-          renderer.setClearAlpha(0);
-
-          renderer.render( scene, camera );
+          renderer.setClearAlpha( 0 );
+          renderer.render( scene , camera );
         }
-        
 
       };
 
