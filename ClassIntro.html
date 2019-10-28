@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>CS460 Computer Graphics at the University of Massachusetts Boston</title>
+    <script type="text/javascript" src="../../js/xtk_edge.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../styles/fonts.css"/>
+    <style>
+      html, body { 
+        background-color:#000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+        font-family: din_condensed;
+        font-size: 18pt;
+      }
+    </style>
+
+    <script type='text/javascript'>
+      window.onload = function() {
+
+        // create a new test_renderer
+        r = new X.renderer3D();
+        r.init();
+        
+        // UMASS BOSTON
+        //
+        // create a cube
+        umassboston = new X.cube();
+        // skin it..
+        umassboston.texture.file = 'umassboston.png';
+        // hide it for now!
+        umassboston.visible = false;
+
+        r.add(umassboston);
+
+
+        // BOSTON GFX
+        //
+        // create a cube
+        bostongfx = new X.cube();
+        // skin it..
+        bostongfx.texture.file = 'bostongfx.png';
+        // hide it for now!
+        bostongfx.visible = false;
+
+        r.add(bostongfx);
+
+        // setup the camera
+        r.camera.position = [00, 00, 60];
+        
+        // .. and render it
+        r.render();
+        
+      };
+
+      clicked = false;
+      window.onclick = function() {
+        
+        if (clicked) return; // sometimes you click again by accident,
+                             // and restart the animation.. let's not!
+
+        // we need user feedback, to allow the music to play..
+        // let's do it on click!
+        clicked = true;
+        animation();
+
+      }
+
+
+      function animation() {
+
+        // start the music
+        var music = document.getElementById('music');
+        music.autoplay = true;
+        music.load();
+
+        setTimeout(function() {
+          umassboston.visible = true;
+        }, 400);
+        
+        setTimeout(function() {
+          umassboston.visible = false;
+          r.camera.position = [0, 0, -25];
+          bostongfx.visible = true;
+        }, 3200);
+
+        setTimeout(rotate_bostongfx, 6200);
+
+      };
+
+
+
+      function rotate_bostongfx() {
+
+        var rotateCounter = 0;
+
+        var spinner1 = setInterval(function(){
+          rotateCounter += 1;
+
+          // console.log(rotateCounter*2);
+          if (rotateCounter*2 >= 90) {
+            clearInterval(spinner1); // this is not time-based now...
+
+            bostongfx.visible = false;
+
+            // now the real CS460 logo..
+            create_cs460_logo();
+            return;
+
+          }
+
+          bostongfx.transform.rotateY(rotateCounter*2);
+        },100);
+
+
+
+      };
+
+
+
+      function create_cs460_logo() {
+
+        document.getElementById('caption').style.display = 'block';
+
+        // create a new X.object
+        cs460logo = new X.object();
+
+        // add the points, normals and colors
+        //
+        // this means 648000 / 3 == 216000 vertices
+        // on my work machine I could set 24000000 / 3 == 8 mio vertices
+        cs460logo.points = new X.triplets(648000);
+        cs460logo.normals = new X.triplets(648000);
+        cs460logo.colors = new X.triplets(648000);
+        
+        // and set the type to POINTS
+        cs460logo.type = 'POINTS';
+        
+        // create the points, normals and colors
+        for ( var x = 0; x < 60; x++) {
+          for ( var y = 0; y < 60; y++) {
+            for ( var z = 0; z < 60; z++) {
+              
+              cs460logo.points.add(x, y, z);
+              cs460logo.normals.add(1, 1, 1);
+              cs460logo.colors.add(x/60, y/60, z/60);
+              
+            }
+          }
+        }
+        
+        // add the object
+        r.add(cs460logo);
+
+        // setup the camera
+        r.camera.position = [500, 500, 500];
+
+        setTimeout(zoom_into_cs460logo, 2000);
+        
+      };
+
+
+
+      function zoom_into_cs460logo() {
+
+        var zoomer = setInterval(function() {
+
+          // we can stop once we are far away enough
+          if (r.camera.view[14] > 1000) {
+            clearInterval(zoomer); 
+            // console.log('zooming done'); 
+
+            setTimeout(function() {
+              document.getElementById('caption').style.display = 'none';
+
+              start_content();
+            }, 2000);
+            
+            return;
+
+          }
+
+          // zoom in
+          r.camera.zoomIn();
+
+        }, 10);
+
+      };
+
+
+      function start_content() {
+
+        // reduce music volume
+        var music = document.getElementById('music');
+        music.volume = .1;
+
+        // activate speech
+        var voice = document.getElementById('voice');
+        voice.autoplay = true;
+        voice.volume = 1;
+        voice.load();
+
+        frames = ['content1', 'content2', 'content3', 'content4', 'content5', null];
+        times = [0, // Today... 
+                 1000, // 
+                 4200, // And
+                 6000, // 
+                 10000, // this is lecture 19
+                 14000];
+
+        //
+        // this is (like the whole animation concept), a little hacky!!
+        //
+        for (var f in frames) {
+    
+          setTimeout(function(f) {
+            
+            if (f > 0) {
+              document.getElementById(frames[f-1]).style.display = 'none';
+            }
+
+            if (frames[f] != null) {
+              document.getElementById(frames[f]).style.display = 'block';
+            } else {
+              music.volume = .1;
+
+              setTimeout(function(f) {
+                fadeout = setInterval(function(f) {
+                  if (music.volume <= 0.) {
+                    clearInterval(fadeout);
+                    return;
+                  }
+                  music.volume -= .05;
+                  
+                }, 500);
+              },3000);
+
+              
+            }
+
+          }.bind(this,f), times[f]);
+
+        }
+
+      };
+
+
+    </script>
+  </head>
+  <body>
+  <div style="visibility:hidden">
+    <audio id='music'>
+      <source src="bensound-evolution.mp3">
+    </audio>
+    <audio id='voice'>
+      <source src="lecture23.mp3">
+    </audio>
+  </div>
+  
+  <div id='caption' style='display:none;position: absolute;color:white;top:45%;left:50%;margin-left:50px;font-size:440%'>CS460</div>
+
+  <div id='content1' style='display:none;position: absolute;color:white;top:25%;left:30%;margin-left:50px;font-size:440%'>Today...</div>
+
+  <div id='content2' style='display:none;position: absolute;color:white;top:30%;left:20%;margin-left:50px;font-size:440%'>We will learn more about animations..</div>
+
+  <div id='content3' style='display:none;position: absolute;color:white;top:20%;left:10%;margin-left:50px;font-size:440%'>And...</div>
+
+  <div id='content4' style='display:none;position: absolute;color:white;top:35%;left:20%;margin-left:50px;font-size:440%'>We will talk to an emmy winning prime-time animator!</div>
+
+  <div id='content5' style='display:none;position: absolute;color:white;top:45%;left:40%;margin-left:50px;font-size:440%'>This is lecture 23.</div>    
+
+  </body>
+</html>
