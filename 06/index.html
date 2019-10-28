@@ -28,9 +28,7 @@
 
       var scene, camera, renderer, ambientLight, light, controls;
       var floor;
-      // var controller = {
-      //   anaglyph: false
-      // };
+      var controller;
 
       window.onload = function() {
 
@@ -69,16 +67,54 @@
         controls = new THREE.TrackballControls( camera );
         //create a robot at x, y, z world coordinates
 
-        var controller = {
-          anaglyph: false
+        r = new Robot(0, -55, 0);
+
+        // gui monitor for Rendering
+        controller = {
+          anaglyph: false, 
+
+          'raise left arm' : function(){
+            r.raise_left_arm();
+          }, 
+
+          'lower left arm' : function(){
+            r.lower_left_arm();
+          },
+
+          'kick' : function(){
+            r.kick();
+          }, 
+
+          'dance' : function(){
+            r.dance();
+          }, 
+
+          'stop' : function(){
+            r.stop();
+          }
         };
 
         var gui = new dat.GUI();
         var rendering = gui.addFolder("Rendering");
-        rendering.add(controller, 'anaglyph');
+        rendering.add(controller, 'anaglyph')
         rendering.open()
 
-        r = new Robot(0, -55, 0);
+        var moving = gui.addFolder("Movement");
+        moving.add(r.head.position, "x", -100, 100);
+        moving.add(r.head.position, "y", -100, 100);
+        moving.add(r.head.position, "z", -100, 100);
+        moving.open();
+
+        var actions = gui.addFolder("Actions");
+        actions.add(controller, 'raise left arm');
+        actions.add(controller, 'lower left arm');
+        actions.add(controller, 'kick');
+        actions.add(controller, 'dance');
+        actions.add(controller, 'stop');
+        actions.open();
+        
+
+        controls = new THREE.TrackballControls(camera, renderer.domElement);
 
         scene.add(r.head);
         r.show(scene);
@@ -92,6 +128,14 @@
       function animate() {
 
         requestAnimationFrame( animate );
+        //set for anaglyph
+        if(controller.anaglyph == false){
+          renderer.setClearAlpha(0);
+        }else{
+          renderer.setClearAlpha(1);
+        }
+
+        r.onAnimate();
 
         controls.update();
         renderer.render( scene, camera );
