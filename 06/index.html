@@ -49,18 +49,53 @@
 		
         document.body.appendChild( renderer.domElement );
         
+		
+		renderer.domElement.onclick = function(e){
+			
+		
+			if(!e.shiftKey){
+				e.preventDefault();
+				return false;
+			}
+			
+			pixCord = new THREE.Vector2(e.clientX, e.clientY);		
+			viewCord = new THREE.Vector2((pixCord.x / window.innerWidth) * 2 - 1, -(pixCord.y / window.innerHeight) * 2 + 1);
+			
+			viewCordNear = new THREE.Vector3(viewCord.x, viewCord.y, 0);
+			
+			raycaster = new THREE.Raycaster();
+			raycaster.setFromCamera(viewCordNear, camera);
+			intersects = raycaster.intersectObject(floor);
+			
+			var pos = intersects[0].point;
+			r.head.position.x = pos.x;
+			r.head.position.y = pos.y + 30;
+			r.head.position.z = pos.z;
+			
+		}
+		
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );
 
-        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        light = new THREE.DirectionalLight( 0xffffff, 1.0 );
         light.position.set( 10, 100, 10 );
         scene.add( light );
 
 
-        var floorTexture = new THREE.TextureLoader().load( 'marble.jpg' );
+        var floorTexture = new THREE.TextureLoader().load( 'diff.jpg' );
+		var normalMap = new THREE.TextureLoader().load( 'normal.jpg' );
+		var aoMap = new THREE.TextureLoader().load( 'ao.jpg' );
+		//var roughMap = new THREE.TextureLoader().load( 'rough.jpg' );
+		//var displacement = new THREE.TextureLoader().load( 'disp.jpg' );
         var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
-        var floorMaterial = new THREE.MeshBasicMaterial( {
+        var floorMaterial = new THREE.MeshStandardMaterial( {
           map: floorTexture,
+		  aoMap: aoMap,
+		  normalMap: normalMap,
+		  //roughnessMap: roughMap,
+		  //roughness: 0.9,
+		  //displacementMap: displacement,
+		  //displacementScale: 4,
           side: THREE.DoubleSide
         } );
         floor = new THREE.Mesh( floorGeometry, floorMaterial );
@@ -69,7 +104,8 @@
         scene.add( floor );
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
-		controls.rotateSpeed = 5;
+		controls.rotateSpeed = 3.5;
+		
 		r = new Robot(0, -20, 250);
 		r.show(scene);
 		
@@ -82,8 +118,17 @@
 		moving.add(r.head.position, "x", -500, 500);
 		moving.add(r.head.position, "y", -500, 500);
 		moving.add(r.head.position, "z", -500, 500);
+		
+		moving.open();
 		rendering.add(controller, "analglyph");
 		rendering.open();
+		
+		var animation = gui.addFolder("Animation");
+		animation.add(r, "raise_left_arm");
+		animation.add(r, "lower_left_arm");
+		animation.add(r, "kick");
+		animation.add(r, "dance");
+		animation.open();
 		
         //animate(controller.analglyph); Could not figure out how to toggle effect
 		animate();
@@ -92,7 +137,7 @@
 
       function animate() {
         requestAnimationFrame( animate );
-
+		r.onAnimate();
         controls.update();
 		/*
 		if(analglyph){
