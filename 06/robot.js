@@ -174,11 +174,6 @@ this.right_lower_leg.add(this.right_foot);
 
 this.movement = null;
 
-this.dance_LS = null;
-this.dance_RS = null;
-this.dance_LL = null;
-this.dance_RL = null;
-
 };
 
 Robot.prototype.show = function(scene) {
@@ -221,7 +216,7 @@ Robot.prototype.onAnimate = function() {
 			this.movement = 'right kick done';
  
     } else {
-      // Kicks Ball 
+      // RIGHT Kicks Ball 
       var T = -Math.PI/2;
       this.right_hip.quaternion.slerp( new THREE.Quaternion( 
       Math.sin( T / 2 ),   // x
@@ -238,7 +233,7 @@ Robot.prototype.onAnimate = function() {
 			this.movement = 'left kick done';
  
     } else {
-      // Kicks Ball
+      // LEFT Kicks Ball
       var T = -Math.PI/2;
       this.left_hip.quaternion.slerp( new THREE.Quaternion( 
       Math.sin( T / 2 ),   // x
@@ -257,51 +252,151 @@ Robot.prototype.onAnimate = function() {
     this.right_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
 	}
 
+
+	// dance start with left hand
 	else if (this.movement == 'time2dance') {
-	// It is time2dance!
-	console.log("time2dance");
-	var T = -Math.PI;
-	this.left_shoulder.quaternion.slerp( new THREE.Quaternion(
-	Math.sin(T/2),   // x
-    0,   			 // y
-    0,               // z
-    Math.cos(T/2)),  // w
-    0.1 );
-
-    if (this.left_shoulder.quaternion.w < 0.01){
-    	console.log("Within Loop");
-    	this.dance_LS = 'left_shoulder done motion';
-    }
-
-    if (this.dance_LS == 'left_shoulder done motion'){
-    	console.log("Dance_LS");
-    	this.left_shoulder.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
-    	this.dance_LS = 'now move right_shoulder';
-    	console.log(this.dance_LS);
-    }
-
-    if (this.dance_LS == 'now move right_shoulder'){
-    	var G = Math.PI;
-    	this.right_shoulder.quaternion.slerp( new THREE.Quaternion(
-    	Math.sin(G/2),   // x
+		// It is time2dance!
+		if (this.left_shoulder.quaternion.w < 0.32){
+    	this.movement = 'left_shoulder done';
+    } else {
+		var T = -Math.PI;
+		this.left_shoulder.quaternion.slerp( new THREE.Quaternion(
+		Math.sin(T/2),   // x
     	0,   			 // y
     	0,               // z
-    	Math.cos(G/2)),  // w
-    	0.1 );
-    	console.log(this.right_shoulder.quaternion.w);
+    	Math.cos(T/2)),  // w
+    	0.05 );
+    	}
+    } else if (this.movement == 'left_shoulder done'){
+    	this.movement = 'move_right_shoulder';
     }
-    
-    if (this.right_shoulder.quaternion.w < 0.01){
-    	console.log("Within Other Loop");
-    	this.dance_LS = 'something';
+
+
+    // right shoulder
+    else if (this.movement == 'move_right_shoulder') {
+		// It is time2dance!
+		if (this.right_shoulder.quaternion.w < 0.32){
+    	this.movement = 'move_right_shoulder done';
+    } else {
+		var T = -Math.PI;
+		this.right_shoulder.quaternion.slerp( new THREE.Quaternion(
+		Math.sin(T/2),   // x
+    	0,   			 // y
+    	0,               // z
+    	Math.cos(T/2)),  // w
+    	0.05 );
+    	}
+    } else if (this.movement == 'move_right_shoulder done'){
+    	this.movement = 'reset_left_shoulder';
+    }
+
+
+    // reset left_shoulder
+    else if (this.movement == 'reset_left_shoulder') {
+		
+		if (this.left_shoulder.quaternion.w > 0.95){
+    	this.movement = 'reset_left_shoulder done';
+    } else {
+		this.left_shoulder.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.05 );
+    	}
+    } else if (this.movement == 'reset_left_shoulder done'){
+    	this.movement = 'reset_right_shoulder';
+
+    }
+
+    // reset right_shoulder
+    else if (this.movement == 'reset_right_shoulder') {
+		
+		if (this.right_shoulder.quaternion.w > 0.95){
+    	this.movement = 'reset_right_shoulder done';
+    } else {
+		this.right_shoulder.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.05 );
+    	}
+    } else if (this.movement == 'reset_right_shoulder done'){
+    	this.movement = 'right_hip';
+
+    }
+
+    // MOVE YOUR FEET
+    //
+    //
+
+	else if (this.movement == 'right_hip') {
+		if (this.right_hip.quaternion.w < 0.72){
+			// this.right_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
+    	this.movement = 'right_hip done';
+    } else {
+	// RIGHT HIP
+      var T = -Math.PI/2;
+      this.right_hip.quaternion.slerp( new THREE.Quaternion( 
+      Math.sin( T / 2 ),   // x
+      0,                   // y
+      0,                   // z
+      Math.cos( T / 2 ) ), // w
+      0.1 );
     	}
 
-    if (this.dance_LS == 'something'){
-    	this.right_shoulder.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.01 );
-    	
+    } else if (this.movement == 'right_hip done'){
+    	this.movement = 'reset_right_hip';
+    }
+
+
+    // RESET RIGHT HIP
+
+    else if (this.movement == 'reset_right_hip') {
+		
+		if (this.right_hip.quaternion.w > 0.97){
+    	this.movement = 'reset_right_hip done';
+    } else {
+		this.right_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.05 );
+		console.log(this.right_hip.quaternion.w)
     	}
+    } else if (this.movement == 'reset_right_hip done'){
+    	this.movement = 'move_left_hip';
 
     }
+
+
+    // LEFT HIP
+    else if (this.movement == 'move_left_hip') {
+		// It is time2dance!
+		if (this.left_hip.quaternion.w < 0.72){
+    	this.movement = 'move_left_hip done';
+    } else {
+		var T = -Math.PI/2;
+      	this.left_hip.quaternion.slerp( new THREE.Quaternion( 
+      	Math.sin( T / 2 ),   // x
+      	0,                   // y
+      	0,                   // z
+      	Math.cos( T / 2 ) ), // w
+      	0.1 );
+    	}
+    } else if (this.movement == 'move_left_hip done'){
+    	this.movement = 'reset_left_hip';
+    }
+
+
+
+    //RESET LEFT HIP
+    else if (this.movement == 'reset_left_hip') {
+		
+		if (this.left_hip.quaternion.w > 0.97){
+    	this.movement = 'reset_left_hip done';
+    } else {
+		this.left_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.05 );
+		console.log(this.right_hip.quaternion.w)
+    	}
+    } else if (this.movement == 'reset_left_hip done'){
+    	this.movement = 'time2dance';
+
+    }
+
+
+
+    //THEN THIS.MOVEMENT = TIME2DANCE
+
+
+   
 
 };
 

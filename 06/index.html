@@ -71,16 +71,9 @@
 
         // Make new Robot Function
 
-        function newRobot(){
+        r = new Robot(0,0,0);
 
-          r = new Robot(0,0,0);
-          r.show(scene);
-
-        }
-
-        newRobot();
-
-        // r.show(scene);
+        r.show(scene);
 
         // Gui
 
@@ -136,10 +129,7 @@
 
             first_intersection = intersects[0];
 
-            // adds newRobot
-            newRobot();
-
-            // repositions newRobot
+            // repositions Robot
             r.head.position.set(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
           };
       };
