@@ -174,6 +174,11 @@ this.right_lower_leg.add(this.right_foot);
 
 this.movement = null;
 
+this.dance_LS = null;
+this.dance_RS = null;
+this.dance_LL = null;
+this.dance_RL = null;
+
 };
 
 Robot.prototype.show = function(scene) {
@@ -224,8 +229,7 @@ Robot.prototype.onAnimate = function() {
       0,                   // z
       Math.cos( T / 2 ) ), // w
       0.1 );
-                                      
-    }
+    	}
  
   }  else if (this.movement == 'left kick') {
 		// check if slerp reached almost the end
@@ -242,7 +246,6 @@ Robot.prototype.onAnimate = function() {
       0,                   // z
       Math.cos( T / 2 ) ), // w
       0.1 );
-                                      
     }
  
   } else if (this.movement == 'left kick done') {
@@ -253,35 +256,53 @@ Robot.prototype.onAnimate = function() {
     // reset right leg back to identity
     this.right_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
 	}
+
 	else if (this.movement == 'time2dance') {
 	// It is time2dance!
 	console.log("time2dance");
 	var T = -Math.PI;
 	this.left_shoulder.quaternion.slerp( new THREE.Quaternion(
-	0,   // x
-    Math.sin(T/2),               // y
+	Math.sin(T/2),   // x
+    0,   			 // y
     0,               // z
     Math.cos(T/2)),  // w
     0.1 );
 
     if (this.left_shoulder.quaternion.w < 0.01){
-    	this.left_shoulder.quaternion.slerp( new THREE.Quaternion(Math.sin(T/2),0,0,1), 0.01 );
-    }
-    var G = Math.PI;
-    this.right_shoulder.quaternion.slerp( new THREE.Quaternion(
-	0,   // x
-    Math.sin(G/2),               // y
-    0,               // z
-    Math.cos(G/2)),  // w
-    0.1 );
-
-    if (this.right_shoulder.quaternion.w < 0.01){
-    	this.right_shoulder.quaternion.slerp( new THREE.Quaternion(Math.sin(G/2),0,0,1), 0.01 );
+    	console.log("Within Loop");
+    	this.dance_LS = 'left_shoulder done motion';
     }
 
+    if (this.dance_LS == 'left_shoulder done motion'){
+    	console.log("Dance_LS");
+    	this.left_shoulder.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
+    	this.dance_LS = 'now move right_shoulder';
+    	console.log(this.dance_LS);
+    }
+
+    if (this.dance_LS == 'now move right_shoulder'){
+    	var G = Math.PI;
+    	this.right_shoulder.quaternion.slerp( new THREE.Quaternion(
+    	Math.sin(G/2),   // x
+    	0,   			 // y
+    	0,               // z
+    	Math.cos(G/2)),  // w
+    	0.1 );
+    	console.log(this.right_shoulder.quaternion.w);
+    }
     
+    if (this.right_shoulder.quaternion.w < 0.01){
+    	console.log("Within Other Loop");
+    	this.dance_LS = 'something';
+    	}
 
-	}
+    if (this.dance_LS == 'something'){
+    	this.right_shoulder.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.01 );
+    	
+    	}
+
+    }
+
 };
 
 Robot.prototype.raise_left_arm = function() {

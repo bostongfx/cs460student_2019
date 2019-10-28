@@ -92,40 +92,22 @@
 
         var moving = gui.addFolder( "Movement" );
 
-        // var ini_x = r.head.position.getComponent(0);
-        // var ini_y = r.head.position.getComponent(1);
-        // var ini_z = r.head.position.getComponent(2);
-
-        // var reset_pos = {
-        //   'Reset Position':function(){ 
-        //     console.log("clicked");
-        //     console.log(ini_x);
-        //     console.log(ini_y);
-        //     console.log(ini_z);
-        //     r.head.position.set(ini_x,ini_y,ini_z);
-        //     console.log("r.head.position" + r.head.position.x);
-        //   }
-        // };
-
-        // moving.add(reset_pos,'Reset Position');
-        moving.add( r.head.position, "x", -1000, 1000 );
-        moving.add( r.head.position, "y", -1000, 1000 );
-        moving.add( r.head.position, "z", -1000, 1000 );
+        moving.add( r.head.position, "x", -1000, 1000 ).listen();
+        moving.add( r.head.position, "y", -1000, 1000 ).listen();
+        moving.add( r.head.position, "z", -1000, 1000 ).listen();
         moving.open();
 
         var animation = gui.addFolder( "Animate" );
 
         animation.add( r, "raise_left_arm" );
-
         animation.add( r, "lower_left_arm" );
-
         animation.add( r, "right_kick" );
-
         animation.add( r, "left_kick" );
-
         animation.add( r, "dance" );
 
         animation.open();
+
+        // Gui end
 
         animate();
 
@@ -136,15 +118,13 @@
                 return false;
             }
           
-            console.log('Yay! We clicked!');
-
             pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
 
             console.log('Pixel coords', pixel_coords);
 
             vp_coords = new THREE.Vector2( 
-                        ( pixel_coords.x / window.innerWidth ) * 2 - 1,  //X
-                        -( pixel_coords.y / window.innerHeight ) * 2 + 1) // Y
+                        ( pixel_coords.x / window.innerWidth ) * 2 - 1,
+                        -( pixel_coords.y / window.innerHeight ) * 2 + 1) 
 
             console.log('Viewport coords', vp_coords);
 
@@ -156,16 +136,12 @@
 
             first_intersection = intersects[0];
 
-            console.log('3D point' + first_intersection.point);
-
+            // adds newRobot
             newRobot();
 
+            // repositions newRobot
             r.head.position.set(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
-
-
           };
-
-
       };
 
       
@@ -183,7 +159,6 @@
           renderer.setClearAlpha(1);
 
           effect.render( scene, camera );
-
         }
 
         else {
