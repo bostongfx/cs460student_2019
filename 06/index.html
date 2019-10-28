@@ -14,7 +14,7 @@
         background-size: 100% 100%;
       }
     </style>
-    <script src="rebot.js" ></script>
+    <script src="robot.js" ></script>
 
     <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
@@ -61,7 +61,21 @@
 
         controls = new THREE.TrackballControls( camera );
 
+        r=new Robot(50,0,0);
+
+        r.show(scene);
+        
         animate();
+
+        var controller = {
+          anaglyph: false
+        }
+
+        var gui = new dat.GUI();
+        var rendering = gui.addFolder( "Rendering" );
+        
+        rendering.add( controller, 'anaglyph' );
+        rendering.open();
 
 
       };
@@ -69,7 +83,7 @@
       function animate() {
 
         requestAnimationFrame( animate );
-
+        r.onAnimate();
         controls.update();
         renderer.render( scene, camera );
 
