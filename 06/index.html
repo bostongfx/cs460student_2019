@@ -11,7 +11,7 @@
         background-image: url("gfx/sky_alt.jpg");
         background-repeat: no-repeat;
         background-position: center;
-        background-size: device-width device-height;
+        background-size: auto auto;
       }
 
     </style>
@@ -131,7 +131,7 @@
         renderer.render( scene, camera );
         if (controller.anaglyph)
         {   
-            document.body.style.backgroundImage = "url('gfx/anaglyph-3d-background-2-credit.png')";
+            document.body.style.backgroundImage = "url('gfx/anaglyph-3d-background-2-credit-alt.png')";
 
             // document.body.style.background-image = "gfx/marble.jpg"
             effect.render(scene,camera);
