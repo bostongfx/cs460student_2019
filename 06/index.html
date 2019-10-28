@@ -65,6 +65,8 @@
         r.show(scene);
 
         // Part 10: dat.GUI
+        //
+
         var controller = {
           anaglyph: false
         }
@@ -75,9 +77,9 @@
         rendering.open();
 
         var moving = gui.addFolder( "Movement" );
-        moving.add( r.head.position, "x", -1000, 1000 );
-        moving.add( r.head.position, "y", -1000, 1000 );
-        moving.add( r.head.position, "z", -1000, 1000 );
+        moving.add( r.head.position, "x", -1000, 1000 ).listen();
+        moving.add( r.head.position, "y", -1000, 1000 ).listen();
+        moving.add( r.head.position, "z", -1000, 1000 ).listen();
         moving.open();
 
         var actions = gui.addFolder( "Actions" );
@@ -89,6 +91,34 @@
         controls = new THREE.TrackballControls( camera, renderer.domElement );
 
         animate();
+      };
+
+      window.onclick = function( e ){
+
+          if (!e.shiftKey) {
+            e.preventDefault();
+            return false;
+          }
+
+          pixel_coords = new THREE.Vector2(e.clientX, e.clientY);
+
+          vp_coords = new THREE.Vector2( 
+            (pixel_coords.x / window.innerWidth) * 2 - 1,
+            -(pixel_coords.y / window.innerHeight) * 2 + 1);
+
+          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0 );
+
+          raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(vp_coords_near, camera);
+
+          intersects = raycaster.intersectObject(floor);
+
+          first_intersection = intersects[0];
+
+          r.head.position.x = first_intersection.point.x;
+          r.head.position.y = first_intersection.point.y;
+          r.head.position.z = first_intersection.point.z;
+
       };
 
       function animate() {
