@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
+ 
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+    
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+ 
+    <script type="text/javascript">
+ 
+    window.onload = function() {
+
+	
+	  camera = new THREE.Prespective Camaera (fov,ratio,zNear,zFar);   // set the camara prespective. znear and zfar are the edges of the camara projection of space in the 3d world.
+	  renderer = new THREE.WebGLRenderer(); //
+	  ambientlight = new THREE.AmbientLight();
+	  light = new THREE.DirectionalLight(0xffffff,5.0);
+	  controls = new THREE.TrackballControls(camera);
+
+	  //loop is a animate function that defines a call on itself and requesting anitmation frame passing the animate function to it.
+	  geometry = new THREE.BoxBufferGeometry (20,20,20);
+	  material new THREE.MeshStandardMaterial({color:0xffffff}); // {} is an object defining the color attribute
+	  cube = new THREE.Mesh (geometry, material); // cube is created
+		  	
+      
+ 
+    };
+ 
+    </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
+	  }
+</html>
