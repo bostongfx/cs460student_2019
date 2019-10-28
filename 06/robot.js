@@ -102,6 +102,10 @@ Robot.prototype.kick = function(){
 Robot.prototype.kickDone = function(){
   this.movement = 'kick done';
 };
+Robot.prototype.dance = function() {
+  this.movement = 'dance';
+};
+
 
 Robot.prototype.onAnimate = function() {
 
@@ -146,6 +150,30 @@ Robot.prototype.onAnimate = function() {
 
     // reset leg back to identity
     this.right_upper_leg.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
+
+  } else if (this.movement == 'dance') {
+    var T = -Math.PI/4;
+    this.left_upper_leg.quaternion.slerp( new THREE.Quaternion(Math.sin(T/2),   // x
+                                                              0,               // y
+                                                              0,               // z
+                                                              Math.cos(T/2)), 0.1 );
+    this.right_upper_leg.quaternion.slerp( new THREE.Quaternion(Math.sin(T/2),   // x
+                                                              0,               // y
+                                                              0,               // z
+                                                              Math.cos(T/2)), 0.1 );
+
+    T = Math.PI/4;
+
+    this.neck.quaternion.slerp( new THREE.Quaternion(Math.sin(T/2),   // x
+                                                              0,               // y
+                                                              0,               // z
+                                                              Math.cos(T/2)), 0.1 );
+
+    T = -Math.PI/4
+    this.torso.quaternion.slerp( new THREE.Quaternion(Math.sin(T/2),   // x
+                                                              0,               // y
+                                                              0,               // z
+                                                              Math.cos(T/2)), 0.1 );
 
   }
 

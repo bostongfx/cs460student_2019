@@ -86,9 +86,9 @@
         rendering.open();
 
         var moving = gui.addFolder( "Movement" );
-        moving.add( r.head.position, "x", -1000, 1000 );
-        moving.add( r.head.position, "y", -1000, 1000 );
-        moving.add( r.head.position, "z", -1000, 1000 );
+        moving.add( r.head.position, "x", -500, 500 ).listen();
+        moving.add( r.head.position, "y", -500, 500 ).listen();
+        moving.add( r.head.position, "z", -500, 500 ).listen();
         moving.add( controller, "Raise Left Arm");
         moving.add( controller , "Lower Left Arm");
         moving.add( controller , "Kick");
@@ -97,8 +97,32 @@
 
         animate();
 
+        renderer.domElement.onclick = function(e) {
+
+          if (!e.shiftKey) {
+            e.preventDefault();
+            return false;
+          }
+
+          pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+          vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
+                                        -( pixel_coords.y / window.innerHeight ) * 2 + 1);
+
+          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+
+          raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(vp_coords_near, camera);
+          intersects = raycaster.intersectObject(floor);
+
+          console.log('Ray to Floor', intersects[0].point);
+
+          r = new Robot(intersects[0].point.x, intersects[0].point.y + 105, intersects[0].point.z);
+          r.show(scene);
+
+        };
 
       };
+
 
       function animate() {
 
