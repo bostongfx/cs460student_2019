@@ -140,13 +140,24 @@ Robot.prototype.kick = function() {
   this.movement = 'kick';
 };
 
+// Bonus Part 2
+// *************
+
+Robot.prototype.dance = function() {
+  this.movement = 'dance';
+};
+
+Robot.prototype.danceBreak = function() {
+  this.movement = 'danceBreak';
+};
+
 Robot.prototype.onAnimate = function() {
 
   // gets called on each animate loop
   // meaning on every frame
 
   // check which movement is requested
-  if( this.movement == 'raise left arm') {
+  if ( this.movement == 'raise left arm') {
 
     // raise the left arm
     T = Math.PI;
@@ -163,7 +174,7 @@ Robot.prototype.onAnimate = function() {
       ), 0.1 );
 
 
-  } else if( this.movement == 'lower left arm') {
+  } else if ( this.movement == 'lower left arm') {
   	// lower the left arm
     T = 0;
     var x = Math.sin(T/2)
@@ -177,7 +188,7 @@ Robot.prototype.onAnimate = function() {
                                           z,
                                           w
       ), 0.1 );
-  } else if(this.movement == 'kick') {
+  } else if (this.movement == 'kick') {
 
   	if (this.right_upper_leg.quaternion.w < 0.72) {
   		this.movement = 'kick done'
@@ -191,6 +202,23 @@ Robot.prototype.onAnimate = function() {
   	}
   } else if (this.movement == 'kick done') {
   	this.right_upper_leg.quaternion.slerp( new THREE.Quaternion(0 ,0 ,0 ,1), 0.1);
+
+  } else if (this.movement == 'dance') {
+
+  	if (this.left_upper_leg.quaternion.w < 0.72 ) {
+  		T = Math.PI/2;
+
+  	} else {
+  		var T = -Math.PI/2;
+  		this.left_upper_leg.quaternion.slerp( new THREE.Quaternion( 0,
+  																	 Math.sin( T/2 ),
+  																	 0,
+  																	 Math.cos( T/2 ) ),
+  												0.1 );
+  	}
+  } else if (this.movement == 'dance break') {
+  	this.left_upper_leg.quaternion.slerp( new THREE.Quaternion(0 ,0 ,0 ,1), 0.1);
+
   } else {}
 
 };

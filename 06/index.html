@@ -86,12 +86,18 @@
         actions.add( r, 'raiseLeftArm', "raise arm" );
         actions.add( r, 'lowerLeftArm', "lower arm" );
         actions.add( r, 'kick', "kick" );
+        actions.add( r, 'dance', "dance" );
+        actions.add( r, 'danceBreak', "stop dancing");
         actions.open();
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
 
         animate();
       };
+
+
+      // Bonus Part 1
+      // *************
 
       window.onclick = function( e ){
 
