@@ -407,3 +407,8 @@ Robot.prototype.dance = function() {
 	this.movement = 'time2dance';
 	console.log("It's Party Time!");
 	};
+
+Robot.prototype.freeze = function() {
+	this.movement = 'null';
+	console.log("It's Time To Stop!");
+	};

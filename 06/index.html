@@ -81,6 +81,21 @@
 
         var moving = gui.addFolder( "Movement" );
 
+        var ini_x = r.head.position.getComponent(0);
+        var ini_y = r.head.position.getComponent(1);
+        var ini_z = r.head.position.getComponent(2);
+        var reset_pos = {
+          'Reset Position':function(){ 
+            console.log("clicked");
+            console.log(ini_x);
+            console.log(ini_y);
+            console.log(ini_z);
+            r.head.position.set(ini_x,ini_y,ini_z);
+            console.log("r.head.position" + r.head.position.x);
+          }
+        };
+        moving.add(reset_pos,'Reset Position');
+
         moving.add( r.head.position, "x", -1000, 1000 ).listen();
         moving.add( r.head.position, "y", -1000, 1000 ).listen();
         moving.add( r.head.position, "z", -1000, 1000 ).listen();
@@ -93,6 +108,7 @@
         animation.add( r, "right_kick" );
         animation.add( r, "left_kick" );
         animation.add( r, "dance" );
+        animation.add( r, "freeze" );
 
         animation.open();
 
