@@ -10,7 +10,8 @@
         overflow: hidden !important;
         background-image: url("gfx/sky_alt.jpg");
         background-repeat: no-repeat;
-        background-size: 100%;
+        background-position: center;
+        background-size: device-width device-height;
       }
 
     </style>
@@ -130,18 +131,15 @@
         renderer.render( scene, camera );
         if (controller.anaglyph)
         {   
-            document.body.style.backgroundImage = "url('gfx/anaglyph-3d-background-2.jpg')";
+            document.body.style.backgroundImage = "url('gfx/anaglyph-3d-background-2-credit.png')";
 
             // document.body.style.background-image = "gfx/marble.jpg"
-            //renderer.setClearAlpha(1);
             effect.render(scene,camera);
         }
         else
         {
             document.body.style.backgroundImage = "url('gfx/sky_alt.jpg')";
 
-
-                        renderer.setClearAlpha(0);
         }
 
       };
