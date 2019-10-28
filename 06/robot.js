@@ -340,7 +340,6 @@ Robot.prototype.onAnimate = function() {
     	this.movement = 'reset_right_hip';
     }
 
-
     // RESET RIGHT HIP
 
     else if (this.movement == 'reset_right_hip') {
@@ -355,7 +354,6 @@ Robot.prototype.onAnimate = function() {
     	this.movement = 'move_left_hip';
 
     }
-
 
     // LEFT HIP
     else if (this.movement == 'move_left_hip') {
@@ -375,8 +373,6 @@ Robot.prototype.onAnimate = function() {
     	this.movement = 'reset_left_hip';
     }
 
-
-
     //RESET LEFT HIP
     else if (this.movement == 'reset_left_hip') {
 		
@@ -390,14 +386,6 @@ Robot.prototype.onAnimate = function() {
     	this.movement = 'time2dance';
 
     }
-
-
-
-    //THEN THIS.MOVEMENT = TIME2DANCE
-
-
-   
-
 };
 
 Robot.prototype.raise_left_arm = function() {
