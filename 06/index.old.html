@@ -18,8 +18,7 @@
     <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/effects/AnaglyphEffect.js" type="text/javascript"></script>
-    <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
-    <script src="robot.js" type="text/javascript"></script>
+
     <script>
 
       var scene, camera, renderer, ambientLight, light, controls;
@@ -59,34 +58,11 @@
         floor.rotateX(-30);
         scene.add( floor );
 
-        controls = new THREE.TrackballControls( camera, renderer.domElement );
-
-	// create a robot at x,y,z world coordinates
-	r = new Robot(0, 0, 0);
-	r.show(scene);
+        controls = new THREE.TrackballControls( camera );
 
         animate();
 
-        var controller = {
-            anaglyph : false
-        };
 
-        var gui = new dat.GUI();
-        var rendering = gui.addFolder("Rendering");
-        rendering.add(controller, "anaglyph");
-        rendering.open();
-
-        var moving = gui.addFolder("Movement");
-        moving.add(r.head.position, "x", -1000, 1000);
-        moving.add(r.head.position, "y", -1000, 1000);
-        moving.add(r.head.position, "z", -1000, 1000);
-        moving.open();
-
-	var animation = gui.addFolder("Animation");
-	animation.add(r, "raise_left_arm");
-	animation.add(r, "lower_left_arm");
-	animation.add(r, "kick");
-	animation.open();
       };
 
       function animate() {
@@ -95,7 +71,6 @@
 
         controls.update();
         renderer.render( scene, camera );
-	r.onAnimate();
 
       };
 
