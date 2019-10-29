@@ -70,6 +70,8 @@
 
 
 
+
+
         var controller = {anaglyph: false};
         var gui = new dat.GUI();
         var rendering = gui.addFolder( "Rendering" );
@@ -111,9 +113,32 @@
 
         animate(controller);
 
+        renderer.domElement.onclick = function(e) {
 
+        if (!e.shiftKey) {
+          e.preventDefault();
+          return false;
+        }
+
+        //console.log('yes! you clicked!');
+
+        pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+
+        //console.log('Pixel coordinates', pixel_coords);
+
+        vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
+                                      -( pixel_coords.y / window.innerHeight ) * 2 + 1);
+        vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+        raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(vp_coords_near, camera);
+        intersects = raycaster.intersectObject(floor);
+        
+        r.head.position.x = intersects[0].point.x;
+        r.head.position.y = intersects[0].point.y+66;
+        r.head.position.z = intersects[0].point.z;
+        }
       };
-
+      
       function animate(controller) {
 
         

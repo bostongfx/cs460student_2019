@@ -15,12 +15,12 @@
     <script>
       window.onload = function() {
 
-        var r2 = document.getElementById('r2');
+        var r2 = document.getElementById('body');
 
         scene = new THREE.Scene();
 
         fov = 75;
-        var ratio = r2.clientWidth / r2.clientHeight;
+        var ratio = r2.innerWidth / r2.clientHeight;
         zNear = 1;
         zFar = 10000;
         // console.log(ratio);

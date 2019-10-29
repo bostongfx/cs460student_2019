@@ -163,6 +163,12 @@ Robot = function(x,y,z){
     };
 
 
+    Robot.prototype.setPosition = function(x,y,z){
+        this.head.position.x = x;
+        this.head.position.y = y + 66;
+        this.head.position.z = z;
+    };
+
     Robot.prototype.onAnimate = function(){
         //called every frame
         
