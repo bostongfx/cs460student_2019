@@ -73,7 +73,7 @@
         cube = new THREE.Mesh( geometry, material);
         scene.add(cube);
 
-		controls = new THREE.TrackballControls( camera );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
  
         // build gui
 
