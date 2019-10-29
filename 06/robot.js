@@ -122,6 +122,10 @@ Robot = function(x,y,z){
 		
 	};
 
+	Robot.prototype.dance = function(){
+		this.movement = 'dance';
+	}
+
 
 
 	Robot.prototype.onAnimate = function(){
