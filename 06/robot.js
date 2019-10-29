@@ -117,20 +117,21 @@ Robot.prototype.onAnimate = function() {
 		var z = 0;
 		var w = Math.cos(t / 2);
 
-		r.left_upper_arm.quaternion( (x, y, z, w), 0.1 );
+		this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(x, y, z, w), 0.1 );
 	} else if (this.movement == "lower left arm") {
 		var x = Math.cos(t / 2);
 		var y = 0;
 		var z = 0;
 		var w = Math.cos(t / 2);
 
-		r.left_upper_arm.quaternion( (x, y, z, w), 0.1 );
+		this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(x, y, z, w), 0.1 );
 	} else if (this.movement == "kick") {
 		var x = Math.cos(t);
 		var y = 0;
 		var z = 0;
 		var w = Math.cos(t / 2);
 
-		r.left_upper_leg.quaternion( (x, y, z, w), 0.1);
+		this.left_upper_leg.quaternion.slerp( new THREE.Quaternion(x, y, z, w), 0.1);
+		
 	}
 }
