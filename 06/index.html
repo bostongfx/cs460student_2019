@@ -69,7 +69,21 @@
         animate();
 
         var controller = {
-             anaglyph: false
+             anaglyph: false,
+             'raise left arm':function(){
+                r.raise_left_arm();
+             },
+             'lower left arm':function(){
+                r.lower_left_arm();
+             },
+             'kick':function(){
+                r.kick();
+
+             },
+             'dance':function(){
+                r.dance();
+             },
+
         };
 
         
@@ -84,6 +98,10 @@
         moving.add( r.head.position, "x", -1000, 1000 );
         moving.add( r.head.position, "y", -1000, 1000 );
         moving.add( r.head.position, "z", -1000, 1000);
+        moving.add( controller,'raise left arm');
+        moving.add( controller,'lower left arm');
+        moving.add( controller, 'kick');
+        moving.add( controller,'dance')
         moving.open();
 
         //var animat = gui.addFolder("Animate");
