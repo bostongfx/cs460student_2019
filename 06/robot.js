@@ -118,27 +118,19 @@ Robot.prototype.onAnimate = function() {
   if (this.movement == 'raise left arm') {
 
     var T = -Math.PI;
-<<<<<<< HEAD
-<<<<<<< HEAD
     this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(Math.sin(T/2),  // x
                                                               0,               // y
                                                               0,               // z
                                                               Math.cos(T/2)),  // w
                                         0.1 );
-=======
     this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(Math.sin(T/2), 0,
                                                               0, Math.cos(T/2)), 0.1 );
->>>>>>> cde26f695f35efa94714528800e89336d022da1a
-=======
     this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(Math.sin(T/2), 0,
                                                               0, Math.cos(T/2)), 0.1 );
->>>>>>> cde26f695f35efa94714528800e89336d022da1a
 
   } else if (this.movement == 'lower left arm') {
 
     var T = -Math.PI;
-<<<<<<< HEAD
-<<<<<<< HEAD
     this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(0,   // x
                                                               0,    // y
                                                               0,    // z
