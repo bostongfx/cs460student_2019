@@ -112,7 +112,7 @@ Robot.prototype.onAnimate = function() {
   if (this.movement == 'raise left arm') {
 
     var T = -Math.PI;
-    this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(Math.sin(T/2),   // x
+    this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(Math.sin(T/2),  // x
                                                               0,               // y
                                                               0,               // z
                                                               Math.cos(T/2)),  // w
@@ -122,9 +122,9 @@ Robot.prototype.onAnimate = function() {
 
     var T = -Math.PI;
     this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(0,   // x
-                                                              0,               // y
-                                                              0,               // z
-                                                              0),  // w
+                                                              0,    // y
+                                                              0,    // z
+                                                              0),   // w
                                         0.1 );
 
   } else if (this.movement == 'kick') {
