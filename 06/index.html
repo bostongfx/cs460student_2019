@@ -73,6 +73,12 @@
             },
             "Kick": function(){
               r.kick();
+            },
+            "Jump": function(){
+              r.jump();
+            },
+            "Dance": function(){
+              r.dance();
             }
 
         }
@@ -92,6 +98,10 @@
         moving.add( controller, "Raise Left Arm");
         moving.add( controller , "Lower Left Arm");
         moving.add( controller , "Kick");
+        moving.add( controller , "Jump");
+        moving.add( controller , "Dance");
+
+
 
         moving.open();
 
@@ -113,8 +123,6 @@
           raycaster = new THREE.Raycaster();
           raycaster.setFromCamera(vp_coords_near, camera);
           intersects = raycaster.intersectObject(floor);
-
-          console.log('Ray to Floor', intersects[0].point);
 
           r = new Robot(intersects[0].point.x, intersects[0].point.y + 105, intersects[0].point.z);
           r.show(scene);
