@@ -312,10 +312,12 @@ Robot.prototype.onAnimate = function() {
     this.right_upperleg.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
   
   } else if (this.movement == 'dance') {
+    // console.log(this.neck.uuid);
 
-    if (typeof dancer === 'undefined') {
+    // if (typeof dancer === 'undefined') {
 
       dancer = setInterval(function() {
+        console.log(this.neck.uuid);
 
         // 
         // some random translation
@@ -363,7 +365,7 @@ Robot.prototype.onAnimate = function() {
 
       }.bind(this), 500);
 
-    }
+    // }
 
   }
 

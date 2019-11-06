@@ -69,49 +69,35 @@
 
         allrobots = [];
 
-        r = new Robot(0, -55, 0);
+        r = new Robot(0, 0, 0);
         r.show(scene);
         allrobots.push(r);
-
-        r = new Robot(100, -55, 0);
-        r.show(scene);
-        allrobots.push(r);
-
-        r = new Robot(-100, -55, 0);
-        r.show(scene);
-        allrobots.push(r);
-
 
         controller = {
           anaglyph: false,
           dance: function() {
-            // allrobots[0].dance();
-            // console.log('0: '+ allrobots[0]);
-
-            // allrobots[1].dance();
-            // console.log('1: '+ allrobots[1]);
-
-            // allrobots[2].dance();
-            // console.log('2: '+ allrobots[2]);
-
             for (var i in allrobots) {
               allrobots[i].dance();
-              console.log('i: '+ i);
-
+            }
+          },
+          kick: function() {
+            for (var i in allrobots) {
+              allrobots[i].kick();
+            }
+          },
+          lower_left_arm: function() {
+            for (var i in allrobots) {
+              allrobots[i].lower_left_arm();
+            }
+          },
+          raise_left_arm: function() {
+            for (var i in allrobots) {
+              allrobots[i].raise_left_arm();
             }
           }
-          // raise_left_arm: function() {
 
-          //   allrobots[0].raise_left_arm();
-          //   console.log('0: '+ allrobots[0]);
 
-          //   allrobots[1].raise_left_arm();
-          //   console.log('1: '+ allrobots[1]);
 
-          //   allrobots[2].raise_left_arm();
-          //   console.log('2: '+ allrobots[2]);
-
-          // }
         }
 
 
@@ -123,9 +109,9 @@
         moving.add( r.head.position, "x", -1000, 1000 ).listen();
         moving.add( r.head.position, "y", -1000, 1000 ).listen();
         moving.add( r.head.position, "z", -1000, 1000 ).listen();
-        moving.add( r, "raise_left_arm" );
-        moving.add( r, "lower_left_arm" );
-        moving.add( r, "kick" );
+        moving.add( controller, "raise_left_arm" );
+        moving.add( controller, "lower_left_arm" );
+        moving.add( controller, "kick" );
         moving.add( controller, "dance" );
         moving.open();
 
@@ -164,10 +150,8 @@
 
           // }
 
-          
-
           r = new Robot(intersects[0].point.x,
-                        intersects[0].point.y + 60,
+                        intersects[0].point.y + 80.8,
                         intersects[0].point.z);
           r.show(scene);
           allrobots.push(r);
