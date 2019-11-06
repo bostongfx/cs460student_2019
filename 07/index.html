@@ -90,6 +90,9 @@
         controller = {
           anaglyph: false,
           dance: function() {
+            // var music = document.getElementById('music');
+            // music.autoplay = true;
+            // music.load();
             for (var i in allrobots) {
               allrobots[i].dance();
             }
@@ -197,5 +200,10 @@
     </script>
   </head>
   <body>
+    <!-- <div style="visibility:hidden">
+    <audio id='music'>
+      <source src="bensound-ukulele.mp3"> //ADD MP3 FILE
+    </audio>
+    </div> -->
   </body>
 </html>
