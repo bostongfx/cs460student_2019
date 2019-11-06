@@ -67,12 +67,51 @@
         floor.rotateX(-30);
         scene.add( floor );
 
+        allrobots = [];
+
         r = new Robot(0, -55, 0);
         r.show(scene);
+        allrobots.push(r);
+
+        r = new Robot(100, -55, 0);
+        r.show(scene);
+        allrobots.push(r);
+
+        r = new Robot(-100, -55, 0);
+        r.show(scene);
+        allrobots.push(r);
 
 
         controller = {
-          anaglyph: false
+          anaglyph: false,
+          dance: function() {
+            // allrobots[0].dance();
+            // console.log('0: '+ allrobots[0]);
+
+            // allrobots[1].dance();
+            // console.log('1: '+ allrobots[1]);
+
+            // allrobots[2].dance();
+            // console.log('2: '+ allrobots[2]);
+
+            for (var i in allrobots) {
+              allrobots[i].dance();
+              console.log('i: '+ i);
+
+            }
+          }
+          // raise_left_arm: function() {
+
+          //   allrobots[0].raise_left_arm();
+          //   console.log('0: '+ allrobots[0]);
+
+          //   allrobots[1].raise_left_arm();
+          //   console.log('1: '+ allrobots[1]);
+
+          //   allrobots[2].raise_left_arm();
+          //   console.log('2: '+ allrobots[2]);
+
+          // }
         }
 
 
@@ -87,10 +126,8 @@
         moving.add( r, "raise_left_arm" );
         moving.add( r, "lower_left_arm" );
         moving.add( r, "kick" );
-        moving.add( r, "dance" );
+        moving.add( controller, "dance" );
         moving.open();
-
-
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
 
@@ -119,13 +156,22 @@
           raycaster.setFromCamera(vp_coords_near, camera);
           intersects = raycaster.intersectObject(floor);
 
-          if (intersects.length > 0) {
+          // if (intersects.length > 0) {
 
-              r.head.position.set(intersects[0].point.x, 
-                                  intersects[0].point.y + 60,
-                                  intersects[0].point.z)
+          //     r.head.position.set(intersects[0].point.x, 
+          //                         intersects[0].point.y + 60,
+          //                         intersects[0].point.z)
 
-          }
+          // }
+
+          
+
+          r = new Robot(intersects[0].point.x,
+                        intersects[0].point.y + 60,
+                        intersects[0].point.z);
+          r.show(scene);
+          allrobots.push(r);
+          console.log(allrobots);
 
       };
 
@@ -133,7 +179,9 @@
 
         requestAnimationFrame( animate );
 
-        r.onAnimate();
+        for (var i in allrobots) {
+          allrobots[i].onAnimate();
+        }
 
         controls.update();
 
