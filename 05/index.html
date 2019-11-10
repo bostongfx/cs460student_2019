@@ -37,8 +37,9 @@
 			var scene;
 			window.onload = function() {
 			    r = new X.renderer3D();
+			    r.container = 'r1';
 				r.init();
-				r.container = 'r1';
+				
 
 				
 				c = new X.cube();
@@ -55,7 +56,6 @@
         var fov = 75;
         var zNear = 1;
         var zFar = 10000;
-        // console.log(ratio);
 
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
         camera.position.set( 0, 0, 100);
