@@ -52,6 +52,87 @@ Robot = function(x, y, z) {
   //end of left arm
 
   // TODO right arm, left leg, right leg
+  //right arm
+    var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'blue');
+  var geometry = fromhelper[0];
+  var material = fromhelper[1];
+  var bones = fromhelper[2];
+
+  var mesh = new THREE.SkinnedMesh( geometry, material );
+  var skeleton = new THREE.Skeleton( bones );
+  mesh.add( bones[0] );
+  mesh.bind( skeleton );
+
+  this.neck.add( bones[ 0 ] ); // invisible anchor point
+
+  this.right_upperarm = bones[ 1 ];
+  this.right_upperarm.position.x = -5;
+  this.right_upperarm.position.y = -5;
+
+  this.right_lowerarm = bones[ 2 ];
+  this.right_lowerarm.position.x = -5;
+  this.right_lowerarm.position.y = -15;
+
+  this.right_hand = bones[ 3 ];
+  this.right_hand.position.x = -5;
+  this.right_hand.position.y = -5;
+  
+  this.rightarm_mesh = mesh;
+  //left leg
+
+    var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'blue');
+  var geometry = fromhelper[0];
+  var material = fromhelper[1];
+  var bones = fromhelper[2];
+
+  var mesh = new THREE.SkinnedMesh( geometry, material );
+  var skeleton = new THREE.Skeleton( bones );
+  mesh.add( bones[0] );
+  mesh.bind( skeleton );
+
+  this.torso.add( bones[ 0 ] ); // invisible anchor point
+
+  this.left_upperleg = bones[ 1 ];
+  this.left_upperleg.position.x = 5;
+  this.left_upperleg.position.y = -5;
+
+  this.left_lowerleg = bones[ 2 ];
+  this.left_lowerleg.position.x = 5;
+  this.left_lowerleg.position.y = -15;
+
+  this.left_feet = bones[ 3 ];
+  this.left_feet.position.x = 5;
+  this.left_feet.position.y = -5;
+
+  this.leftleg_mesh = mesh;
+  // right leg
+
+    var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'blue');
+  var geometry = fromhelper[0];
+  var material = fromhelper[1];
+  var bones = fromhelper[2];
+
+  var mesh = new THREE.SkinnedMesh( geometry, material );
+  var skeleton = new THREE.Skeleton( bones );
+  mesh.add( bones[0] );
+  mesh.bind( skeleton );
+
+  this.torso.add( bones[ 0 ] ); // invisible anchor point
+
+  this.right_upperleg = bones[ 1 ];
+  this.right_upperleg.position.x = -5;
+  this.right_upperleg.position.y = -5;
+
+  this.right_lowerleg = bones[ 2 ];
+  this.right_lowerleg.position.x = -5;
+  this.right_lowerleg.position.y = -15;
+
+  this.right_feet = bones[ 3 ];
+  this.right_feet.position.x = -5;
+  this.right_feet.position.y = -5;
+
+  this.rightleg_mesh = mesh;
+
 
   this.movement = null;
 
@@ -62,7 +143,9 @@ Robot.prototype.show = function(scene) {
 
   scene.add(this.body_mesh);
   scene.add(this.leftarm_mesh);
-  
+  scene.add(this.rightleg_mesh);
+  scene.add(this.rightarm_mesh);
+  scene.add(this.leftleg_mesh);
   // TODO add other body part meshes
 
 };
