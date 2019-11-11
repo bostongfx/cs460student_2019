@@ -26,6 +26,7 @@
   var firstRun = true;
 
 var scene, camera, renderer, ambientLight, light, controls, effect, floor, r, helper;
+var allRobots = [];
 window.onload = function ()
 {
 
@@ -68,13 +69,8 @@ window.onload = function ()
 
     //create robot object
     r = new Robot(0, 0, 0);
-    // var rGroup = new THREE.Group();
-    // rGroup.add(r.head);
-    // helper = new THREE.SkeletonHelper( rGroup );
-    // helper.material.linewidth = 3;
-    // scene.add(helper);
-    // scene.add(rGroup);
 
+    allRobots.push(r);
     controller =
     {
         anaglyph: false
@@ -93,10 +89,10 @@ window.onload = function ()
 
     //sliders for xyz movement
     var moving = gui.addFolder("Movement");
-    moving.add(r.root.position, "x", -300, 300);
+    moving.add(r.root.position, "x", -300, 300).listen();
     // ... add y and z
-    moving.add(r.root.position, "y", -30, 300);
-    moving.add(r.root.position, "z", -300, 300);
+    moving.add(r.root.position, "y", -30, 300).listen();
+    moving.add(r.root.position, "z", -300, 300).listen();
     moving.open();
 
     var actions = gui.addFolder("Actions");
@@ -123,6 +119,35 @@ window.onload = function ()
 
 };
 
+window.onclick = function (e)
+{
+    if (!e.shiftKey)
+    {
+        e.preventDefault();
+        return false;
+    }
+    pixel_coords = new THREE.Vector2(e.clientX, e.clientY);
+    vp_coords = new THREE.Vector2((pixel_coords.x / window.innerWidth) * 2 - 1,
+             - (pixel_coords.y / window.innerHeight) * 2 + 1);
+    vp_coords_near = new THREE.Vector3(vp_coords.x, vp_coords.y, 0);
+    raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(vp_coords_near, camera);
+    intersects = raycaster.intersectObject(floor);
+
+    bot = new Robot(intersects[0].point.x,(intersects[0].point.y + 90),intersects[0].point.z);
+     
+    if (intersects.length > 0)
+    {
+        bot.root.position.set(intersects[0].point.x,
+            intersects[0].point.y + 90,
+            intersects[0].point.z)
+    }
+
+    bot.show(scene)
+    allRobots.push(bot)
+};
+
+
 function animate()
 {
 
@@ -133,8 +158,6 @@ function animate()
     if (controller.anaglyph)
     {
         document.body.style.backgroundImage = "url('gfx/anaglyph-3d-background-2-credit-alt.png')";
-
-        // document.body.style.background-image = "gfx/marble.jpg"
         effect.render(scene, camera);
     }
     else
