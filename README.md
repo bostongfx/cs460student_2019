@@ -5,3 +5,4 @@ Hold SHIFT and move your cursor to draw with Three.js geometries! *!~ [Draw here
 TAP your up-down-left-right arrow keys to avoid obstacles in this Vanilla WebGL game!! ** ~ [Play game.](https://kawuz1.github.io/cs460student/04/)<br/>
 Learn about rotating cubes from XTK and Three.js frameworks!! !!~ [Learn.](https://kawuz1.github.io/cs460student/05/)<br/>
 Make my robot move. [Here.](https://kawuz1.github.io/cs460student/06/)<br/>
+[Laputa Nostalgia.](https://kawuz1.github.io/cs460student/07/)<br/>
