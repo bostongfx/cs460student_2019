@@ -37,10 +37,10 @@ Robot = function(x, y, z){
 
   this.left_upper_arm = bones[1];
   this.left_upper_arm.position.x = 15
-  this.left_upper_arm.position.y = -5
+  this.left_upper_arm.position.y = -10
 
   this.left_lower_arm = bones[2];
-  this.left_lower_arm.position.x = 15
+  this.left_lower_arm.position.x = 10
   this.left_lower_arm.position.y = -15
 
   this.left_hand = bones[3];
@@ -64,10 +64,10 @@ Robot = function(x, y, z){
 
   this.right_upper_arm = bones[1];
   this.right_upper_arm.position.x = -15
-  this.right_upper_arm.position.y = -5
+  this.right_upper_arm.position.y = -10
 
   this.right_lower_arm = bones[2];
-  this.right_lower_arm.position.x = -15
+  this.right_lower_arm.position.x = -10
   this.right_lower_arm.position.y = -15
 
   this.right_hand = bones[3];
@@ -90,7 +90,7 @@ Robot = function(x, y, z){
   this.torso.add( bones[ 0 ] ); // invisible anchor point
 
   this.left_upper_leg = bones[1];
-  this.left_upper_leg.position.x = 25
+  this.left_upper_leg.position.x = 10
   this.left_upper_leg.position.y = -25
 
   this.left_lower_leg = bones[2];
@@ -117,7 +117,7 @@ Robot = function(x, y, z){
   this.torso.add( bones[ 0 ] ); // invisible anchor point
 
   this.right_upper_leg = bones[1];
-  this.right_upper_leg.position.x = -25
+  this.right_upper_leg.position.x = -10
   this.right_upper_leg.position.y = -25
 
   this.right_lower_leg = bones[2];
