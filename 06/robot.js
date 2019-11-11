@@ -125,22 +125,11 @@ Robot.prototype.onAnimate = function() {
                                         0.1 );
     this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(Math.sin(T/2), 0,
                                                               0, Math.cos(T/2)), 0.1 );
-    this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(Math.sin(T/2), 0,
-                                                              0, Math.cos(T/2)), 0.1 );
 
   } else if (this.movement == 'lower left arm') {
 
     var T = -Math.PI;
-    this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(0,   // x
-                                                              0,    // y
-                                                              0,    // z
-                                                              0),   // w
-=======
     this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(0, 0, 0, 0),
->>>>>>> cde26f695f35efa94714528800e89336d022da1a
-=======
-    this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(0, 0, 0, 0),
->>>>>>> cde26f695f35efa94714528800e89336d022da1a
                                         0.1 );
 
   } else if (this.movement == 'kick') {

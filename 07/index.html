@@ -28,6 +28,7 @@
 
       window.onload = function() {
 
+        robots = [];
         scene = new THREE.Scene();
 
         var fov = 60;
@@ -61,19 +62,22 @@
         scene.add( floor );
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
-        r = new Robot(0, 0, 0);
+        r = new Robot(0, 10, 0);
+        robots.push(r);
         r.show(scene);
 
         controller = {
             anaglyph: false,
-            "Raise Left Arm": function(){
-              r.raiseLeftArm();
+
+            jump: function() {
+              for (var r in robots) {
+                robots[r].jump();
+              }
             },
-            "Lower Left Arm": function(){
-              r.lowerLeftArm();
-            },
-            "Kick": function(){
-              r.kick();
+            dance: function() {
+              for (var r in robots) {
+                robots[r].dance();
+              }
             }
 
         }
@@ -90,10 +94,8 @@
         moving.add( r.head.position, "x", -500, 500 ).listen();
         moving.add( r.head.position, "y", -500, 500 ).listen();
         moving.add( r.head.position, "z", -500, 500 ).listen();
-        moving.add( controller, "Raise Left Arm");
-        moving.add( controller , "Lower Left Arm");
-        moving.add( controller , "Kick");
-
+        moving.add( controller , "jump");
+        moving.add( controller , "dance");
         moving.open();
 
         animate();
@@ -115,9 +117,8 @@
           raycaster.setFromCamera(vp_coords_near, camera);
           intersects = raycaster.intersectObject(floor);
 
-          console.log('Ray to Floor', intersects[0].point);
-
-          r = new Robot(intersects[0].point.x, intersects[0].point.y + 105, intersects[0].point.z);
+          r = new Robot(intersects[0].point.x, intersects[0].point.y + 110, intersects[0].point.z);
+          robots.push(r);
           r.show(scene);
 
         };
@@ -129,8 +130,9 @@
 
         requestAnimationFrame( animate );
 
-        r.onAnimate();
-
+        for (var r in robots) {
+          robots[r].onAnimate();
+        }
 
         controls.update();
         if(controller.anaglyph){
