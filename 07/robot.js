@@ -1,3 +1,4 @@
+
 Robot = function(x, y, z){
 
   var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'blue');
@@ -140,8 +141,6 @@ Robot.prototype.show = function(scene){
   scene.add(this.rightarm_mesh);
   scene.add(this.leftleg_mesh);
   scene.add(this.rightleg_mesh);
-
-
 };
 
 Robot.prototype.raiseLeftArm = function(){
@@ -211,7 +210,7 @@ Robot.prototype.onAnimate = function() {
 
   } else if (this.movement == 'jump') {
     step = 2;
-    this.head.position.y += step;
+    this.root.position.y += step;
 
     if(this.neck.quaternion.w < 0.93){
          this.movement = 'jump2';
@@ -249,14 +248,14 @@ Robot.prototype.onAnimate = function() {
       this.right_lower_arm.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
       this.left_upper_arm.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
       this.left_lower_arm.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
-      if(this.head.position.y > 0){
-        this.head.position.y -= step*2;
+      if(this.root.position.y > 10){
+        this.root.position.y -= step*2;
       }
   }
   else if (this.movement == 'dance') {
     step = 5;
-    if (this.head.position.y > -20) {
-      this.head.position.y -= step;
+    if (this.root.position.y > -10) {
+      this.root.position.y -= step;
     }
     if(this.left_upper_arm.quaternion.w < .01){
       this.movement = 'dance2'
