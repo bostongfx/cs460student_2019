@@ -16,6 +16,8 @@
     </style>
     <script src="https://threejs.org/build/three.min.js" 
 	type="text/javascript"></script>
+	<script src="https://threejs.org/examples/js/loaders/PLYLoader.js" 
+	type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/controls/TrackballControls.js" 
 	type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/effects/AnaglyphEffect.js" 
@@ -71,14 +73,22 @@
         r = new Robot(0, -28, 0);
         r.show(scene);
 		ALLROBOTS.push(r);
+		/*
+		var textureLoader = new THREE.TextureLoader();
+		var threeTone = textureLoader.load('threeTone.jpg');
+		threeTone.minFilter = THREE.NearestFilter;
+		threeTone.magFilter = THREE.NearestFilter;
 		
-        r1 = new Robot(32, -28, 0);
-        r1.show(scene);
-		ALLROBOTS.push(r1);
+		var loader = new THREE.PLYLoader();
+		loader.load('beethoven.ply', function (geometry) {
+			geometry.computeVertexNormals();
+			var material = new THREE.MeshToonMaterial( {
+				color: 0x2194CE, gradientMap:threeTone
+			} );
+			scene.add( new THREE.Mesh(geometry, material) );
+		} );
 		
-
-		
-
+*/
         controller = {
 			anaglyph: false,
 			dance: function() {
@@ -100,6 +110,8 @@
 		/*
         var rendering = gui.addFolder( "Rendering" ); rendering.add( controller, 'anaglyph' ); rendering.open(); var moving = gui.addFolder( "Movement" ); moving.add( r.head.position, "x", -1000, 1000 ).listen(); moving.add( r.head.position, "y", -1000, 1000 ).listen(); moving.add( r.head.position, "z", -1000, 1000 ).listen(); moving.add( r, "raise_left_arm" ); moving.add( r, "lower_left_arm" ); moving.add( r, "kick" ); moving.add( r, "dance" );
 		*/
+
+
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
         animate();

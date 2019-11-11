@@ -1,6 +1,5 @@
 Robot = function(x, y, z) {
 //HELPER.cylinderSkeletonMesh
-
 	// create head, neck, and torso
 	var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'red'); //blue
 	var geometry = fromhelper[0];
@@ -14,7 +13,6 @@ Robot = function(x, y, z) {
  
 	this.root = bones[ 0 ]; // invisible anchor point
 	this.root.position.set( x, y, z );
- 
 	this.head = bones[ 1 ];
 	this.neck = bones[ 2 ];
 	this.neck.position.y = -10;
@@ -24,6 +22,24 @@ Robot = function(x, y, z) {
 	this.body_mesh = mesh;
 	// end of head, neck, torso
 
+	var fromhelper = HELPER.cylinderSkeletonMesh( 2, 9, 'white'); //blue
+	var geometry = fromhelper[0];
+	var material = fromhelper[1];
+	var bones = fromhelper[2];
+	var mesh = new THREE.SkinnedMesh( geometry, material );
+	var skeleton = new THREE.Skeleton( bones );
+	mesh.add( bones[0] );
+	mesh.bind( skeleton );
+
+	this.head.add( bones[ 0 ] )
+	this.hair = bones[ 1 ];
+	this.hair.position.y = -10;
+	
+	this.hair1 = bones[ 2 ];
+	this.hair1.position.y = 5;
+	
+	this.hair_mesh = mesh;
+	
   // start of left arm
 	var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'purple'); //blue
 	var geometry = fromhelper[0];
@@ -149,12 +165,12 @@ Robot = function(x, y, z) {
 
 Robot.prototype.show = function(scene) {
 
-  scene.add(this.body_mesh);
-  scene.add(this.leftarm_mesh);
-  scene.add(this.rightarm_mesh);
-  scene.add(this.rightleg_mesh);
-  scene.add(this.leftleg_mesh);
- // scene.add(this.newqueen);
+	scene.add(this.body_mesh);
+	scene.add(this.leftarm_mesh);
+	scene.add(this.rightarm_mesh);
+	scene.add(this.rightleg_mesh);
+	scene.add(this.leftleg_mesh);
+	scene.add(this.hair_mesh);
 
 };
 
@@ -241,9 +257,9 @@ Robot.prototype.onAnimate = function() {
   
   } else if (this.movement == 'dance') {
 
-    if (typeof dancer === 'undefined') {
+    if (typeof this.dancer === 'undefined') {
 
-      dancer = setInterval(function() {
+      this.dancer = setInterval(function() {
 
         // 
         // some random translation
