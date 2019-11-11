@@ -1,4 +1,4 @@
-HELPER = {};
+HELPER = {}; // create a new instance
 
 /**
  * This method returns [geometry, material, bones] to create a skeleton mesh
