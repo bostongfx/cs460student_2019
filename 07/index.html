@@ -102,12 +102,29 @@
             animate();
           }
 
+        },
+        'collective_kick': function(){
+          robots.forEach(robot => {
+            robot.kick();
+          });
+        },
+        'collective_raise_left_arm': function(){
+          robots.forEach(robot =>{
+            robot.raise_left_arm();
+          });
+        },
+        'collective_lower_left_arm': function(){
+          robots.forEach(robot =>{
+            robot.lower_left_arm();
+          });
         }
 
         };
 
         moving.add( controller2, "collective_dance" );
-
+        moving.add(controller2, 'collective_kick');
+        moving.add(controller2, "collective_raise_left_arm");
+        moving.add(controller2, "collective_lower_left_arm");
         moving.open();
         controls = new THREE.TrackballControls( camera, renderer.domElement );
         animate();
