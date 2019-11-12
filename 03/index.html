@@ -92,7 +92,9 @@
             material = new THREE.MeshStandardMaterial({ color: Math.random() * 0xffffff , wireframe:false});
             cube = new THREE.Mesh(geometry, material);
             scene.add(cube);
-            cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+            cube.position.set(intersects[0].point.x, 
+                              intersects[0].point.y, 
+                              intersects[0].point.z);
           }
 
           else if (randomShape == 2){
