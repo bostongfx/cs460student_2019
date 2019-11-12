@@ -21,6 +21,7 @@
     <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
 
     <script src="robot.js"></script>
+    <script src="helper.js"></script>
 
     <script>
       var scene, camera, renderer, ambientLight, light, controls;
@@ -61,14 +62,23 @@
 
 
         // create a robot at x,y,z world coordinates
+        ALLROBOTS = [];
+
         r = new Robot(0, -55, 0);
         r.show(scene);
+
+        ALLROBOTS.push(r);
 
         // Part 10: dat.GUI
         //
 
         var controller = {
-          anaglyph: false
+          anaglyph: false,
+          dance: function() {
+            for (var r in ALLROBOTS) {
+              ALLROBOTS[r].dance();
+            }
+          }
         }
 
         var gui = new dat.GUI();
@@ -86,8 +96,7 @@
         actions.add( r, 'raiseLeftArm', "raise arm" );
         actions.add( r, 'lowerLeftArm', "lower arm" );
         actions.add( r, 'kick', "kick" );
-        actions.add( r, 'dance', "dance" );
-        actions.add( r, 'danceBreak', "stop dancing");
+        actions.add( controller, 'dance' );
         actions.open();
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
@@ -121,21 +130,23 @@
 
           first_intersection = intersects[0];
 
-          r.head.position.x = first_intersection.point.x;
-          r.head.position.y = first_intersection.point.y;
-          r.head.position.z = first_intersection.point.z;
+          rob = new Robot(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
+          rob.show(scene);
 
+          ALLROBOTS.push(rob);
       };
 
       function animate() {
 
         requestAnimationFrame( animate );
 
-        r.onAnimate();
+        for (var r in ALLROBOTS){
+          ALLROBOTS[r].onAnimate();
+        }
 
         controls.update();
 
-        effect.render( scene, camera );
+        renderer.render( scene, camera );
       };
     </script>
   </head>
