@@ -8,7 +8,7 @@
         padding: 0;
         height: 100%;
         overflow: hidden !important;  
-        background-image: url(sky.jpg);
+        background-image: url(snow_bg.jpg);
         background-repeat: no-repeat;
         background-size: 100% 100%;
       }
@@ -39,7 +39,7 @@
         var zNear = 1;
         var zFar = 10000;
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-        camera.position.set( 0, 0, 500);
+        camera.position.set( 20, 50, 500);
         renderer = new THREE.WebGLRenderer({ alpha: true });
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( renderer.domElement );
@@ -53,8 +53,8 @@
         light.position.set( 10, 100, 10 );
         scene.add( light );
 		
-        var floorTexture = new THREE.TextureLoader().load( 'marble.jpg' );
-        var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
+        var floorTexture = new THREE.TextureLoader().load( 'snow.jpg' );
+        var floorGeometry = new THREE.PlaneBufferGeometry( 800, 800 );
         var floorMaterial = new THREE.MeshBasicMaterial( {
           map: floorTexture,
           side: THREE.DoubleSide
@@ -93,7 +93,9 @@
         moving.open();
 		
 
-		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		// Fix slider bug in dat.GUI
+        controls = new THREE.TrackballControls( camera, renderer.domElement );
+
 		animate();
         
       };
@@ -114,11 +116,11 @@
          
 		 
         if (intersects.length > 0) {
-                r = new Robot(intersects[0].point.x,
-                                 intersects[0].point.y + 60,
+                newRobot = new Robot(intersects[0].point.x,
+                                 intersects[0].point.y + 80,
                                  intersects[0].point.z);
-          r.show(scene);
-          allRobots.push(r);
+          newRobot.show(scene);
+          allRobots.push(newRobot);
        	  
         }
       };

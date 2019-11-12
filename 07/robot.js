@@ -29,12 +29,20 @@ Robot = function(x, y, z) {
   var material = fromhelper[1];
   var bones = fromhelper[2];
 
+  head_g = new THREE.BoxBufferGeometry( 18, 18, 18);
+  var head_texture =  new THREE.TextureLoader().load( 'tc.jpg' );
+  head_m = new THREE.MeshStandardMaterial({
+  map: head_texture });
+  this.cube = new THREE.Mesh( head_g, head_m);
+  scene.add(this.cube);
+
   var mesh = new THREE.SkinnedMesh( geometry, material );
   var skeleton = new THREE.Skeleton( bones );
   mesh.add( bones[0] );
   mesh.bind( skeleton );
 
   this.neck.add( bones[ 0 ] ); // invisible anchor point
+  this.neck.add(this.cube);
 
   this.left_upperarm = bones[ 1 ];
   this.left_upperarm.position.x = 5;
@@ -213,7 +221,7 @@ Robot.prototype.onAnimate = function() {
   
   } else if (this.movement == 'dance') {
  
-    if (typeof dancer === 'undefined') {
+    if (typeof this.dancer === 'undefined') {
  
       this.dancer = setInterval(function() {
  
