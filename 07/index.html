@@ -23,10 +23,18 @@
 
     <script src="https://threejs.org/examples/js/loaders/PLYLoader.js" type="text/javascript"></script>
 
-    <!-- <script src="robot.js" type="text/javascript"></script> -->
+    <script src="robot.js" type="text/javascript"></script>
+    <script src="helper.js" type="text/javascript"></script>
 
-    <script src="robot2.js" type="text/javascript"></script>
-    <script src="helper2.js" type="text/javascript"></script>
+    <video id="video" loop crossOrigin="anonymous" playsinline style="display:none">
+      <source src="RA-NGGYUp.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+    </video>
+
+    <div>
+        <button id="startButton">Click to Play</button>
+        <p>Video playback with audio requires user interaction.</p>
+        <p>Please click before continuing.</p>
+      </div>
 
     <script>
 
@@ -35,6 +43,15 @@
 
       window.onload = function() {
 
+        var startButton = document.getElementById( 'startButton' );
+      startButton.onclick = function () {
+
+        setupscene();
+
+      };
+
+      }
+      function setupscene() {
 
         scene = new THREE.Scene();
 
@@ -77,24 +94,21 @@
         r.show(scene);
         allrobots.push(r);
 
-        // var loader = new THREE.PLYLoader();
-        // loader.load('Armadillo.ply', function(geometry){
-
-        //     var armadilloMaterial = new THREE.MeshStandardMaterial( 
-        //         {color:'red'}
-        //     );
-        //     var mesh = new THREE.Mesh(geometry, armadilloMaterial);
-
-        //     scene.add( mesh );
-        // } );
-       
-
         controller = {
           anaglyph: false,
           dance: function() {
-            // var music = document.getElementById('music');
-            // music.autoplay = true;
-            // music.load();
+            //VIDEO
+          video = document.getElementById('video');
+          video.play();
+
+          texture = new THREE.VideoTexture(video);
+
+          var geometry = new THREE.BoxBufferGeometry(20,20,20);
+          var material = new THREE.MeshStandardMaterial({ color: 0xffffff, map: texture});
+          cube = new THREE.Mesh( geometry, material);
+          scene.add(cube);
+            //VIDEO END
+
             for (var i in allrobots) {
               allrobots[i].dance();
             }
@@ -114,11 +128,7 @@
               allrobots[i].raise_left_arm();
             }
           }
-
-
-
         }
-
 
         var gui = new dat.GUI();
         var rendering = gui.addFolder( "Rendering" );
@@ -136,9 +146,7 @@
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
 
-
         animate();
-
 
       };
 
@@ -160,14 +168,6 @@
           raycaster = new THREE.Raycaster();
           raycaster.setFromCamera(vp_coords_near, camera);
           intersects = raycaster.intersectObject(floor);
-
-          // if (intersects.length > 0) {
-
-          //     r.head.position.set(intersects[0].point.x, 
-          //                         intersects[0].point.y + 60,
-          //                         intersects[0].point.z)
-
-          // }
 
           r = new Robot(intersects[0].point.x,
                         intersects[0].point.y + 80.8,
@@ -202,10 +202,5 @@
     </script>
   </head>
   <body>
-    <!-- <div style="visibility:hidden">
-    <audio id='music'>
-      <source src="bensound-ukulele.mp3"> //ADD MP3 FILE
-    </audio>
-    </div> -->
   </body>
 </html>

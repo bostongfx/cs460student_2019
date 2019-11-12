@@ -1,414 +1,280 @@
-Robot = function( x , y , z ) {
-// head and behind of head
-this.head = new THREE.Bone();
-this.head.position.set( x, y, z );
+Robot = function(x, y, z) {
 
-this.left_occipital = new THREE.Bone();
-this.left_occipital.position.x = 5;
+  // create head, neck, torso
+  var fromhelper = HELPER.cylinderSkeletonMesh(3, 3, 'blue')
+  var geometry = fromhelper[0];
+  var material = fromhelper[1];
+  var bones = fromhelper[2];
 
-this.right_occipital = new THREE.Bone();
-this.right_occipital.position.x = -5;
+  var mesh = new THREE.SkinnedMesh( geometry, material );
+  var skeleton = new THREE.Skeleton( bones );
+  mesh.add( bones[ 0 ] );
+  mesh.bind( skeleton );
 
-this.head.add(this.left_occipital);
-this.head.add(this.right_occipital);
+  this.root = bones[ 0 ]; // invisible anchor point
+  this.root.position.set( x, y, z );
 
-this.left_parietal = new THREE.Bone();
-this.left_parietal.position.y = 10;
+  this.head = bones[ 1 ];
 
-this.right_parietal = new THREE.Bone();
-this.right_parietal.position.y = 10;
+  this.neck = bones[ 2 ];
+  this.neck.position.y = -10;
 
-this.top_parietal = new THREE.Bone();
-this.top_parietal.position.x = -10;
+  this.torso = bones[ 3 ];
+  this.torso.position.y = -30;
 
-this.left_occipital.add(this.left_parietal);
-this.right_occipital.add(this.right_parietal);
+  this.body_mesh = mesh;
+  // end of head, neck, torso
+  
+  // left arm
+  var fromhelper = HELPER.cylinderSkeletonMesh(3, 3, 'blue')
+  var geometry = fromhelper[0];
+  var material = fromhelper[1];
+  var bones = fromhelper[2];
 
-this.left_parietal.add(this.top_parietal);
+  var mesh = new THREE.SkinnedMesh( geometry, material );
+  var skeleton = new THREE.Skeleton( bones );
+  mesh.add( bones[ 0 ] );
+  mesh.bind( skeleton );
 
-// head depth
+  this.neck.add( bones[ 0 ] ); // invisible anchor point
 
-this.left_face_bottom = new THREE.Bone();
-this.left_face_bottom.position.z = 10;
+  this.left_upperarm = bones[ 1 ];
+  this.left_upperarm.position.x = 5;
+  this.left_upperarm.position.y = -5;
 
-this.right_face_bottom = new THREE.Bone();
-this.right_face_bottom.position.z = 10;
+  this.left_lowerarm = bones[ 2 ];
+  this.left_lowerarm.position.x = 5;
+  this.left_lowerarm.position.y = -15;
 
-this.left_occipital.add(this.left_face_bottom);
-this.right_occipital.add(this.right_face_bottom);
+  this.left_hand = bones[ 3 ];
+  this.left_hand.position.x = 5;
+  this.left_hand.position.y = -5;
 
-this.left_face_top = new THREE.Bone();
-this.left_face_top.position.z = 10;
 
-this.right_face_top = new THREE.Bone();
-this.right_face_top.position.z = 10;
+  this.leftarm_mesh = mesh;
+  // end of left arm
 
-this.left_parietal.add(this.left_face_top);
-this.right_parietal.add(this.right_face_top);
+  // right arm
+  var fromhelper = HELPER.cylinderSkeletonMesh(3, 3, 'blue')
+  var geometry = fromhelper[0];
+  var material = fromhelper[1];
+  var bones = fromhelper[2];
 
-// head face
+  var mesh = new THREE.SkinnedMesh( geometry, material );
+  var skeleton = new THREE.Skeleton( bones );
+  mesh.add( bones[ 0 ] );
+  mesh.bind( skeleton );
 
-this.left_face = new THREE.Bone();
-this.left_face.position.y = -10;
+  this.neck.add( bones[ 0 ] ); // invisible anchor point
 
-this.right_face = new THREE.Bone();
-this.right_face.position.y = -10;
+  this.right_upperarm = bones[ 1 ];
+  this.right_upperarm.position.x = -5;
+  this.right_upperarm.position.y = -5;
 
-this.left_face_top.add(this.left_face);
-this.right_face_top.add(this.right_face);
+  this.right_lowerarm = bones[ 2 ];
+  this.right_lowerarm.position.x = -5;
+  this.right_lowerarm.position.y = -15;
 
-this.face_top = new THREE.Bone();
-this.face_top.position.x = 10;
+  this.right_hand = bones[ 3 ];
+  this.right_hand.position.x = -5;
+  this.right_hand.position.y = -5;
 
-this.face_bottom = new THREE.Bone();
-this.face_bottom.position.x = 10;
 
-this.right_face_top.add(this.face_top);
-this.right_face.add(this.face_bottom);
+  this.rightarm_mesh = mesh;
+  // end of right arm
 
-// neck and torso
+  // right leg
+  var fromhelper = HELPER.cylinderSkeletonMesh(3, 5, 'blue')
+  var geometry = fromhelper[0];
+  var material = fromhelper[1];
+  var bones = fromhelper[2];
 
-this.neck = new THREE.Bone();
-this.neck.position.y = -5;
+  var mesh = new THREE.SkinnedMesh( geometry, material );
+  var skeleton = new THREE.Skeleton( bones );
+  mesh.add( bones[ 0 ] );
+  mesh.bind( skeleton );
 
-this.head.add(this.neck);
+  this.torso.add( bones[ 0 ] ); // invisible anchor point
 
-this.torso = new THREE.Bone();
-this.torso.position.y = -25;
+  this.right_upperleg = bones[ 1 ];
+  this.right_upperleg.position.x = -5;
+  this.right_upperleg.position.y = -10;
 
-this.neck.add(this.torso);
+  this.right_lowerleg = bones[ 2 ];
+  this.right_lowerleg.position.x = -5;
+  this.right_lowerleg.position.y = -10;
 
-// left arm
-this.left_shoulder = new THREE.Bone();
-this.left_shoulder.position.x = 6;
+  this.right_foot = bones[ 3 ];
+  this.right_foot.position.x = -5;
+  this.right_foot.position.y = -15;
 
-this.neck.add(this.left_shoulder);
 
-this.left_upper_arm = new THREE.Bone();
-this.left_upper_arm.position.x = 5;
-this.left_upper_arm.position.y = -12;
+  this.rightleg_mesh = mesh;
+  // end of right leg
 
-this.left_shoulder.add(this.left_upper_arm);
+  // left leg
+  var fromhelper = HELPER.cylinderSkeletonMesh(3, 5, 'blue')
+  var geometry = fromhelper[0];
+  var material = fromhelper[1];
+  var bones = fromhelper[2];
 
-this.left_lower_arm = new THREE.Bone();
-this.left_lower_arm.position.x = 3;
-this.left_lower_arm.position.y = -10;
+  var mesh = new THREE.SkinnedMesh( geometry, material );
+  var skeleton = new THREE.Skeleton( bones );
+  mesh.add( bones[ 0 ] );
+  mesh.bind( skeleton );
 
-this.left_upper_arm.add(this.left_lower_arm);
+  this.torso.add( bones[ 0 ] ); // invisible anchor point
 
-this.left_hand = new THREE.Bone();
-this.left_hand.position.x = -1;
-this.left_hand.position.y = -5;
+  this.left_upperleg = bones[ 1 ];
+  this.left_upperleg.position.x = 5;
+  this.left_upperleg.position.y = -10;
 
-this.left_lower_arm.add(this.left_hand);
+  this.left_lowerleg = bones[ 2 ];
+  this.left_lowerleg.position.x = 5;
+  this.left_lowerleg.position.y = -10;
 
-// right arm
-this.right_shoulder = new THREE.Bone();
-this.right_shoulder.position.x = -6;
+  this.left_foot = bones[ 3 ];
+  this.left_foot.position.x = 5;
+  this.left_foot.position.y = -15;
 
-this.neck.add(this.right_shoulder);
 
-this.right_upper_arm = new THREE.Bone();
-this.right_upper_arm.position.x = -5;
-this.right_upper_arm.position.y = -12;
+  this.leftleg_mesh = mesh;
 
-this.right_shoulder.add(this.right_upper_arm);
-
-this.right_lower_arm = new THREE.Bone();
-this.right_lower_arm.position.x = -3;
-this.right_lower_arm.position.y = -10;
-
-this.right_upper_arm.add(this.right_lower_arm);
-
-this.right_hand = new THREE.Bone();
-this.right_hand.position.x = 1;
-this.right_hand.position.y = -5;
-
-this.right_lower_arm.add(this.right_hand);
-
-// left leg
-this.left_hip = new THREE.Bone();
-this.left_hip.position.x = 3;
-
-this.torso.add(this.left_hip);
-
-this.left_upper_leg = new THREE.Bone();
-this.left_upper_leg.position.x = 5;
-this.left_upper_leg.position.y = -17;
-
-this.left_hip.add(this.left_upper_leg);
-
-this.left_lower_leg = new THREE.Bone();
-this.left_lower_leg.position.x = 4;
-this.left_lower_leg.position.y = -16;
-
-this.left_upper_leg.add(this.left_lower_leg);
-
-this.left_foot = new THREE.Bone();
-this.left_foot.position.z = 6;
-
-this.left_lower_leg.add(this.left_foot);
-
-// right leg
-this.right_hip = new THREE.Bone();
-this.right_hip.position.x = -3;
-
-this.torso.add(this.right_hip);
-
-this.right_upper_leg = new THREE.Bone();
-this.right_upper_leg.position.x = -5;
-this.right_upper_leg.position.y = -17;
-
-this.right_hip.add(this.right_upper_leg);
-
-this.right_lower_leg = new THREE.Bone();
-this.right_lower_leg.position.x = -4;
-this.right_lower_leg.position.y = -18;
-
-this.right_upper_leg.add(this.right_lower_leg);
-
-this.right_foot = new THREE.Bone();
-this.right_foot.position.z = 6;
-
-this.right_lower_leg.add(this.right_foot);
-
-this.movement = null;
+  this.movement = null;
 
 };
 
+
 Robot.prototype.show = function(scene) {
 
-  var rGroup = new THREE.Group();
-  rGroup.add( this.head );
+  scene.add(this.body_mesh);
+  scene.add(this.leftarm_mesh);
+  scene.add(this.rightarm_mesh);
+  scene.add(this.rightleg_mesh);
+  scene.add(this.leftleg_mesh);
 
-  var helper = new THREE.SkeletonHelper( rGroup );
-  helper.material.linewidth = 10; // make the skeleton thick
+};
 
-  scene.add(rGroup);
-  scene.add(helper);
+Robot.prototype.raise_left_arm = function() {
+
+  this.movement = 'raise left arm';
+
+};
+
+Robot.prototype.lower_left_arm = function() {
+
+  this.movement = 'lower left arm';
+
+};
+
+Robot.prototype.kick = function() {
+
+  this.movement = 'kick';
+
+};
+
+Robot.prototype.dance = function() {
+  
+  this.movement = 'dance';
 
 };
 
 Robot.prototype.onAnimate = function() {
 
-	if (this.movement == 'raise left arm') {
-		var T = -Math.PI;
-		this.left_shoulder.quaternion.slerp( new THREE.Quaternion(
-		Math.sin(T/2),   // x
-        0,               // y
-        0,               // z
-        Math.cos(T/2)),  // w
-        0.1 );
-	}  else if (this.movement == 'lower left arm') {
-		var T = 2*Math.PI;
-		this.left_shoulder.quaternion.slerp( new THREE.Quaternion(
-		Math.sin(T/2),   // x
-        0,               // y
-        0,               // z
-        Math.cos(T/2)),  // w
-        0.1 );
-	}  else if (this.movement == 'right kick') {
-		// check if slerp reached almost the end
-		if (this.right_hip.quaternion.w < 0.72) {
-			// signal that the kick is done and the leg should move back
-			this.movement = 'right kick done';
- 
+  if (this.movement == 'raise left arm') {
+
+    var T = Math.PI;
+    this.left_upperarm.quaternion.slerp( new THREE.Quaternion(Math.sin(-T/2),  // w
+                                                              0,               // x
+                                                              0,               // y
+                                                              Math.cos(-T/2)), // z
+                                        0.1 );
+
+  } else  if (this.movement == 'lower left arm') {
+
+    this.left_upperarm.quaternion.slerp( new THREE.Quaternion(0, 0, 0, 1),
+                                        0.1 );
+
+  } else if (this.movement == 'kick') {
+  
+    // check if slerp reached almost the end
+    if (this.right_upperleg.quaternion.w < 0.72) {
+  
+      // signal that the kick is done and the leg should move back
+      this.movement = 'kick done';
+  
     } else {
-      // RIGHT Kicks
+  
       var T = -Math.PI/2;
-      this.right_hip.quaternion.slerp( new THREE.Quaternion( 
-      Math.sin( T / 2 ),   // x
-      0,                   // y
-      0,                   // z
-      Math.cos( T / 2 ) ), // w
-      0.1 );
-    	}
- 
-  }  else if (this.movement == 'left kick') {
-		// check if slerp reached almost the end
-		if (this.left_hip.quaternion.w < 0.72) {
-			// signal that the kick is done and the leg should move back
-			this.movement = 'left kick done';
- 
-    } else {
-      // LEFT Kicks
-      var T = -Math.PI/2;
-      this.left_hip.quaternion.slerp( new THREE.Quaternion( 
-      Math.sin( T / 2 ),   // x
-      0,                   // y
-      0,                   // z
-      Math.cos( T / 2 ) ), // w
-      0.1 );
+      this.right_upperleg.quaternion.slerp( new THREE.Quaternion( Math.sin( T / 2 ),   // x
+                                                                  0,                   // y
+                                                                  0,                   // z
+                                                                  Math.cos( T / 2 ) ), // w
+                                            0.1 );
+  
     }
- 
-  } else if (this.movement == 'left kick done') {
-    // reset left leg back to identity
-    this.left_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
-	}
-	else if (this.movement == 'right kick done') {
-    // reset right leg back to identity
-    this.right_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
-	}
+  
+  } else if (this.movement == 'kick done') {
+  
+    // reset leg back to identity
+    this.right_upperleg.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
+  
+  } else if (this.movement == 'dance') {
+    // console.log(this.neck.uuid);
+
+    if (typeof this.dancer === 'undefined') {
+
+      this.dancer = setInterval(function() {
+        console.log(this.neck.uuid);
+
+        // 
+        // some random translation
+        //
+        var shakehead = 3*Math.random();
+        if (Math.random() < .5) {
+          shakehead *= -1;
+        }
+
+        var shakeneck = 3*Math.random();
+        if (Math.random() < .5) {
+          shakeneck *= -1;
+        }
+
+        var shaketorso = 3*Math.random();
+        if (Math.random() < .5) {
+          shaketorso *= -1;
+        }
+
+        this.head.position.x += shakehead;
+
+        this.neck.position.x += shakeneck;
+
+        this.torso.position.x += shaketorso;
 
 
-	// MOVE YOUR HANDS
-	//
-	//
+        //
+        // use actions
+        //
+        if (Math.random() < .3) {
+          this.raise_left_arm();
+        }
 
-	else if (this.movement == 'time2dance') {
-		// It is time2dance!
-		if (this.left_shoulder.quaternion.w < 0.32){
-    	this.movement = 'left_shoulder done';
-    } else {
-		var T = -Math.PI;
-		this.left_shoulder.quaternion.slerp( new THREE.Quaternion(
-		Math.sin(T/2),   // x
-    	0,   			 // y
-    	0,               // z
-    	Math.cos(T/2)),  // w
-    	0.05 );
-    	}
-    } else if (this.movement == 'left_shoulder done'){
-    	this.movement = 'move_right_shoulder';
-    }
+        if (Math.random() < .3) {
+          this.lower_left_arm();
+        }
 
+        if (Math.random() < .3) {
+          this.kick();
+        }
 
-    // right shoulder
-    else if (this.movement == 'move_right_shoulder') {
-		// It is time2dance!
-		if (this.right_shoulder.quaternion.w < 0.32){
-    	this.movement = 'move_right_shoulder done';
-    } else {
-		var T = -Math.PI;
-		this.right_shoulder.quaternion.slerp( new THREE.Quaternion(
-		Math.sin(T/2),   // x
-    	0,   			 // y
-    	0,               // z
-    	Math.cos(T/2)),  // w
-    	0.05 );
-    	}
-    } else if (this.movement == 'move_right_shoulder done'){
-    	this.movement = 'reset_left_shoulder';
-    }
+        if (Math.random() < .3) {
+          this.movement = 'kick done';
+        }
 
-
-    // reset left_shoulder
-    else if (this.movement == 'reset_left_shoulder') {
-		
-		if (this.left_shoulder.quaternion.w > 0.95){
-    	this.movement = 'reset_left_shoulder done';
-    } else {
-		this.left_shoulder.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.05 );
-    	}
-    } else if (this.movement == 'reset_left_shoulder done'){
-    	this.movement = 'reset_right_shoulder';
+      }.bind(this), 500);
 
     }
 
-    // reset right_shoulder
-    else if (this.movement == 'reset_right_shoulder') {
-		
-		if (this.right_shoulder.quaternion.w > 0.95){
-    	this.movement = 'reset_right_shoulder done';
-    } else {
-		this.right_shoulder.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.05 );
-    	}
-    } else if (this.movement == 'reset_right_shoulder done'){
-    	this.movement = 'right_hip';
+  }
 
-    }
-
-    // MOVE YOUR FEET
-    //
-    //
-
-	else if (this.movement == 'right_hip') {
-		if (this.right_hip.quaternion.w < 0.72){
-    	this.movement = 'right_hip done';
-    } else {
-
-	  // RIGHT HIP
-      var T = -Math.PI/2;
-      this.right_hip.quaternion.slerp( new THREE.Quaternion( 
-      Math.sin( T / 2 ),   // x
-      0,                   // y
-      0,                   // z
-      Math.cos( T / 2 ) ), // w
-      0.1 );
-    	}
-
-    } else if (this.movement == 'right_hip done'){
-    	this.movement = 'reset_right_hip';
-    }
-
-    // RESET RIGHT HIP
-
-    else if (this.movement == 'reset_right_hip') {
-		
-		if (this.right_hip.quaternion.w > 0.97){
-    	this.movement = 'reset_right_hip done';
-    } else {
-		this.right_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.05 );
-    	}
-    } else if (this.movement == 'reset_right_hip done'){
-    	this.movement = 'move_left_hip';
-
-    }
-
-    // LEFT HIP
-    else if (this.movement == 'move_left_hip') {
-		// It is time2dance!
-		if (this.left_hip.quaternion.w < 0.72){
-    	this.movement = 'move_left_hip done';
-    } else {
-		var T = -Math.PI/2;
-      	this.left_hip.quaternion.slerp( new THREE.Quaternion( 
-      	Math.sin( T / 2 ),   // x
-      	0,                   // y
-      	0,                   // z
-      	Math.cos( T / 2 ) ), // w
-      	0.1 );
-    	}
-    } else if (this.movement == 'move_left_hip done'){
-    	this.movement = 'reset_left_hip';
-    }
-
-    //RESET LEFT HIP
-    else if (this.movement == 'reset_left_hip') {
-		
-		if (this.left_hip.quaternion.w > 0.97){
-    	this.movement = 'reset_left_hip done';
-    } else {
-		this.left_hip.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.05 );
-    	}
-    } else if (this.movement == 'reset_left_hip done'){
-    	this.movement = 'time2dance';
-
-    }
 };
-
-Robot.prototype.raise_left_arm = function() {
-	this.movement = 'raise left arm';
-	};
-
-Robot.prototype.lower_left_arm = function() {
-	this.movement = 'lower left arm';
-	};
-
-Robot.prototype.right_kick = function() {
-	this.movement = 'right kick';
-	};
-
-Robot.prototype.left_kick = function() {
-	this.movement = 'left kick';
-	};
-
-Robot.prototype.dance = function() {
-	this.movement = 'time2dance';
-	console.log("It's Party Time!");
-	};
-
-Robot.prototype.freeze = function() {
-	this.movement = 'null';
-	console.log("It's Time To Stop!");
-	};
