@@ -2,41 +2,7 @@
 Robot = function (x, y, z)
 {
 
-//     var geometry = new THREE.SphereGeometry( 18, 36, 18 );
-// var material = new THREE.MeshBasicMaterial( {color: 'blue'} );
-// var cube = new THREE.Mesh( geometry, material );
 
-
-
-                // Smiley
-                var smileyShape = new THREE.Shape()
-                    .moveTo( 80, 40 )
-                    .absarc( 40, 40, 40, 0, Math.PI * 2, false );
-                var smileyEye1Path = new THREE.Path()
-                    .moveTo( 35, 20 )
-                    .absellipse( 25, 20, 10, 10, 0, Math.PI * 2, true );
-                var smileyEye2Path = new THREE.Path()
-                    .moveTo( 65, 20 )
-                    .absarc( 55, 20, 10, 0, Math.PI * 2, true );
-                var smileyMouthPath = new THREE.Path()
-                    .moveTo( 20, 40 )
-                    .quadraticCurveTo( 40, 60, 60, 40 )
-                    .bezierCurveTo( 70, 45, 70, 50, 60, 60 )
-                    .quadraticCurveTo( 40, 80, 20, 60 )
-                    .quadraticCurveTo( 5, 50, 20, 40 );
-                smileyShape.holes.push( smileyEye1Path );
-                smileyShape.holes.push( smileyEye2Path );
-                smileyShape.holes.push( smileyMouthPath );
-var loader = new THREE.TextureLoader();
-
-                var texture = loader.load( "textures/uv_grid_opengl.jpg" );
-                // it's necessary to apply these settings in order to correctly display the texture on a shape geometry
-                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-                texture.repeat.set( 0.008, 0.008 );
-
-var geometry = new THREE.ShapeBufferGeometry( smileyShape );
-                    var cube = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { side: THREE.DoubleSide, map: texture } ) );
-// scene.add( cube );
 
 
 
@@ -56,7 +22,28 @@ var geometry = new THREE.ShapeBufferGeometry( smileyShape );
     this.root.position.set(x, y, z);
 
     this.head = bones[1];
+
+
+//extra credit question 1
+    face = new THREE.TextureLoader().load('gfx/smiley.bmp');
+    faceGeometry = new THREE.SphereGeometry( 22.5);
+    faceMaterial = new THREE.MeshBasicMaterial(
+        {
+            map: face,
+            color: 'white'
+        }
+        );
+
+    cube = new THREE.Mesh(faceGeometry, faceMaterial);
+                // cube.rotateX(180  );
+                cube.rotateY( 180);
     addLimb(cube, this.head,null,null);
+
+
+  // scene.add(cube);
+  
+
+// var cube = new THREE.Mesh( headShape, material)
 
 
     this.neck = bones[2];
@@ -179,6 +166,7 @@ Robot.prototype.show = function (scene)
     scene.add(this.right_leg_mesh);
 
 }
+
 
 Robot.prototype.raiseLeftArm = function ()
 {
