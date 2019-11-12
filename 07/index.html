@@ -22,7 +22,7 @@
     <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
 
-    <stript src="helper.js" type="text/javascript"></stript>
+    <script src="helper.js" type="text/javascript"></script>
 
     <script src="Robot.js" type="text/javascript"></script>
 
@@ -69,29 +69,60 @@
         //controls = new THREE.TrackballControls( camera );
         //create a robot at x, y, z world coordinates
 
-        r = new Robot(0, -55, 0);
+        // create several robots
+        r1 = new Robot(0, 0, 0);
+        r2 = new Robot(300, 20, 200);
+        r3 = new Robot(-240, 20, 100);
+        r4 = new Robot(150, 10, 100);
+        r5 = new Robot(100, 0, -200);
+        r = new Robot(0, 0, 0);
 
         // gui monitor for Rendering
         controller = {
           anaglyph: false, 
 
           'raise left arm' : function(){
+            r1.raise_left_arm();
+            r2.raise_left_arm();
+            r3.raise_left_arm();
+            r4.raise_left_arm();
+            r5.raise_left_arm();
             r.raise_left_arm();
           }, 
 
           'lower left arm' : function(){
+            r1.lower_left_arm();
+            r2.lower_left_arm();
+            r3.lower_left_arm();
+            r4.lower_left_arm();
+            r5.lower_left_arm();
             r.lower_left_arm();
           },
 
           'kick' : function(){
+            r1.kick();
+            r2.kick();
+            r3.kick();
+            r4.kick();
+            r5.kick();
             r.kick();
           }, 
 
           'dance' : function(){
+            r1.dance();
+            r2.dance();
+            r3.dance();
+            r4.dance();
+            r5.dance();
             r.dance();
           }, 
 
           'stop' : function(){
+            r1.stop();
+            r2.stop();
+            r3.stop();
+            r4.stop();
+            r5.stop();
             r.stop();
           }
         };
@@ -102,9 +133,9 @@
         rendering.open()
 
         var moving = gui.addFolder("Movement");
-        moving.add(r.head.position, "x", -100, 100);
-        moving.add(r.head.position, "y", -100, 100);
-        moving.add(r.head.position, "z", -100, 100);
+        moving.add(r1.root.position, "x", -100, 100);
+        moving.add(r1.root.position, "y", -100, 100);
+        moving.add(r1.root.position, "z", -100, 100);
         moving.open();
 
         var actions = gui.addFolder("Actions");
@@ -118,13 +149,48 @@
 
         controls = new THREE.TrackballControls(camera, renderer.domElement);
 
-        scene.add(r.head);
+        scene.add(r1.root);
+        r1.show(scene);
+
+        scene.add(r2.root);
+        r2.show(scene);
+
+        scene.add(r3.root);
+        r3.show(scene);
+
+        scene.add(r4.root);
+        r4.show(scene);
+
+        scene.add(r5.root);
+        r5.show(scene)
+
+        scene.add(r.root);
         r.show(scene);
         
 
         animate();
 
 
+      };
+
+      window.onclick = function(e) {
+          if (!e.shiftKey) {
+            e.preventDefault();
+            return false;
+          }
+          pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+          vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
+                                        -( pixel_coords.y / window.innerHeight ) * 2 + 1);
+          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+          raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(vp_coords_near, camera);
+          intersects = raycaster.intersectObject(floor);
+          
+          if (intersects.length > 0) {
+              r.root.position.set(intersects[0].point.x, 
+                                  intersects[0].point.y + 100,
+                                  intersects[0].point.z);  
+          }
       };
 
       function animate() {
@@ -137,6 +203,11 @@
           renderer.setClearAlpha(1);
         }
 
+        r1.onAnimate();
+        r2.onAnimate();
+        r3.onAnimate();
+        r4.onAnimate();
+        r5.onAnimate();
         r.onAnimate();
 
         controls.update();
