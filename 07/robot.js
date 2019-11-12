@@ -61,6 +61,8 @@ Robot = function(x, y, z) {
 	mesh.add(bones[0]);
 	mesh.bind(skeleton);
 
+	this.neck.add(bones[0]);
+
 	this.right_upper_arm = bones[1];
 	this.right_upper_arm.position.x = -10;
 	this.right_upper_arm.position.y = -5;
@@ -86,6 +88,8 @@ Robot = function(x, y, z) {
 	var skeleton = new THREE.Skeleton(bones);
 	mesh.add(bones[0]);
 	mesh.bind(skeleton);
+
+	this.torso.add(bones[0]);
 
 	this.left_upper_leg = bones[1];
 	this.left_upper_leg.position.x = 10;
@@ -113,6 +117,8 @@ Robot = function(x, y, z) {
 	mesh.add(bones[0]);
 	mesh.bind(skeleton);
 
+	this.torso.add(bones[0]);
+
 	this.right_upper_leg = bones[1];
 	this.right_upper_leg.position.x = -10;
 	this.right_upper_leg.position.y = -15;
@@ -135,6 +141,10 @@ Robot = function(x, y, z) {
 
 Robot.prototype.show  = function(scene) {
 	scene.add(this.body_mesh);
+	scene.add(this.left_arm_mesh);
+	scene.add(this.right_arm_mesh);
+	scene.add(this.left_leg_mesh);
+	scene.add(this.right_leg_mesh);
 	//var rGroup = new THREE.Group();
 	//rGroup.add(r.head);
 
@@ -155,6 +165,10 @@ Robot.prototype.lower_left_arm = function() {
 
 Robot.prototype.kick = function() {
 	this.movement = "kick";
+}
+
+Robot.prototype.dance = function() {
+	this.movement = "dance";
 }
 
 Robot.prototype.onAnimate = function() {
@@ -186,5 +200,60 @@ Robot.prototype.onAnimate = function() {
 
 		this.left_upper_leg.quaternion.slerp( new THREE.Quaternion(x, y, z, w), 0.1);
 		
-	}
+	} else if (this.movement == 'dance') {
+
+	if (typeof dancer === 'undefined') {
+
+      		dancer = setInterval(function() {
+
+        // 
+        // some random translation
+        //
+        	var shakehead = 3*Math.random();
+        	if (Math.random() < .5) {
+          		shakehead *= -1;
+        	}
+
+       		 var shakeneck = 3*Math.random();
+       		 if (Math.random() < .5) {
+       		 	shakeneck *= -1;
+       		 }
+
+        var shaketorso = 3*Math.random();
+        if (Math.random() < .5) {
+          shaketorso *= -1;
+        }
+
+        this.head.position.x += shakehead;
+
+        this.neck.position.x += shakeneck;
+
+        this.torso.position.x += shaketorso;
+
+
+        //
+        // use actions
+        //
+        if (Math.random() < .3) {
+          this.raise_left_arm();
+        }
+
+        if (Math.random() < .3) {
+          this.lower_left_arm();
+        }
+
+        if (Math.random() < .3) {
+          this.kick();
+        }
+
+        if (Math.random() < .3) {
+          this.movement = 'kick done';
+        }
+
+      }.bind(this), 500);
+
+    }
+
+
+}
 }
