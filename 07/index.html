@@ -84,7 +84,7 @@ window.onload = function ()
     //and anaglyph rendering
     var gui = new dat.GUI();
 
-    var rendering = gui.addFolder("Rendering");
+    var rendering = gui.addFolder("Rendering (Click to Enable/Disable VideoTexture and 3D)");
     rendering.add(controller, 'anaglyph');
     rendering.open();
 
@@ -194,7 +194,7 @@ video.play();
     else
     {
         document.body.style.backgroundImage = "url('gfx/sky_alt.jpg')";
-        
+
     }
 
 };
