@@ -24,6 +24,8 @@
       var scene, camera, skybox, renderer, ambientLight, light, controls;
       var floor;
 
+	var robots = [];
+
       window.onload = function() {
 
         scene = new THREE.Scene();
@@ -86,12 +88,22 @@
 	// create a robot at x,y,z world coordinates
 	r = new Robot(0, 0, 0);
 	r.show(scene);
+	robots.push(r)
 
         animate();
 
         var controller = {
             anaglyph : false
         };
+
+	var slowdancer = {
+		dance : function() {
+			for (let e in robots) {
+				e.dance();
+			}
+		}
+	}
+		
 
         var gui = new dat.GUI();
         var rendering = gui.addFolder("Rendering");
@@ -111,7 +123,7 @@
 	animation.open();
 
 	var dance = gui.addFolder("Dancing");
-	dance.add(r, "dance");
+	dance.add(slowdancer, "dance");
 	dance.open();
 
 	// ply mesh loader
@@ -147,6 +159,7 @@
               //                    intersects[0].point.z)
 	      r2 = new Robot(intersects[0].point.x, intersects[0].point.y + 80, intersects[0].point.z);
 	      r2.show(scene);
+		robots.push(r2);
           }
       };
 
