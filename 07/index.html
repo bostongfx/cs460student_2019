@@ -97,9 +97,10 @@
         };
 
 	var slowdancer = {
+		anaglyph : false,
 		dance : function() {
 			for (let e in robots) {
-				e.dance();
+				robots[e].dance();
 			}
 		}
 	}
