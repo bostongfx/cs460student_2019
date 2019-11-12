@@ -17,7 +17,8 @@ Robot = function (x, y, z)
     this.root.position.set(x, y, z);
 
     this.head = bones[1];
-    this.head.position.z = z;
+    // this.head.position.z = z;
+    
 
     this.neck = bones[2];
     setPosition(this.neck, null, -10)
