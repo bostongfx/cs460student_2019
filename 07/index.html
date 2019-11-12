@@ -1,0 +1,211 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body { 
+        background-color:#000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+
+        background-image: url(sky.jpg);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+    </style>
+
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/effects/AnaglyphEffect.js" type="text/javascript"></script>
+	<script src="robot.js"></script>
+	<script src="helper.js"></script>
+	<script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
+	<video id="video" loop style="display:none" src = "floor.mp4" type = "video/mp4"></video>
+	<audio id= "music" src = "music.mp3"></audio>
+    <script>
+
+      var scene, camera, renderer, ambientLight, light, controls;
+      var floor;
+	  robots = [];
+	  
+	  
+      window.onload = function() {
+
+        scene = new THREE.Scene();
+
+		
+		
+        var fov = 60;
+        var ratio = window.innerWidth / window.innerHeight;
+        var zNear = 1;
+        var zFar = 10000;
+        camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camera.position.set( 0, 0, 500);
+
+        renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize( window.innerWidth, window.innerHeight );
+		
+		effect = new THREE.AnaglyphEffect(renderer);
+		effect.setSize( window.innerWidth, window.innerHeight );
+		
+        document.body.appendChild( renderer.domElement );
+        
+		
+		renderer.domElement.onclick = function(e){
+			
+		
+			if(!e.shiftKey){
+				e.preventDefault();
+				return false;
+			}
+			
+			pixCord = new THREE.Vector2(e.clientX, e.clientY);		
+			viewCord = new THREE.Vector2((pixCord.x / window.innerWidth) * 2 - 1, -(pixCord.y / window.innerHeight) * 2 + 1);
+			
+			viewCordNear = new THREE.Vector3(viewCord.x, viewCord.y, 0);
+			
+			raycaster = new THREE.Raycaster();
+			raycaster.setFromCamera(viewCordNear, camera);
+			intersects = raycaster.intersectObject(floor);
+			
+			var pos = intersects[0].point;
+			var robot = new Robot(pos.x, pos.y + 80, pos.z);
+			robots.push(robot);
+			robot.show(scene);
+			
+		}
+		
+        ambientLight = new THREE.AmbientLight();
+        scene.add( ambientLight );
+
+        light = new THREE.DirectionalLight( 0xffffff, 1.0 );
+        light.position.set( 10, 100, 10 );
+        scene.add( light );
+
+
+        var floorTexture = new THREE.TextureLoader().load( 'diff.jpg' );
+		var normalMap = new THREE.TextureLoader().load( 'normal.jpg' );
+		var aoMap = new THREE.TextureLoader().load( 'ao.jpg' );
+		//var roughMap = new THREE.TextureLoader().load( 'rough.jpg' );
+		//var displacement = new THREE.TextureLoader().load( 'disp.jpg' );
+        var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
+        var floorMaterial = new THREE.MeshStandardMaterial( {
+          map: floorTexture,
+		  aoMap: aoMap,
+		  normalMap: normalMap,
+		  //roughnessMap: roughMap,
+		  //roughness: 0.9,
+		  //displacementMap: displacement,
+		  //displacementScale: 4,
+          side: THREE.DoubleSide
+        } );
+        floor = new THREE.Mesh( floorGeometry, floorMaterial );
+        floor.position.y = -100;
+        floor.rotateX(-30);
+        scene.add( floor );
+
+        controls = new THREE.TrackballControls( camera, renderer.domElement );
+		controls.rotateSpeed = 3.5;
+		
+		r = new Robot(0, 20, 250);
+		robots.push(r);
+		r.show(scene);
+		
+		var controller = {
+			analglyph : false,
+			raise_left_arm: function(){
+				robots.forEach(function(item){
+					item.raise_left_arm();
+				});
+			},
+			
+			lower_left_arm: function(){
+				robots.forEach(function(item){
+					item.lower_left_arm();
+				});
+			},
+			
+			kick: function(){
+				robots.forEach(function(item){
+					item.kick();
+				});
+			},
+			
+			dance: function(){
+				//Video file
+				var video = document.getElementById("video");
+				video.play();
+				floorTexture = new THREE.VideoTexture(video);
+				floorMaterial = new THREE.MeshStandardMaterial( {
+				map: floorTexture,
+				aoMap: aoMap,
+				normalMap: normalMap,
+				//roughnessMap: roughMap,
+				//roughness: 0.9,
+				//displacementMap: displacement,
+				//displacementScale: 4,
+				side: THREE.DoubleSide
+				} );
+				scene.remove(floor);
+				floor = new THREE.Mesh( floorGeometry, floorMaterial );
+				floor.position.y = -100;
+				floor.rotateX(-30);
+				scene.add( floor );
+			
+				//Music
+				var music = document.getElementById("music");
+				music.autoplay = true;
+				music.load();
+			
+				
+				robots.forEach(function(item){
+					item.dance();
+				});
+			}
+		}
+		var gui = new dat.GUI();
+		var rendering = gui.addFolder("Rendering");
+		var moving = gui.addFolder("Movement");
+		moving.add(r.head.position, "x", -500, 500);
+		moving.add(r.head.position, "y", -500, 500);
+		moving.add(r.head.position, "z", -500, 500);
+		
+		moving.open();
+		rendering.add(controller, "analglyph");
+		rendering.open();
+		
+		var animation = gui.addFolder("Animation");
+		animation.add(controller, "raise_left_arm");
+		animation.add(controller, "lower_left_arm");
+		animation.add(controller, "kick");
+		animation.add(controller, "dance");
+		animation.open();
+		
+        //animate(controller.analglyph); Could not figure out how to toggle effect
+		animate();
+
+      };
+
+      function animate() {
+        requestAnimationFrame( animate );
+		robots.forEach(function(item){
+			item.onAnimate();
+		});
+        controls.update();
+		/*
+		if(analglyph){
+			effect.render(scene, camera);
+		}
+		else{
+			renderer.render(scene, camera);
+		}*/
+		renderer.render(scene, camera);
+		
+		
+      };
+
+    </script>
+  </head>
+  <body></body>
+</html>
