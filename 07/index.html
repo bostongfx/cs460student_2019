@@ -1,0 +1,218 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body { 
+        background-color:#000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+        background-image: url(forest.png);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+    </style>
+
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/effects/AnaglyphEffect.js" type="text/javascript"></script>
+
+    <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
+
+    <script src="robot.js" type="text/javascript"></script>
+    <script src="robot1.js" type="text/javascript"></script>
+    <script src="robot2.js" type="text/javascript"></script>
+    <script src="robot3.js" type="text/javascript"></script>
+    <script src="robot4.js" type="text/javascript"></script>
+    <script src="robot5.js" type="text/javascript"></script>
+    <script src="robot6.js" type="text/javascript"></script>
+    <script src="helper.js" type="text/javascript"></script>
+
+    <script>
+      var scene, camera, renderer, effect, ambientLight, light, controls;
+      var floor;
+      window.onload = function() {
+        scene = new THREE.Scene();
+        var fov = 60;
+        var ratio = window.innerWidth / window.innerHeight;
+        var zNear = 1;
+        var zFar = 10000;
+        camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camera.position.set( 0, 0, 500);
+        renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+        
+        effect = new THREE.AnaglyphEffect( renderer );
+        effect.setSize( window.innerWidth, window.innerHeight );
+        ambientLight = new THREE.AmbientLight();
+        scene.add( ambientLight );
+        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        light.position.set( 10, 100, 10 );
+        scene.add( light );
+        var floorTexture = new THREE.TextureLoader().load( 'grass.jpg' );
+        var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
+        var floorMaterial = new THREE.MeshBasicMaterial( {
+          map: floorTexture,
+          side: THREE.DoubleSide
+        } );
+        floor = new THREE.Mesh( floorGeometry, floorMaterial );
+        floor.position.y = -135;
+        floor.rotateX(-30);
+        scene.add( floor );
+        ALLBOTS = [];
+        
+        controller = {
+          anaglyph: false,
+          dance: function() {
+
+            var music = document.getElementById('dance');
+            music.autoplay = true;
+            music.load();
+            
+
+            for (var r in ALLBOTS) {
+
+              ALLBOTS[r].dance();
+            }
+          }
+        }
+
+
+        var gui = new dat.GUI();
+        var moving = gui.addFolder( "Movement" );
+        moving.add( controller, "dance" );
+        moving.open();
+        controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+        animate();
+      };
+      window.onclick = function(e) {
+          if (!e.shiftKey) {
+            e.preventDefault();
+            return false;
+          }
+          pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+          vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
+                                        -( pixel_coords.y / window.innerHeight ) * 2 + 1);
+          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+          raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(vp_coords_near, camera);
+          intersects = raycaster.intersectObject(floor);
+          if (intersects.length > 0) {
+              r = new Robot(intersects[0].point.x, 
+                                  intersects[0].point.y + 80,
+                                  intersects[0].point.z)
+              r.show(scene);
+              var music = document.getElementById('music');
+              music.autoplay = true;
+              music.load();
+              ALLBOTS.push(r);
+            }
+
+
+
+
+        //   for(var i = 0; i <= 6; i++){
+        //     if(i == 0){
+        //       if (intersects.length > 0) {
+        //       r = new Robot(intersects[0].point.x, 
+        //                           intersects[0].point.y + 80,
+        //                           intersects[0].point.z)
+        //       r.show(scene);
+        //       ALLBOTS.push(r);
+        //     }
+        //   }
+        //   else if(i == 1){
+        //       if (intersects.length > 0) {
+        //       r = new Robot1(intersects[0].point.x, 
+        //                           intersects[0].point.y + 80,
+        //                           intersects[0].point.z)
+        //       r.show(scene);
+        //       ALLBOTS.push(r);
+
+        //     }
+        //   }
+        //   else if(i == 2){
+        //       if (intersects.length > 0) {
+        //       r = new Robot2(intersects[0].point.x, 
+        //                           intersects[0].point.y + 80,
+        //                           intersects[0].point.z)
+        //       r.show(scene);
+        //       ALLBOTS.push(r);
+
+        //     }
+        //   }
+        //   else if(i == 3){
+        //       if (intersects.length > 0) {
+        //       r = new Robot3(intersects[0].point.x, 
+        //                           intersects[0].point.y + 80,
+        //                           intersects[0].point.z)
+        //       r.show(scene);
+        //       ALLBOTS.push(r);
+        //     }
+        //   }
+        //   else if(i == 4){
+        //       if (intersects.length > 0) {
+        //       r = new Robot4(intersects[0].point.x, 
+        //                           intersects[0].point.y + 80,
+        //                           intersects[0].point.z)
+        //       r.show(scene);
+        //       ALLBOTS.push(r);
+        //     }
+        //   }
+        //   else if(i == 5){
+        //       if (intersects.length > 0) {
+        //       r = new Robot5(intersects[0].point.x, 
+        //                           intersects[0].point.y + 80,
+        //                           intersects[0].point.z)
+        //       r.show(scene);
+        //       ALLBOTS.push(r);
+        //     }
+        //   }
+        //   else if(i == 6){
+        //       if (intersects.length > 0) {
+        //       r = new Robot6(intersects[0].point.x, 
+        //                           intersects[0].point.y + 80,
+        //                           intersects[0].point.z)
+        //       r.show(scene);
+        //       console.log("robot 6")
+        //       ALLBOTS.push(r);
+        //     }
+        //   }
+        // }
+      };
+      function animate() {
+        requestAnimationFrame( animate );
+        
+        for (var r in ALLBOTS) {
+          ALLBOTS[r].onAnimate();
+        }
+        
+        controls.update();
+        if (controller.anaglyph) {
+            renderer.setClearAlpha(1);
+            effect.render( scene, camera );
+        } else {
+            renderer.setClearAlpha(0);
+            renderer.render( scene, camera );
+        }
+        
+      };
+    </script>
+  </head>
+  <body>
+    <div style="visibility:hidden">
+    <audio id='music'>
+      <source src="sound.mp3">
+    </audio>
+
+    <audio>
+    <div style="visibility:hidden">
+    <audio id='dance'>
+      <source src="dance.mp3">
+    </audio>
+
+  </body>
+</html>
