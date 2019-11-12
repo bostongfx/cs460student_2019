@@ -63,12 +63,21 @@
         
 
         controller = {
-          anaglyph: false
+          anaglyph: false,
+
+          makeAllDance: function() {
+            for (var i = 0; i < allRobots.length; i++) {
+              allRobots[i].dance();
+              animate();
+            }
+          }
+        
           
         }
         var gui = new dat.GUI();
         var rendering = gui.addFolder( "Rendering" );
         rendering.add( controller, 'anaglyph' );
+        rendering.add( controller, 'makeAllDance');
         rendering.open();
         var moving = gui.addFolder( "Movement" );
         moving.add( r.head.position, "x", -1000, 1000 ).listen();

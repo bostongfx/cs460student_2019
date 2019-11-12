@@ -218,9 +218,9 @@ Robot.prototype.onAnimate = function() {
   
   } else if (this.movement == 'dance') {
  
-    if (typeof dancer === 'undefined') {
+    if (typeof this.dancer === 'undefined') {
  
-      dancer = setInterval(function() {
+      this.dancer = setInterval(function() {
  
         // 
         // some random translation
