@@ -125,6 +125,27 @@
 
       };
 
+      window.onclick = function(e) {
+          if (!e.shiftKey) {
+            e.preventDefault();
+            return false;
+          }
+          pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+          vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
+                                        -( pixel_coords.y / window.innerHeight ) * 2 + 1);
+          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+          raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(vp_coords_near, camera);
+          intersects = raycaster.intersectObject(floor);
+          if (intersects.length > 0) {
+              //r.head.position.set(intersects[0].point.x, 
+              //                    intersects[0].point.y + 60,
+              //                    intersects[0].point.z)
+	      r2 = new Robot(intersects[0].point.x, intersects[0].point.y + 60, intersects[0].point.z);
+	      r2.show(scene);
+          }
+      };
+
       function animate() {
 
         requestAnimationFrame( animate );

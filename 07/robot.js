@@ -98,6 +98,8 @@ Robot = function(x, y, z) {
 	this.left_foot = bones[3];
 	this.left_foot.position.x = 5;
 	this.left_foot.position.y = -1;
+
+	this.left_leg_mesh = mesh;
 	// --- end of left leg ---
 
 	// --- start of right leg ---
@@ -122,6 +124,9 @@ Robot = function(x, y, z) {
 	this.right_foot = bones[3];
 	this.right_foot.position.x = -5;
 	this.right_foot.position.y = -1;
+
+	this.right_leg_mesh = mesh;
+	// --- end of right leg ---
 
 	// string, controls which animation to run
 	// ex. "raise left arm" raises left arm
