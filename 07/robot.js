@@ -153,7 +153,6 @@ Robot.prototype.show = function(scene) {
   scene.add(this.leftleg_mesh);
   scene.add(this.rightleg_mesh);
 
-
 };
 
 Robot.prototype.raise_left_arm = function() {
@@ -224,13 +223,12 @@ Robot.prototype.onAnimate = function() {
 
     var music = document.getElementById('music');
     music.autoplay = true;
+    music.loop = true;
     music.load();
-    video.play();
 
     if (typeof this.dancer === 'undefined') {
 
       this.dancer = setInterval(function() {
-
         // 
         // some random translation
         //
@@ -254,7 +252,6 @@ Robot.prototype.onAnimate = function() {
         this.neck.position.x += shakeneck;
 
         this.torso.position.x += shaketorso;
-
 
         //
         // use actions
