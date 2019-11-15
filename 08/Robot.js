@@ -183,11 +183,17 @@ Robot.prototype.onStep = function() {
 		}
 
 	}
+	if((this.root.position.z > 40 && this.root.position.z < 160) 
+		&& (this.root.position.x > -60 && this.root.position.x < 60))
+		this.root.rotateY(Math.PI/2);
+	//bug area -57,0,50
+	// x -50~50, z 50~150
 	
 	if(this.root.position.z > 490 ||  this.root.position.z < -490)
 		this.root.rotateY(Math.PI/2);
 	else if(this.root.position.x > 490 ||  this.root.position.x < -490)
 		this.root.rotateY(Math.PI/2);
+
 
 	this.root.translateZ(5);
 };
