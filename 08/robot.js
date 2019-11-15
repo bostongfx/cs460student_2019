@@ -9,8 +9,16 @@ Robot = function(x, y, z){
 	else if(random > 0.33 && random <= 0.66)
 		color = "green";
 	else
-		color = "red";
-	
+		color = "red";	
+	var rot;
+	if(random < .25)
+		rot = 0;
+	else if(random >= .25 && random < .5)
+		rot = Math.PI/2;
+	else if(random >= .5 && random < .75)
+		rot = Math.PI;
+	else if(random >= .75)
+		rot = 3 * Math.PI / 2;
 	//Create Upperbody
 	var from_helper = HELPER.cylinderSkeletonMesh(3, 2, color);
 	var geom = from_helper[0];
@@ -22,6 +30,8 @@ Robot = function(x, y, z){
 	mesh.bind(skeleton);
 	
 	this.root 			 = createBone(x, y, z, bones[0]);
+	
+	this.root.rotateY(rot);
 	this.head 			 = createBone(0, 0, 0, bones[1]);
 	this.neck 			 = createBone(0, -10, 0, bones[2]);
 	this.torso 			 = createBone(0, -25, 0, bones[3]);
@@ -97,7 +107,6 @@ Robot = function(x, y, z){
 	
 	this.right_leg_mesh = mesh;
 
-	
 };
 
 function createBone(x, y, z, parent){
@@ -148,7 +157,25 @@ Robot.prototype.walk = function(){
 Robot.prototype.onStep = function(){
 	this.root.translateZ(10);
 	if(Math.abs(this.root.position.z) > 500 || Math.abs(this.root.position.x) > 500)
-		this.root.rotateY(Math.PI);
+		this.root.rotateY(Math.PI * .25);
+	for(var rock in rocks){
+		var rock = rocks[rock];
+		var boundingBox = rock.children[0].geometry.boundingBox;
+		if(boundingBox.containsPoint(this.root.position)){
+			this.root.rotateY(Math.PI * .25);
+		}
+
+		
+	}
+	
+	for(var bot in robots){
+		var bot = robots[bot];
+		if(bot.root.position.equals(this.root.position))
+			continue;
+		if(bot.root.position.distanceTo(this.root.position) < 10){
+			this.root.rotateY(Math.PI * .25);
+		}
+	}
 }
 
 Robot.prototype.onAnimate = function(){

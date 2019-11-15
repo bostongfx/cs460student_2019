@@ -21,6 +21,7 @@
 	<script src="robot.js"></script>
 	<script src="helper.js"></script>
 	<script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
+	<script src="https://threejs.org/examples/js/loaders/OBJLoader.js" type="text/javascript"></script>
 	<video id="video" loop style="display:none" src = "floor.mp4" type = "video/mp4"></video>
 	<audio id= "music" src = "music.mp3"></audio>
     <script>
@@ -28,8 +29,7 @@
       var scene, camera, renderer, ambientLight, light, controls;
       var floor;
 	  robots = [];
-	  
-	  
+	  rocks = [];
       window.onload = function() {
 
         scene = new THREE.Scene();
@@ -79,11 +79,20 @@
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );
 
-        light = new THREE.DirectionalLight( 0xffffff, 1.0 );
-        light.position.set( 10, 100, 10 );
-        scene.add( light );
+		
+		
+       light = new THREE.DirectionalLight( 0x00ffff, 0.5 );
+       light.position.set( 10, 100, 10 );
+       scene.add( light );
 
+		light = new THREE.PointLight(0xbb00FF, 10, 250);
+		light.position.set(10, 40, 10);
+		scene.add(light);
 
+		light = new THREE.RectAreaLight(0X00FF00, 20, 150, 120);
+		light.position.set(250, 40, 200);
+		scene.add(light);
+		
         var floorTexture = new THREE.TextureLoader().load( 'diff.jpg' );
 		var normalMap = new THREE.TextureLoader().load( 'normal.jpg' );
 		var aoMap = new THREE.TextureLoader().load( 'ao.jpg' );
@@ -111,7 +120,71 @@
 		r = new Robot(0, -25, 250);
 		robots.push(r);
 		r.show(scene);
-		r.movement = "walk";
+		
+		//Rocks
+		var loader = new THREE.OBJLoader();
+		loader.load("rock.obj", function(object){
+			object.scale.x = 100;
+			object.scale.y = 50;
+			object.scale.z = 50;
+			object.position.y = -120;
+
+			//Found by messing around with console
+			var geometry = object.children[0].geometry;
+			geometry.computeBoundingBox();
+			geometry.boundingBox.min.x *= 100;
+			geometry.boundingBox.min.y *= 50;
+			geometry.boundingBox.min.z *= 50;
+			geometry.boundingBox.max.x *= 100;
+			geometry.boundingBox.max.y *= 50;
+			geometry.boundingBox.max.z *= 50;
+			
+			
+			//From https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj.html
+			object.traverse( function( child ) {
+				if ( child instanceof THREE.Mesh ) {
+					child.material = floorMaterial;
+
+				}
+			} );
+			rocks.push(object);
+			scene.add(object);
+		});
+		loader.load("rock.obj", function(object){
+			object.scale.x = 39;
+			object.scale.y = 75;
+			object.scale.z = 50;
+			object.position.y = -120;
+			object.position.x = -220;
+			
+
+			
+			
+			
+			//Found by messing around with console
+			var geometry = object.children[0].geometry;
+			geometry.computeBoundingBox();
+
+			geometry.boundingBox.min.x *= 39;
+			geometry.boundingBox.min.y *= 75;
+			geometry.boundingBox.min.z *= 50;
+			geometry.boundingBox.max.x *= 39;
+			geometry.boundingBox.max.y *= 75;
+			geometry.boundingBox.max.z *= 50;
+			
+			geometry.boundingBox.min.x -= 220;
+			geometry.boundingBox.max.x -= 220;
+			geometry.boundingBox.min.y -= 75;
+			geometry.boundingBox.max.y -= 75;
+			object.traverse( function( child ) {
+				if ( child instanceof THREE.Mesh ) {
+					child.material = floorMaterial;
+
+				}
+			} );
+			rocks.push(object);
+			scene.add(object);
+		});
 		
 		var controller = {
 			analglyph : false,
@@ -130,6 +203,12 @@
 			kick: function(){
 				robots.forEach(function(item){
 					item.kick();
+				});
+			},
+			
+			walk: function(){
+				robots.forEach(function(item){
+					item.walk();
 				});
 			},
 			
@@ -181,6 +260,7 @@
 		animation.add(controller, "lower_left_arm");
 		animation.add(controller, "kick");
 		animation.add(controller, "dance");
+		animation.add(controller, "walk");
 		animation.open();
 		
         //animate(controller.analglyph); Could not figure out how to toggle effect
