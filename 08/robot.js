@@ -1,5 +1,7 @@
 Robot = function(x, y, z) {
 
+  //change
+
   // create head, neck, and, torso
   var fromhelper = HELPER.cylinderSkeletonMesh(3, 5, 'black')
   var geometry = fromhelper[0];
