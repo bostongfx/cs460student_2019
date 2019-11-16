@@ -253,28 +253,28 @@ Robot = function(x, y, z){
         this.movement = 'walk2';
       }
 
-      this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(0, 0, 0, 1), 0.1);
+      this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(0, 0, 0, 1), 0.5);
 
       var T = -Math.PI/4;
-      this.right_upper_leg.quaternion.slerp(new THREE.Quaternion(Math.sin(T/2)), 
+      this.right_upper_leg.quaternion.slerp(new THREE.Quaternion(Math.sin(T/2), 
                                                                 0, 
                                                                 0, 
-                                                                Math.cos(T/2), 
-                                                                              0.1);
+                                                                Math.cos(T/2)), 
+                                                                              0.5);
       this.onStep();
     }else if(this.movement == 'walk2'){
       if(this.left_upper_leg.quaternion.w < 0.93){
         this.movement = 'walk';
       }
 
-      this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(0, 0, 0, 1), 0.1);
+      this.right_upper_leg.quaternion.slerp(new THREE.Quaternion(0, 0, 0, 1), 0.5);
 
       var T = -Math.PI/4;
       this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(Math.sin(T/2), 
                                                                 0, 
                                                                 0, 
                                                                 Math.cos(T/2)), 
-                                                                              0.1);
+                                                                              0.5);
       this.onStep();
     }else if(this.movement == 'kick'){
     
