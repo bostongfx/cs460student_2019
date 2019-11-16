@@ -94,7 +94,13 @@
               r = all_robots[r];
               r.dance();
             }
-          }
+          },
+          walk: function() {
+                      for (var r in all_robots) {
+                        r = all_robots[r];
+                        r.walk();
+                      }
+                    }
         }
 
 
@@ -110,6 +116,8 @@
         moving.add( r, "lower_left_arm" );
         moving.add( r, "kick" );
         moving.add( controller, "dance" );
+        moving.add( controller, "walk" );
+
         moving.open();
 
 
@@ -176,7 +184,6 @@
             effect.render( scene, camera );
         } else {
                 document.body.style.backgroundImage = "url('gfx/sky_alt.jpg')";
-
            // renderer.setClearAlpha(0);
             renderer.render( scene, camera );
         }
@@ -192,7 +199,7 @@
       <source src="techno.mp3">
     </audio>
     <video id="video" loop crossOrigin="anonymous" webkit-playsinline style="display:none">
-      <source src="discoball.mp4"  type='video/mp4'>
+      <source src="gfx/60-fps-dancefloor.mp4"  type='video/mp4'>
     </video>
     </div>
   </body>
