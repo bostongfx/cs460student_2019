@@ -194,6 +194,7 @@ Robot.prototype.onStep = function() {
 
     if (b.position.distanceTo(this.root.position)<80){
       this.root.rotateY(Math.PI/2);
+      console.log("Reached Here");
 
     }
 
