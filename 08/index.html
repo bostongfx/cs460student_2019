@@ -49,14 +49,50 @@
         effect = new THREE.AnaglyphEffect( renderer );
         effect.setSize( window.innerWidth, window.innerHeight );
 
-        ambientLight = new THREE.AmbientLight();
-        scene.add( ambientLight );
+        // ambientLight = new THREE.AmbientLight();
+        // scene.add( ambientLight );
 
-        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
-        light.position.set( 10, 100, 10 );
-        scene.add( light );
+        // light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        // light.position.set( 10, 100, 10 );
+        // scene.add( light );
 
 
+        // Light SpotLight          
+        var color = 0xFFFFFF;
+        var intensity = 1;
+        var spotlight = new THREE.SpotLight(color, intensity);
+        spotlight.position.set(-43, 80, -200);
+        spotlight.target.position.set(-20, -30, 465);
+        scene.add(spotlight);
+        scene.add(spotlight.target);
+
+        // Light PointLight 
+        var color = 0xFFFFFF;
+        var intensity = 1;
+        var pointLight = new THREE.PointLight(color, intensity);
+        pointLight.position.set(-150, -30, -150);
+        scene.add(pointLight);
+
+        // Light PointLight2 
+        var color = 0xFFFFFF;
+        var intensity = 1;
+        var pointLight_2 = new THREE.PointLight(color, intensity);
+        pointLight_2.position.set(150, 70, 150);
+        scene.add(pointLight_2);
+
+        class DegRadHelper {
+        constructor(obj, prop) {
+          this.obj = obj;
+          this.prop = prop;
+        }
+        get value() {
+            return THREE.Math.radToDeg(this.obj[this.prop]);
+          }
+        set value(v) {
+            this.obj[this.prop] = THREE.Math.degToRad(v);
+          }
+        }
+         
         var floorTexture = new THREE.TextureLoader().load( 'marble.jpg' );
         var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
         var floorMaterial = new THREE.MeshBasicMaterial( {
@@ -76,14 +112,42 @@
         all_robots.push(r);
 
 
+        all_mesh = [];
+
+        var cubeSize = 50;
+        var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
+        var cubeMat = new THREE.MeshPhongMaterial({color: '#8AC'});
+        var mesh_1 = new THREE.Mesh(cubeGeo, cubeMat);
+        mesh_1.position.set(80, -74, 0);
+        scene.add(mesh_1);
+
+        var sphereRadius = 70;
+        var sphereWidthDivisions = 32;
+        var sphereHeightDivisions = 16;
+        var sphereGeo = new THREE.SphereBufferGeometry(sphereRadius, sphereWidthDivisions, sphereHeightDivisions);
+        var sphereMat = new THREE.MeshPhongMaterial({color: '#CA8'});
+        var mesh_2 = new THREE.Mesh(sphereGeo, sphereMat);
+        mesh_2.position.set(-100, -30, 400);
+        scene.add(mesh_2);
+
+        var cubeSize = 50;
+        var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
+        var cubeMat = new THREE.MeshPhongMaterial({color: '#8AC'});
+        var mesh_3 = new THREE.Mesh(cubeGeo, cubeMat);
+        mesh_3.position.set(-80, -74, -80);
+        scene.add(mesh_3);
+
+        all_mesh.push(mesh_1);
+        all_mesh.push(mesh_2);
+        all_mesh.push(mesh_3);
+
+
+
         controller = {
           anaglyph: false,
           dance: function() {
 
-            // start the music
-            var music = document.getElementById('music');
-            music.autoplay = true;
-            music.load();
+            // start the Video
             
             var video = document.getElementById('video');
             var texture = new THREE.VideoTexture( video );
@@ -119,6 +183,17 @@
         moving.add( controller, "dance" );
         moving.open();
 
+        var lights_1 = gui.addFolder( "Point Light" );
+        lights_1.add(pointLight, 'distance', 0, 1);
+        lights_1.open();
+
+        var lights_2 = gui.addFolder( "Spot Light" );
+        lights_2.add(new DegRadHelper(spotlight, 'angle'), 'value', 0, 90).name('angle');
+        lights_2.open();
+
+        var lights_3 = gui.addFolder( "Point Light 2" );
+        lights_3.add(pointLight_2, 'distance', 0, 1);
+        lights_3.open();
 
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
@@ -191,9 +266,6 @@
   </head>
   <body>
     <div style="visibility:hidden">
-    <audio id='music'>
-      <source src="techno.mp3">
-    </audio>
     <video id="video" loop crossOrigin="anonymous" webkit-playsinline style="display:none">
       <source src="RA-NGGYUp.mp4"  type='video/mp4'>
     </video>

@@ -184,6 +184,22 @@ Robot.prototype.onStep = function() {
 
   }
 
+  for (var b in all_mesh) {
+
+    b = all_mesh[b];
+
+    if (b.position.equals(this.root.position)) {
+      continue;
+    }
+
+    if (b.position.distanceTo(this.root.position)<80){
+      this.root.rotateY(Math.PI/2);
+      console.log("Reached Here");
+
+    }
+
+  }
+
   if (this.root.position.z > 490 || this.root.position.z < -490) {
     this.root.rotateY(Math.PI/2);
   } else if (this.root.position.x > 490 || this.root.position.x < -490) {
