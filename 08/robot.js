@@ -173,6 +173,10 @@ Robot = function(x, y, z){
   Robot.prototype.kick = function(){
     this.movement = 'kick';
   }
+
+  Robot.prototype.walk = function(){
+    this.movement = 'walk';
+}
   
   Robot.prototype.dance = function(){
     this.movement = 'dance';
@@ -182,8 +186,33 @@ Robot = function(x, y, z){
     this.movement = 'null';
   }
 
-  Robot.prototype.walk = function(){
-      this.movement = 'walk';
+  Robot.prototype.onStep = function(){
+    // check if this robot i close
+    // to another robot by looping
+    // through all robots
+    for(var a in all_robots){
+      a = all_robots[a];
+
+      if(a.root.position.equals(this.root.position)){
+        continue;
+      }
+
+      if(a.root.position.distanceTo(this.root.position) < 10){
+        this.root.rotateY(Math.PI/2);
+      }
+    }
+
+
+
+    if(this.root.position.z > 490 || this.root.position.z < -490){
+      this.root.rotateY(Math.PI/2);
+    }else if(this.root.position.x > 490 || this.root.position.x < -490){
+      this.root.rotateY(Math.PI/2);
+    }else if(this.root.position.y > 490 || this.root.position.y < -490){
+      this.root.rotateY(Math.PI/2);
+    }
+
+    this.root.translateZ(10);
   }
   
   Robot.prototype.onAnimate = function(){
@@ -224,27 +253,29 @@ Robot = function(x, y, z){
         this.movement = 'walk2';
       }
 
-      this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(0, 0, 0, 1), 0.5);
+      this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(0, 0, 0, 1), 0.1);
 
       var T = -Math.PI/4;
       this.right_upper_leg.quaternion.slerp(new THREE.Quaternion(Math.sin(T/2)), 
                                                                 0, 
                                                                 0, 
                                                                 Math.cos(T/2), 
-                                                                              0.5);
+                                                                              0.1);
+      this.onStep();
     }else if(this.movement == 'walk2'){
       if(this.left_upper_leg.quaternion.w < 0.93){
         this.movement = 'walk';
       }
 
-      this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(0, 0, 0, 1), 0.5);
+      this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(0, 0, 0, 1), 0.1);
 
       var T = -Math.PI/4;
       this.left_upper_leg.quaternion.slerp(new THREE.Quaternion(Math.sin(T/2), 
                                                                 0, 
                                                                 0, 
                                                                 Math.cos(T/2)), 
-                                                                              0.5);
+                                                                              0.1);
+      this.onStep();
     }else if(this.movement == 'kick'){
     
       // check if slerp reached almost the end

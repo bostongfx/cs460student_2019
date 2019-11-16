@@ -95,6 +95,7 @@
               r.dance();
             }
           }, 
+          
           walk: function(){
             for(var r in all_robots){
               r = all_robots[r];
@@ -182,6 +183,11 @@
         } else {
             renderer.setClearAlpha(0);
             renderer.render( scene, camera );
+        }
+
+        for(var r in all_robots){
+          r = all_robots[r];
+          r.onAnimate();
         }
         
 
