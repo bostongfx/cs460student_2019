@@ -181,7 +181,18 @@ Robot.prototype.walk = function() {
 };
 
 Robot.prototype.onStep = function() {
+  if (this.root.position > 500 || this.root.position.z < -500) {
+    this.root.rotateY(Math.PI/2);
+  }
+
+  else if (this.root.position.x > 500 || this.root.position.x < -500) {
+    this.root.rotateY(Math.PI/2);
+  }
+
+
   this.root.translateZ(10);
+
+
   };
  
 Robot.prototype.onAnimate = function() {
