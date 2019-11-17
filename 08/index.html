@@ -73,12 +73,12 @@
           
           },
 
-          walk: function() {
+          roboWalk: function() {
             for (var i = 0; i < allRobots.length; i++) {
               allRobots[i].walk();
               animate();
             }
-            
+
           }
         
           
@@ -96,7 +96,8 @@
         moving.add( r, "lower_left_arm" );
         moving.add( r, "kick" );
         moving.add( r, "dance" );
-        moving.add( controller, 'walk')
+        moving.add( r, "walk");
+        moving.add( controller, 'roboWalk')
         moving.open();
         controls = new THREE.TrackballControls( camera, renderer.domElement );
         animate();

@@ -178,7 +178,11 @@ Robot.prototype.dance = function() {
 
 Robot.prototype.walk = function() {
   this.movement = 'walk';
-}
+};
+
+Robot.prototype.onStep = function() {
+  this.root.translateZ(10);
+  };
  
 Robot.prototype.onAnimate = function() {
  
@@ -215,12 +219,46 @@ Robot.prototype.onAnimate = function() {
   
     }
   
+
+
   } else if (this.movement == 'kick done') {
   
     // reset leg back to identity
     this.right_upperleg.quaternion.slerp( new THREE.Quaternion(0,0,0,1), 0.1 );
-  
-  } else if (this.movement == 'dance') {
+  }  
+
+  else if (this.movement == 'walk') {
+      if (this.right_upperleg.quaternion.w < 0.93) {
+        this.movement = 'walk2';
+      }
+
+
+      var T = -Math.PI/4;
+      this.right_upperleg.quaternion.slerp(new THREE.Quaternion(Math.sin(T/2), 
+        0, 0, Math.cos(T/2)), 0.5); // 45 degree along x axis
+
+      this.left_upperleg.quaternion.slerp(new THREE.Quaternion(0,0,0,1), 0.5); // identity
+
+      this.onStep();
+    }
+
+    else if (this.movement == 'walk2') {
+      if (this.left_upperleg.quaternion.w < 0.93) {
+        this.movement = 'walk';
+      }
+      var T = -Math.PI/4;
+      this.left_upperleg.quaternion.slerp(new THREE.Quaternion(Math.sin(T/2), 
+        0, 0, Math.cos(T/2)), 0.5); // 45 degree along x axis
+
+      this.right_upperleg.quaternion.slerp(new THREE.Quaternion(0,0,0,1), 0.5); // identity
+
+      this.onStep();
+    }
+
+
+
+
+   else if (this.movement == 'dance') {
  
     if (typeof this.dancer === 'undefined') {
  
@@ -272,40 +310,6 @@ Robot.prototype.onAnimate = function() {
  
       }.bind(this), 500);
  
-    }
-  
-    else if (this.movement == 'walk') {
-      if (this.right_upperleg.quaternion.w < 0.93) {
-        this.movement = 'walk2';
-      }
-
-
-      var T = -Math.PI/4;
-      this.left_upperleg.quaternion.slerp(new THREE.Quaternion(Math.sin(T/2), 
-        0, 0, Math.cos(T/2)), 0.5); // 45 degree along x axis
-
-      this.right_upperleg.quaternion.slerp(new THREE.Quaternion(0,0,0,1), 0.5); // identity
-
-      this.onStep();
-    }
-
-    else if (this.movement == 'walk2') {
-      if (this.left_upperleg.quaternion.w < 0.93) {
-        this.movement = 'walk';
-      }
-      var T = -Math.PI/4;
-      this.left_upperleg.quaternion.slerp(new THREE.Quaternion(Math.sin(T/2), 
-        0, 0, Math.cos(T/2)), 0.5); // 45 degree along x axis
-
-      this.right_upperleg.quaternion.slerp(new THREE.Quaternion(0,0,0,1), 0.5); // identity
-
-      this.onStep();
-    }
- 
+    } 
   } 
 };
-
-
-  Robot.prototype.onStep = function() {
-    this.root.translateZ(10);
-  }
