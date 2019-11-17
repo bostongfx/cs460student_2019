@@ -97,6 +97,15 @@
           }
         }
 
+        walkController = {
+            anaglyph : false,
+            walk : function() {
+            	for (var a in all_robots) {
+			all_robots[a].walk();
+		}
+	    }
+        }
+
 
         var gui = new dat.GUI();
         var rendering = gui.addFolder( "Rendering" );
@@ -113,7 +122,7 @@
         moving.open();
 
 	var walking = gui.addFolder("Walking");
-	walking.add( r, "walk" );
+	walking.add( walkController, "walk" );
 	walking.open();
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );

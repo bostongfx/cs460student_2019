@@ -176,16 +176,29 @@ Robot.prototype.walk = function() {
 }
 
 Robot.prototype.onStep = function() {
-	if (this.root.position.x > 200) {
-		this.root.rotateY(180);
-	} else if (this.root.position.x < -200) {
-		this.root.rotateY(180);
+	var rotate = Math.PI / 2;
+	for (var a in all_robots) {
+		a = all_robots[a];
+
+		if (a.root.position.equals(this.root.position)) {
+			continue;
+		}
+
+		if (a.root.position.distanceTo(this.root.position) < 10) {
+			this.root.rotateY(rotate);
+		}
 	}
 
-	if (this.root.position.z > 200) {
-		this.root.rotateY(180);
-	} else if (this.root.position.z < -200) {
-		this.root.rotateY(180);
+	if (this.root.position.x > 490) {
+		this.root.rotateY(rotate);
+	} else if (this.root.position.x < -490) {
+		this.root.rotateY(rotate);
+	}
+
+	if (this.root.position.z > 490) {
+		this.root.rotateY(rotate);
+	} else if (this.root.position.z < -490) {
+		this.root.rotateY(rotate);
 	}
 
 	this.root.translateZ(10);
