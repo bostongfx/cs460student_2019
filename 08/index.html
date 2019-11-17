@@ -50,12 +50,32 @@
         document.body.appendChild( renderer.domElement );
         
         effect = new THREE.AnaglyphEffect( renderer );
-        effect.setSize( window.innerWidth, window.innerHeight );
+        effect.setSize( window.innerWidth, window.innerHeight );    
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );
         light = new THREE.DirectionalLight( 0xffffff, 5.0 );
         light.position.set( 10, 100, 10 );
         scene.add( light );
+        
+
+        //add point light
+        plight = new THREE.PointLight(0xff0000, 100, 100);
+        plight.position.set(10, -10, 10);
+        scene.add(plight);
+
+        sphereSize = 10;
+        helper = new THREE.PointLightHelper( plight, sphereSize );
+        scene.add( helper );
+
+        pointLight = new THREE.PointLight(0x00ff00, 100, 100);
+        pointLight.position.set(-10, -10, -10);
+        scene.add(pointLight);
+
+        sphereSize = 10;
+        pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
+        scene.add( pointLightHelper );
+
+
         var floorTexture = new THREE.TextureLoader().load( 'marble.jpg' );
         var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
         var floorMaterial = new THREE.MeshBasicMaterial( {

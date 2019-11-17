@@ -1,7 +1,7 @@
 Robot = function(x, y, z) {
 
   //create head, neck, and torso
-  var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'blue');
+  var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'white');
   var geometry = fromhelper[0];
   var material = fromhelper[1];
   var bones = fromhelper[2];
@@ -32,7 +32,7 @@ Robot = function(x, y, z) {
   //end of head, neck, torso
 
   //start of left arm
-  var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'blue');
+  var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'white');
   var geometry = fromhelper[0];
   var material = fromhelper[1];
   var bones = fromhelper[2];
@@ -60,7 +60,7 @@ Robot = function(x, y, z) {
   //end of left arm
 
 //start of right arm
-  var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'blue');
+  var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'white');
   var geometry = fromhelper[0];
   var material = fromhelper[1];
   var bones = fromhelper[2];
@@ -88,7 +88,7 @@ Robot = function(x, y, z) {
   //end of right arm
 
   //start of left leg
-  var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'blue');
+  var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'white');
   var geometry = fromhelper[0];
   var material = fromhelper[1];
   var bones = fromhelper[2];
@@ -117,7 +117,7 @@ Robot = function(x, y, z) {
 
 
   //start of right leg
-  var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'blue');
+  var fromhelper = HELPER.cylinderSkeletonMesh( 3, 5, 'white');
   var geometry = fromhelper[0];
   var material = fromhelper[1];
   var bones = fromhelper[2];
