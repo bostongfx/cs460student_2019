@@ -1,4 +1,4 @@
-<html>
+ <html>
   <head>
     <meta charset="UTF-8" />
     <style>
@@ -58,7 +58,7 @@
         } );
         floor = new THREE.Mesh( floorGeometry, floorMaterial );
         floor.position.y = -100;
-        floor.rotateX(-30);
+        floor.rotateX(Math.PI/2);
         scene.add( floor );
 
         controls = new THREE.TrackballControls( camera ,renderer.domElement);
@@ -87,7 +87,13 @@
               music.load();
               for (var r in ALLROBOTS) {
 
-              ALLROBOTS[r].dance();}}
+              ALLROBOTS[r].dance();}},
+
+              'walk':function(){
+              for (var r in ALLROBOTS){
+                ALLROBOTS[r].walk();
+              }
+              },
              
 
         }
@@ -107,7 +113,8 @@
         moving.add( controller,'raise left arm');
         moving.add( controller,'lower left arm');
         moving.add( controller, 'kick');
-        moving.add( controller,'dance')
+        moving.add( controller,'dance');
+        moving.add( controller, 'walk')
         moving.open();
 
         //var animat = gui.addFolder("Animate");
