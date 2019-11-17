@@ -180,10 +180,13 @@ Robot.prototype.onStep = function() {
     }
   }
 
-  if (this.root.position.z > 490 || this.root.position.z < -490) {
+  // Armadillo bounding box : x-axis: -430 ~ -499
+  //                          z-axis: -450 ~ -499
+
+  if (this.root.position.z > 490 || this.root.position.z < -449) {
     this.root.rotateY(Math.PI/2);
 
-  } else if (this.root.position.x > 490 || this.root.position.x < -490) {
+  } else if (this.root.position.x > 490 || this.root.position.x < -429) {
     this.root.rotateY(Math.PI/2);
   }
 
