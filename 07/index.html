@@ -21,6 +21,7 @@
         min-width: 100%; 
         min-height: 100%;
       }
+
     </style>
 
     <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
@@ -100,11 +101,12 @@
             music.autoplay = true;
             music.load();
 
-            /* add video as background
-            var video = document.getElementById('myVideo');
-            video.autoplay = true;
+            //add video as background
+            var video = document.getElementById('video');
+            var texture = new THREE.VideoTexture(video);
+            floor.material.map = texture;
             video.play();
-            */
+            
             
             for(var r in ALLROBOTS){
               ALLROBOTS[r].dance();
@@ -180,8 +182,8 @@
     <audio id='music'>
       <source src="idle-Lion.mp3">
     </audio>
-    <video autoplay muted loop id="myVideo">
-      <source src="gidle-Lion.mp4" type="video/mp4" autostart = "true">
+    <video id="video" loop crossOrigin="anonymous" webkit-playsinline style="display:none">
+      <source src="gidle-Lion.mp4" type="video/mp4">
     </video>
     </div>
   </body>
