@@ -273,7 +273,7 @@ Robot.prototype.onAnimate = function() {
       }.bind(this), 500);
  
     }
-
+  
     else if (this.movement == 'walk') {
       if (this.right_upperleg.quaternion.w < 0.93) {
         this.movement = 'walk2';
@@ -285,19 +285,27 @@ Robot.prototype.onAnimate = function() {
         0, 0, Math.cos(T/2)), 0.5); // 45 degree along x axis
 
       this.right_upperleg.quaternion.slerp(new THREE.Quaternion(0,0,0,1), 0.5); // identity
+
+      this.onStep();
     }
 
     else if (this.movement == 'walk2') {
       if (this.left_upperleg.quaternion.w < 0.93) {
-        this.movement = 'walk2';
+        this.movement = 'walk';
       }
       var T = -Math.PI/4;
-      this.right_upperleg.quaternion.slerp(new THREE.Quaternion(Math.sin(T/2), 
+      this.left_upperleg.quaternion.slerp(new THREE.Quaternion(Math.sin(T/2), 
         0, 0, Math.cos(T/2)), 0.5); // 45 degree along x axis
 
-      this.left_upperleg.quaternion.slerp(new THREE.Quaternion(0,0,0,1), 0.5); // identity
+      this.right_upperleg.quaternion.slerp(new THREE.Quaternion(0,0,0,1), 0.5); // identity
+
+      this.onStep();
     }
  
-  }
- 
+  } 
 };
+
+
+  Robot.prototype.onStep = function() {
+    this.root.translateZ(10);
+  }
