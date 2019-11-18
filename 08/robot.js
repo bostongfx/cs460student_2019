@@ -154,6 +154,10 @@ Robot.prototype.onStep = function() {
 for (var a in robots) {
   a = robots[a];
 
+  if(this.root.position.distanceTo({x:0, y:0, z:0}) < 75) {
+      this.root.rotateY(Math.PI/2);
+    }
+
   if(a.root.position.equals(this.root.position)){
     continue;
   }
@@ -161,9 +165,7 @@ for (var a in robots) {
   if(a.root.position.distanceTo(this.root.position) < 10) {
     this.root.rotateY(Math.PI/2);
   }
-  if(this.root.position.distanceTo({x:0, y:0, z:0}) < 75) {
-      this.root.rotateY(Math.PI/2);
-    }
+
 
 
 }
