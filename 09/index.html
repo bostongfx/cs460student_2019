@@ -84,9 +84,9 @@
 
         var directionalFolder = gui.addFolder('Directional Light');
         directionalFolder.addColor(controller, 'color').onChange( function(value) { directionalLight.color.setHex(value); });
-        directionalFolder.add(directionalLight.position, 'x', 0, 100);
-        directionalFolder.add(directionalLight.position, 'y', 0, 100);
-        directionalFolder.add(directionalLight.position, 'z', 0, 100);
+        directionalFolder.add(directionalLight.position, 'x', -100, 100);
+        directionalFolder.add(directionalLight.position, 'y', -100, 100);
+        directionalFolder.add(directionalLight.position, 'z', -100, 100);
         directionalFolder.open();
 
         // TODO Part 4 (control the color and position of point lights)
