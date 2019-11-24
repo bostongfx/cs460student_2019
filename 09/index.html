@@ -20,16 +20,16 @@
 
     <script>
 
-      var scene, camera, renderer, effect, ambientLight, light, controls;
+      var scene, camera, renderer, effect, ambientLight, directionallight, controls;
+      var toonMaterial, material, pointLight1, pointLight2;
       var floor;
 
       window.onload = function() {
 
-
         scene = new THREE.Scene();
 
-        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
-        camera.position.set( 0, 0, 500);
+        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
+        camera.position.set( -400, 200, 200 );
 
         renderer = new THREE.WebGLRenderer({ });
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -42,9 +42,14 @@
         directionalLight.position.set( 10, 100, 10 );
         scene.add( directionalLight );
 
-
         // TODO Part 3 (add 2 pointlights)
+        pointLight1 = new THREE.PointLight( 0xff0000, 200, 0 );
+        pointLight1.position.set( 0, 0, -100 );
+        scene.add( pointLight1 );
 
+        pointLight2 = new THREE.PointLight( 0x4a00ff, 200, 0 );
+        pointLight2.position.set( 0, 100, -100 );
+        scene.add( pointLight2 );
 
 
         var loader = new THREE.PLYLoader();
@@ -52,50 +57,82 @@
 
           geometry.computeVertexNormals();
 
-          toonMaterial = new THREE.MeshToonMaterial( {
-             color: 0x21ce70
-          } );
+          toonMaterial = new THREE.MeshToonMaterial( { color: 0x0055ff } );
 
           mesh = new THREE.Mesh( geometry, toonMaterial );
-          
+          mesh.position.z = 100;
+
           scene.add( mesh );
 
         } );
 
         // TODO Part 1, load another mesh
         // TODO Part 2, use a different material for this mesh
+        loader.load('egret.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( { color: 0x0055ff, flatShading: true } );
+
+          mesh = new THREE.Mesh( geometry, material );
+          mesh.position.z = -100;
+          mesh.position.y = 40;
+          mesh.scale.multiplyScalar( 0.03 );
+          mesh.rotation.z = Math.PI / 2;
+          mesh.rotation.x = - Math.PI / 2;
+
+          scene.add( mesh );
+
+        } );
 
 
 
         controller = {
-          'color': 0xffffff // we can use this single color
+          'color': 0xffffff, // we can use this single color
                             // container for all colors in the scene 
                             // if we modify the onChange callback (see below)
 
           // TODO Bonus Part 1
           // TODO Bonus Part 2
-        }
+        };
 
 
         var gui = new dat.GUI();
-        var ambientFolder = gui.addFolder('Ambient Light');
-        ambientFolder.addColor(controller, 'color').onChange( function(value) { ambientLight.color.setHex(value); });
+        var ambientFolder = gui.addFolder( 'Ambient Light' );
+        ambientFolder.addColor( controller, 'color' ).onChange( function(value) { ambientLight.color.setHex( value ); } );
         ambientFolder.open();
 
-        var directionalFolder = gui.addFolder('Directional Light');
-        directionalFolder.addColor(controller, 'color').onChange( function(value) { directionalLight.color.setHex(value); });
-        directionalFolder.add(directionalLight.position, 'x', -100, 100);
-        directionalFolder.add(directionalLight.position, 'y', -100, 100);
-        directionalFolder.add(directionalLight.position, 'z', -100, 100);
+        var directionalFolder = gui.addFolder( 'Directional Light' );
+        directionalFolder.addColor( controller, 'color' ).onChange( function(value) { directionalLight.color.setHex( value ); } );
+        directionalFolder.add( directionalLight.position, 'x', -100, 100 );
+        directionalFolder.add( directionalLight.position, 'y', -100, 100 );
+        directionalFolder.add( directionalLight.position, 'z', -100, 100 );
         directionalFolder.open();
 
         // TODO Part 4 (control the color and position of point lights)
+        var pointFolder1 = gui.addFolder( 'Point Light 1' );
+        pointFolder1.addColor( controller, 'color' ).onChange( function(value) { pointLight1.color.setHex( value ); } );
+        pointFolder1.add( pointLight1.position, 'x', -100, 100 );
+        pointFolder1.add( pointLight1.position, 'y', -100, 100 );
+        pointFolder1.add( pointLight1.position, 'z', -100, 100 );
+        pointFolder1.open();
+
+        var pointFolder2 = gui.addFolder( 'Point Light #2' );
+        pointFolder2.addColor( controller, 'color' ).onChange( function(value) { pointLight2.color.setHex( value ); } );
+        pointFolder2.add( pointLight2.position, 'x', -100, 100 );
+        pointFolder2.add( pointLight2.position, 'y', -100, 100 );
+        pointFolder2.add( pointLight2.position, 'z', -100, 100) ;
+        pointFolder2.open();
 
         // TODO Part 5 (control the color of both materials in the scene)
+        var bothMaterial = gui.addFolder( 'Color All' );
+        bothMaterial.addColor( controller, 'color' ).onChange( function(value) {
+          toonMaterial.color.setHex( value );
+          material.color.setHex( value );
+        } );
+        bothMaterial.open();
 
         gui.open();
-
-
 
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
