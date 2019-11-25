@@ -123,9 +123,10 @@
                             // if we modify the onChange callback (see below)
           'pointColor': 0xffffff,
           'armadillo_color' : 0xffffff,
-          'dophins_color' : 0xffffff
+          'dophins_color' : 0xffffff,
 
           // TODO Bonus Part 1
+          'material': ['toon', 'standard', 'phong'],
           // TODO Bonus Part 2
         }
 
@@ -165,6 +166,56 @@
         var dophinsFolder = gui.addFolder('dophins');
         dophinsFolder.addColor(controller, 'dophins_color').onChange(function(){
           mesh2.material.color.set(controller.dophins_color);
+        });
+
+        // choose from accepted values
+        gui.add(controller, 'material', ['toon', 'standard', 'phong']).onChange(function(value){
+          if(value == 'phong'){
+            loader.load('armadillo.ply', function (geometry) {
+
+              geometry.computeVertexNormals();
+
+              phongMaterial = new THREE.MeshPhongMaterial( {
+                color: 0x21ce70
+              } );
+
+              mesh1 = new THREE.Mesh( geometry, toonMaterial );
+              mesh1.position.x = -200;
+
+              scene.add( mesh1 );
+
+            } );
+          }else if(value == 'standard'){
+            loader.load('armadillo.ply', function (geometry) {
+
+            geometry.computeVertexNormals();
+
+            standardMaterial = new THREE.MeshStandardMaterial( {
+              color: 0x21ce70
+            } );
+
+            mesh1 = new THREE.Mesh( geometry, standardMaterial );
+            mesh1.position.x = -200;
+
+            scene.add( mesh1 );
+
+            } );
+          }else if(value == 'toon'){
+            loader.load('armadillo.ply', function (geometry) {
+
+              geometry.computeVertexNormals();
+
+              toonMaterial = new THREE.MeshToonMaterial( {
+                color: 0x21ce70
+              } );
+
+              mesh1 = new THREE.Mesh( geometry, toonMaterial );
+              mesh1.position.x = -200;
+
+              scene.add( mesh1 );
+
+              } );
+          }
         });
 
         gui.open();
