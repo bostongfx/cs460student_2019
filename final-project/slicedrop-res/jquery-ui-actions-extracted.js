@@ -5,8 +5,8 @@
 // ****************************************************************************
    // Setup all UI elements once the loading was completed.
    function setupUi() 
-   function volumerenderingOnOff(bool) 
-   function thresholdVolume(event, ui) 
+   // function volumerenderingOnOff(bool) 
+   // function thresholdVolume(event, ui) 
    function windowLevelVolume(event, ui) 
    function opacity3dVolume(event, ui) 
    function volumeslicingSag(event, ui) 

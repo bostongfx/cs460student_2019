@@ -1,0 +1,157 @@
+$('#labelmapvisibility').addClass('hide-icon');
+$('#labelmapvisibility').removeClass('hide-icon');
+$('#labelmapvisibility').removeClass('show-icon');
+.floor(jQuery('#red_slider').slider("option", "value"));
+.floor(jQuery('#yellow_slider').slider("option", "value"));
+// jQuery('#green_slider').slider("option", "value",volume.indexZ);
+// jQuery('#red_slider').slider("option", "value",volume.indexY);
+[volume.min, volume.max/2]);
+[volume.min, volume.max/5]);
+[volume.min, volume.max]);
+[volume.windowLow, volume.windowHigh]);
+_scene.labelmap.opacity = volume.labelmap.opacity;
+_scene.labelmap.visible = volume.labelmap.visible;
+_scene.volume.indexIS = volume.indexIS;
+_scene.volume.indexLR = volume.indexLR;
+_scene.volume.indexPA = volume.indexPA;
+_scene.volume.lowerThreshold = volume.lowerThreshold;
+_scene.volume.maxColor = volume.maxColor;
+_scene.volume.minColor = volume.minColor;
+_scene.volume.opacity = volume.opacity;
+_scene.volume.transform = Array.apply([], volume.transform.matrix);
+_scene.volume.upperThreshold = volume.upperThreshold;
+_scene.volume.volumeRendering = volume.volumeRendering;
+_scene.volume.windowHigh = volume.windowHigh;
+_scene.volume.windowLow = volume.windowLow;
+jQuery("#blue_slider").slider("option", "max", dim[2] - 1);
+jQuery("#blue_slider").slider("option", "min", 0);
+jQuery("#blue_slider").slider("option", "value", volume.indexZ);
+jQuery("#green_slider").slider("option", "disabled", false);
+jQuery("#green_slider").slider("option", "max", dim[1] - 1);
+jQuery("#green_slider").slider("option", "min", 0);
+jQuery("#green_slider").slider("option", "value",
+jQuery("#green_slider").slider("option", "value", volume.indexPA);
+jQuery("#green_slider").slider("option", "value", volume.indexY);
+jQuery("#red_slider")
+jQuery("#red_slider").slider("option", "disabled", false);
+jQuery("#red_slider").slider("option", "max", dim[0] - 1);
+jQuery("#red_slider").slider("option", "max", dim[2] - 1);
+jQuery("#red_slider").slider("option", "min", 0);
+jQuery("#red_slider").slider("option", "value", volume.indexIS);
+jQuery("#red_slider").slider("option", "value", volume.indexX);
+jQuery("#yellow_slider").slider("option", "disabled", false);
+jQuery("#yellow_slider").slider("option", "max", dim[0] - 1);
+jQuery("#yellow_slider").slider("option", "min", 0);
+jQuery("#yellow_slider").slider("option", "value",
+jQuery("#yellow_slider").slider("option", "value", volume.indexLR);
+jQuery('#blue_slider').slider("option", "value",volume.indexZ);
+jQuery('#green_slider').slider("option", "value",volume.indexPA);
+jQuery('#green_slider').slider("option", "value",volume.indexY);
+jQuery('#opacity-labelmap').slider("option", "value",
+jQuery('#opacity-labelmap').slider("option", "value", 40);
+jQuery('#opacity-labelmap').slider("option", "value", volume.labelmap.opacity * 100);
+jQuery('#opacity-volume').show();
+jQuery('#opacity-volume').slider("option", "value",
+jQuery('#opacity-volume').slider("option", "value", 20);
+jQuery('#opacity-volume').slider("option", "value", volume.opacity * 100);
+jQuery('#red_slider').slider("option", "value",volume.indexIS);
+jQuery('#red_slider').slider("option", "value",volume.indexX);
+jQuery('#slicing').removeClass('ui-state-active');
+jQuery('#threshold-volume').dragslider("option", "max", volume.max);
+jQuery('#threshold-volume').dragslider("option", "min", volume.min);
+jQuery('#threshold-volume').dragslider("option", "values",
+jQuery('#threshold-volume').dragslider("option", "values", [volume.lowerThreshold, 
+jQuery('#volume .menu').removeClass('menuDisabled');
+jQuery('#volumerendering').addClass('ui-state-active');
+jQuery('#windowlevel-volume').dragslider("option", "max", volume.max);
+jQuery('#windowlevel-volume').dragslider("option", "min", volume.min);
+jQuery('#windowlevel-volume').dragslider("option", "values",
+jQuery('#windowlevel-volume').dragslider("option", "values", [volume.windowLow, 
+jQuery('#yellow_slider').slider("option", "value",volume.indexLR);
+volume.dimensionsras
+volume.file
+volume.file = _file;
+volume.file = data['volume']['file'].map(function(v) {
+volume.file = scene.volume.file;
+volume.filedata
+volume.filedata = data['volume']['filedata'];
+volume.indexIS = Math.floor(jQuery('#red_slider').slider("option", "value"));
+volume.indexIS = scene.volume.indexIS;
+volume.indexLR = Math
+volume.indexLR = scene.volume.indexLR;
+volume.indexLR);
+volume.indexPA = Math.floor(jQuery('#green_slider').slider("option", "value"));
+volume.indexPA = scene.volume.indexPA;
+volume.indexPA);
+volume.indexX = Math
+volume.indexY = Math.floor(jQuery('#green_slider').slider("option", "value"));
+volume.indexZ = Math.floor(jQuery('#blue_slider').slider("option", "value"));
+volume.indexax
+volume.indexis
+volume.indexlr
+volume.indexpa
+volume.indexx
+volume.indexy
+volume.indexz
+volume.js
+volume.labelmap
+volume.labelmap.colortable.file = scene.colortable.file[0];
+volume.labelmap.file = data['labelmap']['file'].map(function(v) {
+volume.labelmap.file = scene.labelmap.file[0];
+volume.labelmap.filedata = data['labelmap']['filedata'];
+volume.labelmap.opacity * 100);
+volume.labelmap.opacity = 0.4; // re-propagate
+volume.labelmap.opacity = scene.labelmap.opacity;
+volume.labelmap.opacity = ui.value / 100;
+volume.labelmap.visible = !volume.labelmap.visible;
+volume.labelmap.visible = scene.labelmap.visible;
+volume.labelmap[data.target] = data.value;
+volume.lowerThreshold = (volume.min + (volume.max/10));
+volume.lowerThreshold = scene.volume.lowerThreshold;
+volume.lowerThreshold = ui.values[0];
+volume.lowerThreshold, volume.upperThreshold]);
+volume.lowerthreshold
+volume.max
+volume.maxColor = [rgb.r / 255, rgb.g / 255, rgb.b / 255];
+volume.maxColor = scene.volume.maxColor;
+volume.maxColor[1] * 255 << 8) + volume.maxColor[2] * 255)
+volume.maxcolor
+volume.min
+volume.minColor = [rgb.r / 255, rgb.g / 255, rgb.b / 255];
+volume.minColor = scene.volume.minColor;
+volume.minColor[1] * 255 << 8) + volume.minColor[2] * 255)
+volume.mincolor
+volume.modified
+volume.modified();
+volume.onComputing = function(direction) {
+volume.onComputingEnd = function(direction) {
+volume.onComputingProgress = function(value) {
+volume.oncomputing
+volume.oncomputingend
+volume.oncomputingprogress
+volume.opacity
+volume.opacity * 100);
+volume.opacity = 0.2; // re-propagate
+volume.opacity = scene.volume.opacity;
+volume.opacity = ui.value / 100;
+volume.prototype
+volume.range
+volume.size
+volume.transform
+volume.transform.matrix = new Float32Array(
+volume.upperThreshold = scene.volume.upperThreshold;
+volume.upperThreshold = ui.values[1];
+volume.upperThreshold]);
+volume.upperthreshold
+volume.volumeRendering = bool;
+volume.volumeRendering = true;
+volume.volumerendering
+volume.windowHigh = scene.volume.windowHigh;
+volume.windowHigh = ui.values[1];
+volume.windowHigh = volume.max/2;
+volume.windowHigh = volume.max/5;
+volume.windowHigh]);
+volume.windowLow = scene.volume.windowLow;
+volume.windowLow = ui.values[0];
+volume.windowhigh
+volume.windowlow
