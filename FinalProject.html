@@ -33,7 +33,7 @@
         camara = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
         camara.position.set(0,0,50);
 
-        renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer = new THREE.WebGLRenderer({  });
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( renderer.domElement );
 
