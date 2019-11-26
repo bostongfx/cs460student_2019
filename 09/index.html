@@ -17,6 +17,7 @@
 
 
     <script src="https://threejs.org/examples/js/loaders/PLYLoader.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/loaders/GLTFLoader.js"></script>
 
     <script>
 
@@ -38,30 +39,93 @@
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );
 
-        directionalLight = new THREE.DirectionalLight( 0xffffff, 5.0 );
-        directionalLight.position.set( 10, 100, 10 );
+        directionalLight = new THREE.DirectionalLight(  5.0 );
+        // directionalLight.position.set( 10, 100, 10 );
         scene.add( directionalLight );
 
 
         // TODO Part 3 (add 2 pointlights)
 
+        var intensity = 180;
+        var distance = 90;
+        var decay = 1.8;
 
 
-        var loader = new THREE.PLYLoader();
-        loader.load('armadillo.ply', function (geometry) {
+  pointLightSrcA = new THREE.PointLight( 0xffaa00, intensity, distance, decay );
+  pointLightSrcA.position.set( 10, 10, 10 );
+  scene.add( pointLightSrcA );
+  
+        pointLightSrcB = new THREE.PointLight( 0xff0040, intensity, distance, decay );
+        pointLightSrcB.position.set( -10,-10,-10 );
+        scene.add( pointLightSrcB );
 
+        var plyloader = new THREE.PLYLoader();
+        plyloader.load('meshes/armadillo_edited.ply', 
+          function (geometry) {
           geometry.computeVertexNormals();
-
           toonMaterial = new THREE.MeshToonMaterial( {
-             color: 0x21ce70
+             color: 0x20af20
           } );
-
           mesh = new THREE.Mesh( geometry, toonMaterial );
           
           scene.add( mesh );
-
         } );
 
+
+        // TODO Part 1, load another mesh
+        // TODO Part 2, use a different material for this mesh
+
+        var plyloaderB = new THREE.PLYLoader();
+        plyloaderB.load('meshes/shark.ply', 
+          function (geometry) {
+          geometry.computeVertexNormals();
+          phongMaterial = new THREE.MeshPhongMaterial( {
+             color: 0x202cf0
+          } );
+          mesh = new THREE.Mesh( geometry, phongMaterial );
+          
+          scene.add( mesh );
+        } );
+
+
+    
+/*
+
+        var gltfloader = new THREE.GLTFLoader();
+
+//loads gltf cow 
+
+// Load a glTF resource
+ gltfloader.load(
+  // resource URL
+  'meshes/cow_textured.gltf',
+  // called when the resource is loaded
+  function ( gltf ) {
+
+    scene.add( gltf.scene );
+
+
+    gltf.animations; // Array<THREE.AnimationClip>
+    gltf.scene; // THREE.Scene
+    gltf.scenes; // Array<THREE.Scene>
+    gltf.cameras; // Array<THREE.Camera>
+    gltf.asset; // Object
+  },
+    // called while loading is progressing
+  function ( xhr ) {
+
+    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+  },
+  // called when loading has errors
+  function ( error ) {
+
+    console.log( 'An error happened' );
+
+  }
+);
+
+*/
         // TODO Part 1, load another mesh
         // TODO Part 2, use a different material for this mesh
 
@@ -90,6 +154,23 @@
         directionalFolder.open();
 
         // TODO Part 4 (control the color and position of point lights)
+         var pointFolderA = gui.addFolder('Point-Source Light A');
+             pointFolderA.addColor(controller, 'color').onChange( function(value) { pointLightSrcA.color.setHex(value); });
+             pointFolderA.add(pointLightSrcA.position, 'x', -100, 100);
+             pointFolderA.add(pointLightSrcA.position, 'y', -100, 100);
+             pointFolderA.add(pointLightSrcA.position, 'z', -100, 100);
+             pointFolderA.open();
+
+             var pointFolderB = gui.addFolder('Point-Source Light B');
+             pointFolderB.addColor(controller, 'color').onChange( function(value) { pointLightSrcB.color.setHex(value); });
+             pointFolderB.add(pointLightSrcB.position, 'x', -100, 100);
+             pointFolderB.add(pointLightSrcB.position, 'y', -100, 100);
+             pointFolderB.add(pointLightSrcB.position, 'z', -100, 100);
+        pointFolderB.open();
+
+
+
+
 
         // TODO Part 5 (control the color of both materials in the scene)
 
