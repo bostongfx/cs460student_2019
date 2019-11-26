@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body { 
+          background-color:#000;
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          overflow: hidden !important;  
+      }
+    </style>
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script src='ThreeCSG.js' type="text/javascript"></script>
+    <script>
+      var scene;
+      var camara;
+      var renderer; 
+      var light; 
+      var ambientLight; 
+      var controls;
+      var direction; 
+      var slices; 
+      var vector;
+      var angle;
+      window.onload = function(){
+        scene = new THREE.Scene();
+        var fov = 60;
+        var ratio = window.innerWidth / window.innerHeight;
+        var zNear = 1;
+        var zFar = 10000;
+        camara = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camara.position.set(0,0,50);
+
+        renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+
+        ambientLight = new THREE.AmbientLight();
+        scene.add( ambientLight );
+        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        light.position.set( 10, 100, 10 );
+        scene.add( light );
+
+        controls = new THREE.TrackballControls(camara, renderer.domElement); //might need the domelement
+
+        // set up compleate
+        // start of project
+        // create cube to be sliced for testing purposes
+        material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        geometry = new THREE.BoxBufferGeometry(20,20,20);
+        cube = new THREE.Mesh( geometry, material);
+        cube.position.set(0,0,0);
+        //scene.add(cube);
+        vector = new THREE.Vector3(0.,0.,0.);
+        direction = camara.getWorldDirection(vector);
+        var angleVector = directio.clone(); // copy the camara vector
+        shadowVector.z = 0;                  // then set the new vector on the ground
+        angle = direction.angleTo(shadowVector); // angle of camara viewing the 3d object
+        slices = getSlices(cube, angle, direction.normalize(), 2000); // gets the slices of the cube into an array
+        var picture = makeSprite(slices); // makes the sequences of BPS slices into a 2d sprite
+        printDapic(picture); //renders the picture
+
+
+        //animate the Scene
+        animate();
+
+        function getSlices(obj3d, angleOfCamara, camaraVectorNorm, sliceNumber) {
+          var boundrySphere = obj3d.geometry.computeBoundingSphere().boundingSphere; //assuming it is an array
+          boundry = makeSphere(boundrySphere, obj3d.position.x, obj3d.position.y, obj3d.position.z);
+          var raycaster = new THREE.Raycaster();
+           boxPosVec = new THREE.vector3(boundry.position.x,boundry.position.y,boundry.position.z)
+          raycaster.set(direction, boxPosVec.normalize()); //direction is teh camara's vector view, BoxPosVec needs to be normalize to set the raycaster
+          coordOfInter = raycaster.intersectObject(obj3d).point; // coordinates in 3d space in which it interesects the object also the starting point for slicing. I am assuming the coord is a 3d vector
+          PL = makePlane(coordOfInter); //first slice
+
+
+
+        }
+        function makePlane(coor, angleOfCamara) {
+          plane = THREE.Plane(coor.x,coor.y,coor.z); //might not need angle and just do vectors to make the angle of the plane
+          plane.rotateZ(angleOfCamara);
+        }
+
+        function makeSphere(elements, x, y, z) {
+        
+        }
+
+        function animate() {
+          requestAnimationFrame( animate );
+ 
+          controls.update();
+          renderer.render( scene, camara );
+    }
+      }
+    </script>>
+    </head>
+  <body>
+  </body>
+</html>

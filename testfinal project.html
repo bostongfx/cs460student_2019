@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body { 
+          background-color:#000;
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          overflow: hidden !important;  
+      }
+    </style>
+    <script src="https://threejs.org/build/three.js" type="text/javascript"></script>
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script src='ThreeCSG.js' type="text/javascript"></script>
+    <script>
+      var scene;
+      var camara;
+      var renderer; 
+      var light; 
+      var ambientLight; 
+      var controls;
+      var direction; 
+      var slices; 
+      var vector;
+      var angle;
+      window.onload = function(){
+        scene = new THREE.Scene();
+        var fov = 60;
+        var ratio = window.innerWidth / window.innerHeight;
+        var zNear = 1;
+        var zFar = 10000;
+        camara = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camara.position.set(0,0,50);
+
+        renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+
+        ambientLight = new THREE.AmbientLight();
+        scene.add( ambientLight );
+        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        light.position.set( 10, 100, 10 );
+        scene.add( light );
+
+        controls = new THREE.TrackballControls(camara, renderer.domElement); //might need the domelement
+
+        // set up compleate
+        // start of project
+        // create cube to be sliced for testing purposes
+        var material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        var geometry = new THREE.BoxBufferGeometry(20,20,20);
+        var cube = new THREE.Mesh( geometry, material);
+        cube.position.set(0,0,0);
+        //scene.add(cube);
+        var a = cube.geometry;
+        a.boundingSphere = null;
+        var b = a.computeBoundingSphere();
+        var c = b.boundingSphere;
+        //animate the Scene
+        animate();
+
+
+
+        function animate() {
+          requestAnimationFrame( animate );
+ 
+          controls.update();
+          renderer.render( scene, camara );
+    }
+      }
+    </script>>
+    </head>
+  <body>
+  </body>
+</html>
