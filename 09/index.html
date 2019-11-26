@@ -40,7 +40,7 @@
         scene.add( ambientLight );
 
         directionalLight = new THREE.DirectionalLight(  5.0 );
-        // directionalLight.position.set( 10, 100, 10 );
+        directionalLight.position.set( 10, 100, 10 );
         scene.add( directionalLight );
 
 
@@ -52,11 +52,11 @@
 
 
   pointLightSrcA = new THREE.PointLight( 0xffaa00, intensity, distance, decay );
-  pointLightSrcA.position.set( 10, 10, 10 );
+  pointLightSrcA.position.set( 10, 100, 100 );
   scene.add( pointLightSrcA );
   
         pointLightSrcB = new THREE.PointLight( 0xff0040, intensity, distance, decay );
-        pointLightSrcB.position.set( -10,-10,-10 );
+        pointLightSrcB.position.set( 10,-10,-10 );
         scene.add( pointLightSrcB );
 
         var plyloader = new THREE.PLYLoader();
