@@ -45,7 +45,21 @@
 
         // TODO Part 3 (add 2 pointlights)
 
+        pLight_1 = new THREE.PointLight( 0xF1C40F, 30, 50 );
+        pLight_1.position.set(50,50,50);
+        scene.add(pLight_1);
 
+        pLight_2 = new THREE.PointLight( 0xff0000, 30, 50 );
+        pLight_2.position.set(5,50,80);
+        scene.add(pLight_2);
+
+        var sphereSize = 1;
+        var pointLightHelper = new THREE.PointLightHelper( pLight_1, sphereSize );
+        scene.add( pointLightHelper );
+
+        var sphereSize = 1;
+        var pointLightHelper = new THREE.PointLightHelper( pLight_2, sphereSize );
+        scene.add( pointLightHelper );
 
         var loader = new THREE.PLYLoader();
         loader.load('armadillo.ply', function (geometry) {
@@ -57,6 +71,8 @@
           } );
 
           mesh = new THREE.Mesh( geometry, toonMaterial );
+
+          mesh.rotation.y =  Math.PI ;
           
           scene.add( mesh );
 
@@ -65,6 +81,106 @@
         // TODO Part 1, load another mesh
         // TODO Part 2, use a different material for this mesh
 
+        loader.load('hind.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( { color: 0x145A32, flatShading: true } );
+          mesh = new THREE.Mesh( geometry, material );
+          mesh.position.z = 80;
+          mesh.position.y = 50;
+          mesh.scale.multiplyScalar( 1.2 );
+          mesh.rotation.z = Math.PI / 2;
+          mesh.rotation.x = - Math.PI / 2;
+
+          scene.add( mesh );
+
+        } );
+
+          loader.load('hind.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( { color: 0x145A32, flatShading: true } );
+          mesh = new THREE.Mesh( geometry, material );
+          mesh.position.x = -30;
+          mesh.position.z = 90;
+          mesh.position.y = 55;
+          mesh.scale.multiplyScalar( 1.2 );
+          mesh.rotation.z = Math.PI / 2;
+          mesh.rotation.x = - Math.PI / 2;
+
+          scene.add( mesh );
+
+        } );
+
+          loader.load('hind.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( { color: 0x145A32, flatShading: true } );
+          mesh = new THREE.Mesh( geometry, material );
+          mesh.position.x = 30;
+          mesh.position.z = 90;
+          mesh.position.y = 52;
+          mesh.scale.multiplyScalar( 1.2 );
+          mesh.rotation.z = - Math.PI / 3;
+          mesh.rotation.x = - Math.PI / 2;
+
+          scene.add( mesh );
+
+        } );
+
+          loader.load('airplane.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( { color: 0x3498DB, flatShading: true } );
+          mesh = new THREE.Mesh( geometry, material );
+          mesh.position.x = 30;
+          mesh.position.z = 60;
+          mesh.position.y = 92;
+          mesh.scale.multiplyScalar( 0.02 );
+          mesh.rotation.z = - Math.PI / 3;
+          mesh.rotation.x = - Math.PI / 2;
+
+          scene.add( mesh );
+
+        } );
+
+          loader.load('airplane.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( { color: 0x3498DB, flatShading: true } );
+          mesh = new THREE.Mesh( geometry, material );
+          // mesh.position.x = 30;
+          mesh.position.z = 30;
+          mesh.position.y = 52;
+          mesh.scale.multiplyScalar( 0.02 );
+          mesh.rotation.z = - Math.PI / 3;
+          mesh.rotation.x = - Math.PI / 2;
+
+          scene.add( mesh );
+
+        } );
+
+          loader.load('mug.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( { color: 0x3498DB, flatShading: true } );
+          mesh = new THREE.Mesh( geometry, material );
+          mesh.position.x = -85;
+          mesh.position.z = 30;
+          mesh.position.y = 75;
+          mesh.scale.multiplyScalar( 400 );
+          mesh.rotation.z = - Math.PI / 7;
+          // mesh.rotation.x = - Math.PI / 2;
+
+          scene.add( mesh );
+
+        } );
 
 
         controller = {
@@ -91,11 +207,29 @@
 
         // TODO Part 4 (control the color and position of point lights)
 
+        var pLight_1Folder = gui.addFolder('Point Light 1');
+        pLight_1Folder.addColor(controller, 'color').onChange( function(value) { pLight_1.color.setHex(value); });
+        pLight_1Folder.add(pLight_1.position, 'x', -100, 100);
+        pLight_1Folder.add(pLight_1.position, 'y', -100, 100);
+        pLight_1Folder.add(pLight_1.position, 'z', -100, 100);
+        pLight_1Folder.open();
+
+        var pLight_2Folder = gui.addFolder('Point Light 2');
+        pLight_2Folder.addColor(controller, 'color').onChange( function(value) { pLight_2.color.setHex(value); });
+        pLight_2Folder.add(pLight_2.position, 'x', -100, 100);
+        pLight_2Folder.add(pLight_2.position, 'y', -100, 100);
+        pLight_2Folder.add(pLight_2.position, 'z', -100, 100);
+        pLight_2Folder.open();
+
+
         // TODO Part 5 (control the color of both materials in the scene)
+        var materialColorFolder = gui.addFolder('Material Color');
+        materialColorFolder.addColor(controller, 'color').onChange( function(value) { toonMaterial.color.setHex(value); });
+        materialColorFolder.addColor(controller, 'color').onChange( function(value) { material.color.setHex(value); });
+
+        materialColorFolder.open();
 
         gui.open();
-
-
 
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
