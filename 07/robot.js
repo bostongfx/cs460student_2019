@@ -10,7 +10,7 @@ Robot = function(x, y, z) {
   mesh.bind( skeleton );
 
   this.root = bones[0];
-  this.root.position.set(x,y,z);
+  this.root.position.set(x,-29,z);
 
   this.head = bones[1];
   this.neck = bones[2];
@@ -25,7 +25,7 @@ Robot = function(x, y, z) {
     reflectivity : 1} );
   var sphere = new THREE.Mesh( geometry, material );
   this.head_mesh = sphere;
-  this.head_mesh.position.set(x,y,z);
+  this.head_mesh.position.set(x,-29,z);
 
   var fromhelper = HELPER.cylinderSkeletonMesh(3, 5, 'blue');  var geometry = fromhelper[0];
   var material = fromhelper[1];
