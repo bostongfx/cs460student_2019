@@ -1,0 +1,3 @@
+To grader:
+Fixed armadillo mesh, it eventually showed up must have been a cache issue or something else.
+-Jared
