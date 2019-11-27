@@ -60,7 +60,7 @@
         scene.add( pointLightSrcB );
 
         var plyloader = new THREE.PLYLoader();
-        plyloader.load('meshes/armadillo_editedB.ply', 
+        plyloader.load('armadillo_editedB.ply', 
           function (geometry) {
           geometry.computeVertexNormals();
           toonMaterial = new THREE.MeshToonMaterial( {
