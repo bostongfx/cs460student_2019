@@ -17,7 +17,8 @@
 
 
     <script src="https://threejs.org/examples/js/loaders/PLYLoader.js" type="text/javascript"></script>
-    
+    <script src="https://threejs.org/examples/js/loaders/GLTFLoader.js"></script>
+
     <script>
 
       var scene, camera, renderer, effect, ambientLight, light, controls;
@@ -58,17 +59,10 @@
         pointLightSrcB.position.set( 10,-10,-10 );
         scene.add( pointLightSrcB );
 
-<<<<<<< HEAD
         var plyloaderA = new THREE.PLYLoader();
         plyloaderA.load('./meshes/armadillo_edited.ply', 
           function (geometryA) {
           geometryA.computeVertexNormals();
-=======
-        var plyloader = new THREE.PLYLoader();
-        plyloader.load('meshes/armadillo.ply', 
-          function (geometry) {
-          geometry.computeVertexNormals();
->>>>>>> 4e4b411989ba2e83553553e62af3f4b3218ab840
           toonMaterial = new THREE.MeshToonMaterial( {
              color: 0x20af20
           } );
@@ -148,6 +142,7 @@
 
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
+
         animate();
 
       };
