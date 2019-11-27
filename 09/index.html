@@ -17,8 +17,7 @@
 
 
     <script src="https://threejs.org/examples/js/loaders/PLYLoader.js" type="text/javascript"></script>
-    <script src="https://threejs.org/examples/js/loaders/GLTFLoader.js"></script>
-
+    
     <script>
 
       var scene, camera, renderer, effect, ambientLight, light, controls;
@@ -59,16 +58,23 @@
         pointLightSrcB.position.set( 10,-10,-10 );
         scene.add( pointLightSrcB );
 
+<<<<<<< HEAD
+        var plyloaderA = new THREE.PLYLoader();
+        plyloaderA.load('./meshes/armadillo_edited.ply', 
+          function (geometryA) {
+          geometryA.computeVertexNormals();
+=======
         var plyloader = new THREE.PLYLoader();
         plyloader.load('meshes/armadillo.ply', 
           function (geometry) {
           geometry.computeVertexNormals();
+>>>>>>> 4e4b411989ba2e83553553e62af3f4b3218ab840
           toonMaterial = new THREE.MeshToonMaterial( {
              color: 0x20af20
           } );
-          mesh = new THREE.Mesh( geometry, toonMaterial );
+          meshA = new THREE.Mesh( geometryA, toonMaterial );
           
-          scene.add( mesh );
+          scene.add( meshA );
         } );
 
 
@@ -76,56 +82,18 @@
         // TODO Part 2, use a different material for this mesh
 
         var plyloaderB = new THREE.PLYLoader();
-        plyloaderB.load('meshes/shark.ply', 
-          function (geometry) {
-          geometry.computeVertexNormals();
+        plyloaderB.load('./meshes/shark.ply', 
+          function (geometryB) {
+          geometryB.computeVertexNormals();
           phongMaterial = new THREE.MeshPhongMaterial( {
              color: 0x202cf0
           } );
-          mesh = new THREE.Mesh( geometry, phongMaterial );
+          meshB = new THREE.Mesh( geometryB, phongMaterial );
           
-          scene.add( mesh );
-        } );
+          scene.add( meshB );
+        });
 
 
-    
-/*
-
-        var gltfloader = new THREE.GLTFLoader();
-
-//loads gltf cow 
-
-// Load a glTF resource
- gltfloader.load(
-  // resource URL
-  'meshes/cow_textured.gltf',
-  // called when the resource is loaded
-  function ( gltf ) {
-
-    scene.add( gltf.scene );
-
-
-    gltf.animations; // Array<THREE.AnimationClip>
-    gltf.scene; // THREE.Scene
-    gltf.scenes; // Array<THREE.Scene>
-    gltf.cameras; // Array<THREE.Camera>
-    gltf.asset; // Object
-  },
-    // called while loading is progressing
-  function ( xhr ) {
-
-    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-
-  },
-  // called when loading has errors
-  function ( error ) {
-
-    console.log( 'An error happened' );
-
-  }
-);
-
-*/
         // TODO Part 1, load another mesh
         // TODO Part 2, use a different material for this mesh
 
@@ -180,7 +148,6 @@
 
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
-
         animate();
 
       };
