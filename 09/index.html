@@ -70,11 +70,11 @@
              color: 0x21ce70
           } );
 
-          mesh = new THREE.Mesh( geometry, toonMaterial );
+          kaiju = new THREE.Mesh( geometry, toonMaterial );
 
-          mesh.rotation.y =  Math.PI ;
+          kaiju.rotation.y =  Math.PI ;
           
-          scene.add( mesh );
+          scene.add( kaiju );
 
         } );
 
@@ -154,7 +154,6 @@
 
           material = new THREE.MeshStandardMaterial( { color: 0x3498DB, flatShading: true } );
           mesh = new THREE.Mesh( geometry, material );
-          // mesh.position.x = 30;
           mesh.position.z = 30;
           mesh.position.y = 52;
           mesh.scale.multiplyScalar( 0.02 );
@@ -170,24 +169,23 @@
           geometry.computeVertexNormals();
 
           material = new THREE.MeshStandardMaterial( { color: 0x3498DB, flatShading: true } );
-          mesh = new THREE.Mesh( geometry, material );
-          mesh.position.x = -85;
-          mesh.position.z = 30;
-          mesh.position.y = 75;
-          mesh.scale.multiplyScalar( 400 );
-          mesh.rotation.z = - Math.PI / 7;
-          // mesh.rotation.x = - Math.PI / 2;
+          mug = new THREE.Mesh( geometry, material );
+          mug.position.x = -85;
+          mug.position.z = 30;
+          mug.position.y = 75;
+          mug.scale.multiplyScalar( 400 );
+          mug.rotation.z = - Math.PI / 7;
 
-          scene.add( mesh );
+          scene.add( mug );
 
         } );
 
 
         controller = {
-          'color': 0xffffff // we can use this single color
+          'color': 0xffffff, // we can use this single color
                             // container for all colors in the scene 
                             // if we modify the onChange callback (see below)
-
+          'material': [ 'toon', 'standard', 'phong' ]
           // TODO Bonus Part 1
           // TODO Bonus Part 2
         }
@@ -224,10 +222,45 @@
 
         // TODO Part 5 (control the color of both materials in the scene)
         var materialColorFolder = gui.addFolder('Material Color');
-        materialColorFolder.addColor(controller, 'color').onChange( function(value) { toonMaterial.color.setHex(value); });
-        materialColorFolder.addColor(controller, 'color').onChange( function(value) { material.color.setHex(value); });
+        materialColorFolder.addColor(controller, 'color').onChange( function(value) { kaiju.material.color.setHex(value); });
+        materialColorFolder.addColor(controller, 'color').onChange( function(value) { mug.material.color.setHex(value); });
 
         materialColorFolder.open();
+
+        var kaijuFolder = gui.addFolder('Kaiju Material');
+        // Choose from accepted values
+        kaijuFolder.add(controller, 'material', [ 'toon', 'standard', 'phong' ] ).onChange( function(value) {
+          
+          if (value == 'phong') {
+            kaiju.material = new THREE.MeshPhongMaterial({ color: 0x2194CE });
+
+          } else if (value == 'standard'){
+            kaiju.material = new THREE.MeshStandardMaterial({ color: 0x2194CE });
+
+          } else if (value == 'toon'){
+            kaiju.material = new THREE.MeshToonMaterial({ color: 0x2194CE });
+          }
+
+        });
+        var mugFolder = gui.addFolder('Mug Material');
+        // Choose from accepted values
+        mugFolder.add(controller, 'material', [ 'toon', 'standard', 'phong' ] ).onChange( function(value) {
+          
+          if (value == 'phong') {
+            mug.material = new THREE.MeshPhongMaterial({ color: 0x2194CE });
+
+          } else if (value == 'standard'){
+            mug.material = new THREE.MeshStandardMaterial({ color: 0x2194CE });
+
+          } else if (value == 'toon'){
+            mug.material = new THREE.MeshToonMaterial({ color: 0x2194CE });
+
+          }
+
+        });
+
+
+        
 
         gui.open();
 
