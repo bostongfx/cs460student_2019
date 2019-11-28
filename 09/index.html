@@ -17,11 +17,15 @@
 
 
     <script src="https://threejs.org/examples/js/loaders/PLYLoader.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/loaders/OBJLoader.js" type="text/javascript"></script>
 
     <script>
 
       var scene, camera, renderer, effect, ambientLight, light, controls;
       var floor;
+
+      // necessary for how the OBJ Loader works
+      var sanic;
 
       window.onload = function() {
 
@@ -43,8 +47,13 @@
         scene.add( directionalLight );
 
 
-        // TODO Part 3 (add 2 pointlights)
-
+        // Part 3 (add 2 pointlights)
+        pointLight1 = new THREE.PointLight(0xffffff);
+        pointLight1.position.set(0, 0, 0);
+        pointLight2 = new THREE.PointLight(0xffffff);
+        pointLight2.position.set(60, -30, 0);
+        scene.add(pointLight1);
+        scene.add(pointLight2);
 
 
         var loader = new THREE.PLYLoader();
@@ -62,10 +71,30 @@
 
         } );
 
-        // TODO Part 1, load another mesh
-        // TODO Part 2, use a different material for this mesh
+        // Part 1, load another mesh
+        // Part 2, use a different material for this mesh
+        var sanic_loader = new THREE.OBJLoader();
+        sanic_loader.load("./sanic/SONIC3.obj", function (obj) {
+          // make a reference to it so we can access the material later
+          sanic = obj
 
+          lmaterial = new THREE.MeshLambertMaterial( {
+            color : 0x366BFF
+          } );
 
+          // obj loader's wack:  https://stackoverflow.com/questions/16200082/assigning-materials-to-an-objloader-model-in-three-js
+          obj.traverse( function(child) {
+              if (child instanceof THREE.Mesh) {
+                  child.material = lmaterial
+              }
+          } );
+
+          // re-position model
+          obj.rotateY( Math.PI / 4 );
+          obj.translateX( 60 );
+          obj.translateY( -30 );
+          scene.add(obj);
+        }, null, null );
 
         controller = {
           'color': 0xffffff // we can use this single color
@@ -89,9 +118,39 @@
         directionalFolder.add(directionalLight.position, 'z', -100, 100);
         directionalFolder.open();
 
-        // TODO Part 4 (control the color and position of point lights)
+        plcontroller1 = { "light 1 color" : 0xffffff };
+        plcontroller2 = { "light 2 color" : 0xffffff };
 
-        // TODO Part 5 (control the color of both materials in the scene)
+        armacolor = { "armadillo color" : 0x21CE70 };
+        saniccolor = { "sonic color" : 0x366BFF };
+
+        // Part 4 (control the color and position of point lights)
+        var plFolder1 = gui.addFolder("Point Lights");
+        plFolder1.addColor(plcontroller1, "light 1 color").onChange( function(value) {
+            pointLight1.color.setHex(value);
+        } );
+        plFolder1.addColor(plcontroller2, "light 2 color").onChange( function(value) {
+            pointLight2.color.setHex(value);
+        } );
+        plFolder1.open();
+        
+
+        // Part 5 (control the color of both materials in the scene)
+        var modelColors = gui.addFolder("Model Colors");
+        modelColors.addColor(armacolor, "armadillo color").onChange( function(value) {
+            toonMaterial = new THREE.MeshToonMaterial({ "color" : value });
+            mesh.material = toonMaterial;
+        } );
+        modelColors.addColor(saniccolor, "sonic color").onChange( function(value) {
+            lmaterial = new THREE.MeshLambertMaterial({ "color" : value });
+            
+            sanic.traverse( function(child) {
+                if (child instanceof THREE.Mesh) {
+                    child.material = lmaterial
+                }
+            } );
+        } );
+        modelColors.open();
 
         gui.open();
 
