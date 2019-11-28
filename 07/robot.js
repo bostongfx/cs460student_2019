@@ -9,8 +9,8 @@ Robot = function(x, y, z){
 	else if(random > 0.33 && random <= 0.66)
 		color = "green";
 	else
-		color = "red";
-	
+		color = "red";	
+
 	//Create Upperbody
 	var from_helper = HELPER.cylinderSkeletonMesh(3, 2, color);
 	var geom = from_helper[0];
