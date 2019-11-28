@@ -1,13 +1,14 @@
+<!-- Saurav Paudyal -->
 <html>
   <head>
     <meta charset="UTF-8" />
     <style>
-      html, body { 
+      html, body {
         background-color:#000;
         margin: 0;
         padding: 0;
         height: 100%;
-        overflow: hidden !important;  
+        overflow: hidden !important;
       }
     </style>
 
@@ -34,7 +35,7 @@
         renderer = new THREE.WebGLRenderer({ });
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( renderer.domElement );
-        
+
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );
 
@@ -43,7 +44,14 @@
         scene.add( directionalLight );
 
 
-        // TODO Part 3 (add 2 pointlights)
+        //  Part 3 (add 2 pointlights)
+        var pointLight1 = new THREE.PointLight( 0x3600e8, 1, 1000 );
+        pointLight1.position.set( 100, 0, 0 );
+        scene.add( pointLight1 );
+
+        var pointLight2 = new THREE.PointLight( 0xff0000, 1, 1000 );
+        pointLight2.position.set( -100, 0, 0 );
+        scene.add( pointLight2 );
 
 
 
@@ -53,27 +61,53 @@
           geometry.computeVertexNormals();
 
           toonMaterial = new THREE.MeshToonMaterial( {
-             color: 0x21ce70
+             color: 0x2cfa
           } );
 
           mesh = new THREE.Mesh( geometry, toonMaterial );
-          
+
+
           scene.add( mesh );
+          mesh.position.set(-100, 0, 0);
+          mesh.rotateY( Math.PI );
 
         } );
 
-        // TODO Part 1, load another mesh
-        // TODO Part 2, use a different material for this mesh
+      //  Part 1, load another mesh
+      //I did the assignment with a different ply file but since it was too
+      //high in memory was not able to load it on github.
+        loader.load('armadillo.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+      //  Part 2, use a different material for this mesh
+
+          physicalMaterial = new THREE.MeshPhysicalMaterial( {
+             color: 0x8270d9
+          } );
+
+
+          mesh = new THREE.Mesh( geometry, physicalMaterial );
+
+          scene.add( mesh );
+          mesh.position.set(100, 0, 0);
+          mesh.rotateY( Math.PI );
+
+        } );
+
+
 
 
 
         controller = {
           'color': 0xffffff // we can use this single color
-                            // container for all colors in the scene 
+                            // container for all colors in the scene
                             // if we modify the onChange callback (see below)
 
-          // TODO Bonus Part 1
-          // TODO Bonus Part 2
+          //  Bonus Part 1
+
+
+          //  Bonus Part 2
         }
 
 
@@ -89,9 +123,38 @@
         directionalFolder.add(directionalLight.position, 'z', -100, 100);
         directionalFolder.open();
 
-        // TODO Part 4 (control the color and position of point lights)
+        //  Part 4 (control the color and position of point lights)
+        var pointLight1Folder = gui.addFolder('Point Light 1');
+        pointLight1Folder.addColor(controller, 'color').onChange( function(value) { pointLight1.color.setHex(value); });
+        pointLight1Folder.add(pointLight1.position, 'x', -100, 100);
+        pointLight1Folder.add(pointLight1.position, 'y', -100, 100);
+        pointLight1Folder.add(pointLight1.position, 'z', -100, 100);
+        pointLight1Folder.open();
 
-        // TODO Part 5 (control the color of both materials in the scene)
+        var pointLight2Folder = gui.addFolder('Point Light 2');
+        pointLight2Folder.addColor(controller, 'color').onChange( function(value) { pointLight2.color.setHex(value); });
+        pointLight2Folder.add(pointLight2.position, 'x', -100, 100);
+        pointLight2Folder.add(pointLight2.position, 'y', -100, 100);
+        pointLight2Folder.add(pointLight2.position, 'z', -100, 100);
+        pointLight2Folder.open();
+
+        //  Part 5 (control the color of both materials in the scene)
+        var toonMaterialFolder = gui.addFolder('Toon Material');
+        toonMaterialFolder.addColor(controller, 'color').onChange( function(value) { toonMaterial.color.setHex(value); });
+        toonMaterialFolder.open();
+
+        var physicalMaterialFolder = gui.addFolder('Physical Material');
+        physicalMaterialFolder.addColor(controller, 'color').onChange( function(value) { physicalMaterial.color.setHex(value); });
+        physicalMaterialFolder.open();
+
+        var materialFolder = gui.addFolder('Switch Material');
+        // materialFolder.add(controller, 'material', [ 'toon', 'standard', 'phong' ] ).onChange( function(value) {
+        //   if (value == 'phong') {
+        //
+        //     }
+        //   });
+
+
 
         gui.open();
 
@@ -112,7 +175,7 @@
         controls.update();
 
         renderer.render( scene, camera );
-        
+
 
       };
 
