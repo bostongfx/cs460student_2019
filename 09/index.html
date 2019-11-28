@@ -44,7 +44,11 @@
 
 
         // TODO Part 3 (add 2 pointlights)
-
+		var pointLight = new THREE.PointLight( 0xff0000, 0.5 );
+		pointLight.position.z = 2500;
+		scene.add( pointLight );
+		var pointLight2 = new THREE.PointLight( 0xff6666, 1 );
+		scene.add( pointLight2 );
 
 
         var loader = new THREE.PLYLoader();
@@ -63,19 +67,59 @@
         } );
 
         // TODO Part 1, load another mesh
+
+
+ 		var loader2 = new THREE.PLYLoader();
+        loader2.load('armadillo.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          toonMaterial2 = new THREE.MeshLambertMaterial( {
+             color: 0x21ce70
+          } );
+
+          mesh2 = new THREE.Mesh( geometry, toonMaterial2 );
+          
+          scene.add( mesh2 );
+          mesh2.position.set(100, 100, 100);
+
+        } );
+
+          // mesh2 = new THREE.Mesh( geometry, toonMaterial );
+          
+          // scene.add( mesh2 );
+
+       
+
+
+
         // TODO Part 2, use a different material for this mesh
 
 
 
         controller = {
-          'color': 0xffffff // we can use this single color
+          'color': 0xffffff, // we can use this single color
                             // container for all colors in the scene 
                             // if we modify the onChange callback (see below)
 
           // TODO Bonus Part 1
+          'material': 'toon'
           // TODO Bonus Part 2
         }
 
+        	// material
+				materialStandard = new THREE.MeshStandardMaterial( {
+					color: 0xffffff,
+					
+				} );
+				materialToon = new THREE.MeshToonMaterial( {
+					color: 0x21ce70,
+					
+				} );
+				materialPhong = new THREE.MeshPhongMaterial( {
+					color: 0xffffff,
+					
+				} );
 
         var gui = new dat.GUI();
         var ambientFolder = gui.addFolder('Ambient Light');
@@ -89,9 +133,62 @@
         directionalFolder.add(directionalLight.position, 'z', -100, 100);
         directionalFolder.open();
 
+        // gui.add( params, 'material', [ 'standard', 'normal', 'depthBasic', 'depthRGBA' ] );
+// 
         // TODO Part 4 (control the color and position of point lights)
 
+
+        var pointFolder = gui.addFolder('Point Light 1');
+        pointFolder.addColor(controller, 'color').onChange( function(value) { pointLight.color.setHex(value); });
+        pointFolder.add(pointLight.position, 'x', -100, 100);
+        pointFolder.add(pointLight.position, 'y', -100, 100);
+        pointFolder.add(pointLight.position, 'z', -100, 100);
+        pointFolder.open();
+
+        var pointFolder = gui.addFolder('Point Light 2');
+        pointFolder.addColor(controller, 'color').onChange( function(value) { pointLight2.color.setHex(value); });
+        pointFolder.add(pointLight2.position, 'x', -100, 100);
+        pointFolder.add(pointLight2.position, 'y', -100, 100);
+        pointFolder.add(pointLight2.position, 'z', -100, 100);
+        pointFolder.open();
+
         // TODO Part 5 (control the color of both materials in the scene)
+        var ToonFolder = gui.addFolder('Toon Material');
+        ToonFolder.addColor(controller, 'color').onChange( function(value) { toonMaterial.color.setHex(value); });
+
+        var LambertFolder = gui.addFolder('Lambert Material');
+        LambertFolder.addColor(controller, 'color').onChange( function(value) { toonMaterial2.color.setHex(value); });
+
+        var MaterialFolder = gui.addFolder('Choose Material');
+        MaterialFolder.add(controller, 'material', [ 'toon', 'standard', 'phong' ] ).onChange( function(value) {
+
+		if (value == 'standard') {
+		// TODO
+		 material = materialStandard; 
+
+				material.needsUpdate = true;
+					
+		}
+
+			if (value == 'toon') {
+		// TODO
+		 material = materialToon; 
+
+				material.needsUpdate = true;
+					
+		}
+
+			if (value == 'phong') {
+		// TODO
+		 material = materialPhong; 
+
+				material.needsUpdate = true;
+					
+		}
+				mesh.material = material; 
+				mesh2.material = material;
+
+		}); 
 
         gui.open();
 
