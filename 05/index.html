@@ -113,10 +113,10 @@
 		
 		var threejsUI = gui.addFolder('Three.js Cube');
 		threejsUI.add(cube, 'visible');
-		threejsUI.add(cube.material, 'opacity', 0, 1).onChange( 
-			function() {cube.material.transparent = true;});
-		threejsUI.addColor(controller, 'threejs_color').onChange( 
-			function() {cube.material.color.set( controller.threejs_color );} );
+		threejsUI.add(cube.material, 'opacity', 0, 1);
+		threejsUI.addColor(controller, 'threejs_color').onChange( function() 
+			{cube.material.color.set( controller.threejs_color )
+		;});
 		threejsUI.open();
 		
 		var both = gui.addFolder('Both Cubes');
