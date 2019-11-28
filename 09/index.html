@@ -43,8 +43,15 @@
         scene.add( directionalLight );
 
 
-        // TODO Part 3 (add 2 pointlights)
+        // Part 3 :
 
+        var pointLight_a = new THREE.PointLight( 0xff0000, 5, 100);
+        pointLight_a.position.set( 100, 20, 10 );
+        scene.add( pointLight_a );
+        
+        var pointLight_b = new THREE.PointLight( 0xff0000, 5, 100 );
+        pointLight_b.position.set( 100, 20, 10 );
+        scene.add( pointLight_b );
 
 
         var loader = new THREE.PLYLoader();
@@ -62,16 +69,29 @@
 
         } );
 
-        // TODO Part 1, load another mesh
-        // TODO Part 2, use a different material for this mesh
+        // Part 1 & 2 :
 
+        var loader_2 = new THREE.PLYLoader();
+        loader_2.load('armadillo.ply', function (geometry) {
 
+          geometry.computeVertexNormals();
+
+          standardMaterial = new THREE.MeshStandardMaterial( {
+          	color: 0x800080
+          } );
+
+          mesh_2 = new THREE.Mesh( geometry, standardMaterial );
+
+          mesh_2.position.set(200,0,0);
+
+          scene.add( mesh_2 );
+        } );
 
         controller = {
           'color': 0xffffff // we can use this single color
                             // container for all colors in the scene 
                             // if we modify the onChange callback (see below)
-
+          
           // TODO Bonus Part 1
           // TODO Bonus Part 2
         }
@@ -89,9 +109,31 @@
         directionalFolder.add(directionalLight.position, 'z', -100, 100);
         directionalFolder.open();
 
-        // TODO Part 4 (control the color and position of point lights)
+        // Part 4 :
 
-        // TODO Part 5 (control the color of both materials in the scene)
+        var pointFolder_a = gui.addFolder( 'PointLight  - A' );
+        pointFolder_a.addColor( controller, 'color' ).onChange( function(value) { pointLight_a.color.setHex( value ); } );
+        pointFolder_a.add( pointLight_a.position, 'x', -100, 100 );
+        pointFolder_a.add( pointLight_a.position, 'y', -100, 100 );
+        pointFolder_a.add( pointLight_a.position, 'z', -100, 100 );
+        pointFolder_a.open();
+
+        var pointFolder_b = gui.addFolder( 'PointLight - B' );
+        pointFolder_b.addColor( controller, 'color' ).onChange( function(value) { pointLight_b.color.setHex( value ); } );
+        pointFolder_b.add( pointLight_b.position, 'x', -100, 100 );
+        pointFolder_b.add( pointLight_b.position, 'y', -100, 100 );
+        pointFolder_b.add( pointLight_b.position, 'z', -100, 100) ;
+        pointFolder_b.open();
+
+        // Part 5 :
+
+        var MaterialColor = gui.addFolder( 'Material Color' );
+        MaterialColor.addColor( controller, 'color' ).onChange( function(value) {
+          toonMaterial.color.setHex( value );
+          standardMaterial.color.setHex( value );
+          MaterialColor.open();
+
+        } );
 
         gui.open();
 
