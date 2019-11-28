@@ -44,7 +44,13 @@
 
 
         // TODO Part 3 (add 2 pointlights)
+        var light1 = new THREE.PointLight( 0xff0000, 1, 100 );
+        light1.position.set( 50, 50, 50 );
+        scene.add( light1 );
 
+        var light2 = new THREE.PointLight( 0xff0000, 1, 100 );
+        light2.position.set( -50, 50, -50 );
+        scene.add( light2 );
 
 
         var loader = new THREE.PLYLoader();
@@ -52,28 +58,62 @@
 
           geometry.computeVertexNormals();
 
-          toonMaterial = new THREE.MeshToonMaterial( {
+          armadilloMaterial = new THREE.MeshToonMaterial( {
              color: 0x21ce70
           } );
 
-          mesh = new THREE.Mesh( geometry, toonMaterial );
+          armadilloMesh = new THREE.Mesh( geometry, armadilloMaterial );
           
-          scene.add( mesh );
+          scene.add( armadilloMesh );
 
         } );
 
         // TODO Part 1, load another mesh
-        // TODO Part 2, use a different material for this mesh
 
+        loader.load( 'full_body.ply', function(geometry) {
+
+            geometry.computeVertexNormals();
+
+            bodyMaterial = new THREE.MeshStandardMaterial( {
+              color:0x4d3939, flatShading: true
+            } );
+
+            bodyMesh  = new THREE.Mesh( geometry, bodyMaterial );
+
+            //bodyMesh.position.x = -100;
+            bodyMesh.position.z = -130;
+            bodyMesh.scale.x = 0.08;
+            bodyMesh.scale.y = 0.08;
+            bodyMesh.scale.z = 0.08;
+
+            scene.add( bodyMesh );
+            
+        } );
+
+        // TODO Part 2, use a different material for this mesh
+        // See Part 1
 
 
         controller = {
-          'color': 0xffffff // we can use this single color
+          'color': 0xffffff, // we can use this single color
                             // container for all colors in the scene 
                             // if we modify the onChange callback (see below)
+          'ArmadilloColor': 0xffffff,
+          'BodyColor': 0xffffff,
 
           // TODO Bonus Part 1
+          'material': ['toon', 'standard', 'phong'],
+
           // TODO Bonus Part 2
+          newDirectionalLight: function() {
+            var newLight = new THREE.DirectionalLight( 0xffffff, 5.0 );
+            newLight.position.set( 10, 100, 10 );
+            scene.add( newLight );
+          },
+
+          removeDirectionalLight: function() {
+            scene.remove( newLight );
+          }
         }
 
 
@@ -91,7 +131,81 @@
 
         // TODO Part 4 (control the color and position of point lights)
 
+        var f1 = gui.addFolder('Point Light 1');
+        f1.addColor(controller, 'color').onChange( function(value) { light1.color.setHex(value); });
+        f1.add(light1.position, 'x', -100, 100);
+        f1.add(light1.position, 'y', -100, 100);
+        f1.add(light1.position, 'z', -100, 100);
+        f1.open();
+
+        var f2 = gui.addFolder('Point Light 2');
+        f2.addColor(controller, 'color').onChange( function(value) { light1.color.setHex(value); });
+        f2.add(light2.position, 'x', -100, 100);
+        f2.add(light2.position, 'y', -100, 100);
+        f2.add(light2.position, 'z', -100, 100);
+        f2.open();
+
         // TODO Part 5 (control the color of both materials in the scene)
+
+        var f3 = gui.addFolder('Armadillo');
+        f3.addColor(controller, 'ArmadilloColor').onChange( 
+          function() { 
+            armadilloMesh.material.color.set(controller.ArmadilloColor); 
+          });
+        // f3.open();
+        // Choose from accepted values
+        f3.add(controller, 'material', [ 'toon', 'standard', 'phong' ] ).onChange( function(value) {
+          
+          if (value == 'phong') {
+            phongMaterial = new THREE.MeshPhongMaterial( {} );
+            armadilloMesh.material = phongMaterial;
+
+          } 
+          if (value == 'toon') {
+            toonMaterial = new THREE.MeshToonMaterial( {} );
+            armadilloMesh.material = toonMaterial;
+          } 
+          if (value == 'standard') {
+           standardMaterial = new THREE.MeshStandardMaterial( {} );
+            armadilloMesh.material = standardMaterial;
+          }
+
+        });
+
+        var f4 = gui.addFolder('Full Body');
+        f4.addColor(controller, 'BodyColor').onChange( 
+          function() { 
+            bodyMesh.material.color.set(controller.BodyColor); 
+          });
+        // f4.open();
+        // Choose from accepted values
+        f4.add(controller, 'material', [ 'toon', 'standard', 'phong' ] ).onChange( function(value) {
+          
+          if (value == 'phong') {
+            phongMaterial = new THREE.MeshPhongMaterial( {} );
+            bodyMesh.material = phongMaterial;
+
+          } 
+          if (value == 'toon') {
+            toonMaterial = new THREE.MeshToonMaterial( {} );
+            bodyMesh.material = toonMaterial;
+          } 
+          if (value == 'standard') {
+            standardMaterial = new THREE.MeshStandardMaterial( {} );
+            bodyMesh.material = standardMaterial;
+          }
+
+        });
+
+        // TODO Bonus Part 2
+        var f5 = gui.addFolder('New Directional Light');
+        f5.add(controller, 'newDirectionalLight');
+        //f5.addColor(controller, 'color').onChange( function(value) { newLight.color.setHex(value); });
+        // f5.add(newLight.position, 'x', -100, 100);
+        // f5.add(newLight.position, 'y', -100, 100);
+        // f5.add(newLight.position, 'z', -100, 100);
+        //f5.add(controller, 'removeDirectionalLight');
+        f5.open();
 
         gui.open();
 
