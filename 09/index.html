@@ -95,18 +95,37 @@
           scene.add( mesh );
         } );
 
+        var ptlightn = 2;
+        ptLights = []
 
         controller = {
-          'color': 0xffffff // we can use this single color
+          'color': 0xffffff, // we can use this single color
                             // container for all colors in the scene 
                             // if we modify the onChange callback (see below)
 
           // TODO Bonus Part 1
+          'material': 'default',
+
           // TODO Bonus Part 2
+          'add': function(){
+            console.log("Added point light");
+
+            pointLight = new THREE.PointLight( 0xffffff, 5.0 );
+            pointLight.position.set( 15, 100, 15 );
+            scene.add( pointLight );
+
+            var pointFolder = gui.addFolder('Point Light' + ' ' + (++ptlightn));
+            pointFolder.addColor(controller, 'color').onChange( function(value) { pointLight.color.setHex(value); });
+            pointFolder.add(pointLight.position, 'x', -100, 100, 10);
+            pointFolder.add(pointLight.position, 'y', -100, 100, 10);
+            pointFolder.add(pointLight.position, 'z', -100, 100, 10);
+            pointFolder.open();
+          }
         }
 
 
         var gui = new dat.GUI();
+
         var ambientFolder = gui.addFolder('Ambient Light');
         ambientFolder.addColor(controller, 'color').onChange( function(value) { ambientLight.color.setHex(value); });
         ambientFolder.open();
@@ -117,6 +136,12 @@
         directionalFolder.add(directionalLight.position, 'y', -100, 100);
         directionalFolder.add(directionalLight.position, 'z', -100, 100);
         directionalFolder.open();
+
+        // Bonus Part 2
+
+        var dynamicPoint = gui.addFolder('Add a Point Light')
+        dynamicPoint.add(controller, 'add');
+
 
         // TODO Part 4 (control the color and position of point lights)
         var pointFolder1 = gui.addFolder('Point Light 1');
@@ -134,13 +159,30 @@
         pointFolder2.open();
 
         // TODO Part 5 (control the color of both materials in the scene)
-        var colorControl1 = gui.addFolder('Armadillo Material Color');
-        colorControl1.addColor(controller, 'color').onChange( function(value) { MESHES[0].material.color.setHex(value); });
-        colorControl1.open()
+        var matControl1 = gui.addFolder('Armadillo Material');
+        matControl1.addColor(controller, 'color').onChange( function(value) { MESHES[0].material.color.setHex(value); });
+        // Choose from accepted values
+        matControl1.add(controller, 'material', [ 'toon', 'standard', 'phong' ] ).onChange( function(value) {
+              if (value == 'phong')
+                MESHES[0].material = new THREE.MeshPhongMaterial();
+              else if (value == 'toon')
+                MESHES[0].material = new THREE.MeshToonMaterial();
+              else if (value == 'standard')
+                MESHES[0].material = new THREE.MeshStandardMaterial();
+            });
+        matControl1.open()
 
-        var colorControl2 = gui.addFolder('Human Head Material Color');
-        colorControl2.addColor(controller, 'color').onChange( function(value) { MESHES[1].material.color.setHex(value); });
-        colorControl2.open();
+        var matControl2 = gui.addFolder('Human Head Material');
+        matControl2.addColor(controller, 'color').onChange( function(value) { MESHES[1].material.color.setHex(value); });
+        matControl2.add(controller, 'material', [ 'normal', 'standard', 'phong' ] ).onChange( function(value) {
+              if (value == 'phong')
+                MESHES[1].material = new THREE.MeshPhongMaterial();
+              else if (value == 'normal')
+                MESHES[1].material = new THREE.MeshNormalMaterial();
+              else if (value == 'standard')
+                MESHES[1].material = new THREE.MeshStandardMaterial();
+            });
+        matControl2.open();
 
 
 
