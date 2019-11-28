@@ -18,8 +18,12 @@
     <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/effects/AnaglyphEffect.js" type="text/javascript"></script>
+<<<<<<< HEAD
     <script src="robot.js"></script>
     <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
+=======
+
+>>>>>>> 6a6b96e4d883f0379d7ee30b4db15eeb459da0ab
     <script>
 
       var scene, camera, renderer, ambientLight, light, controls;
@@ -59,6 +63,7 @@
         floor.rotateX(-30);
         scene.add( floor );
 
+<<<<<<< HEAD
         //controls = new THREE.TrackballControls( camera );
         var r = new Robot(0, 0, 0);
         r.show(scene);
@@ -79,6 +84,10 @@
         moving.open();
 
         controls = new THREE.TrackballControls(camera, renderer.domElement); 
+=======
+        controls = new THREE.TrackballControls( camera );
+
+>>>>>>> 6a6b96e4d883f0379d7ee30b4db15eeb459da0ab
         animate();
 
 
@@ -88,6 +97,10 @@
 
         requestAnimationFrame( animate );
 
+<<<<<<< HEAD
+=======
+        controls.update();
+>>>>>>> 6a6b96e4d883f0379d7ee30b4db15eeb459da0ab
         renderer.render( scene, camera );
 
       };
