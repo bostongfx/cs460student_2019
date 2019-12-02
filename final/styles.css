@@ -32,6 +32,24 @@ h1 {
   font-size: 1em;
 }
 
+#addBtn {
+  color: white;
+  font-size: 1em;
+  font-weight:600;
+  background-color: black;
+  position: absolute;
+  width: 100px;
+  height: 36px;
+  padding: 8px;
+  top: 10px;
+  right: 10px;
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
+}
+#addBtn:hover {
+  background-color: #3a3a3a;
+}
 
 .imageDisplay {
   width:30%;
