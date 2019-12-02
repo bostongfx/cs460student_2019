@@ -224,12 +224,13 @@ Robot.prototype.onAnimate = function() {
 
   } else if (this.movement == 'dance') {
 	
+
     // check if slerp reached almost the end
-    if (this.right_upper_leg.quaternion.w < 0.72 && this.left_upper_arm.quaternion.w < 0.72 ) {
+    if (this.right_upper_leg.quaternion.w < 0.72 || this.left_upper_arm.quaternion.w < 0.8 ) {
 
       // signal that the kick is done and the leg should move back
       this.movement = 'kick done';
-      this.movement = 'lower left arm'
+    //  this.movement = 'lower left arm'
 
     }else {
 
@@ -246,11 +247,13 @@ Robot.prototype.onAnimate = function() {
                                             0.1 );
 
 
-      r.left_upper_arm.quaternion.slerp( new THREE.Quaternion( Math.sin( T / 2 ),   // x
+       r.right_upper_arm.quaternion.slerp( new THREE.Quaternion( Math.sin( T / 2 ),   // x
                                                                   0,                   // y
                                                                   0,                   // z
                                                                   Math.cos( T / 2 ) ), // w
                                             0.1 );
+
+       //this.movement = 'raise left arm';
     }
  // check if slerp reached almost the end
     if (this.left_upper_arm.quaternion.w < 0.72 ) {
@@ -260,21 +263,15 @@ Robot.prototype.onAnimate = function() {
 
     }else {
 
-    //   var T = -Math.PI/2;
-    // var x = Math.sin( T / 2 )
-    // var y = 0
-    // var z = 0
-    // var w = Math.cos( T / 2 )    
-
-    //   r.left_upper_arm.quaternion.slerp( new THREE.Quaternion( Math.sin( T / 2 ),   // x
-    //                                                               0,                   // y
-    //                                                               0,                   // z
-    //                                                               Math.cos( T / 2 ) ), // w
-    //                                         0.1 );
-                                      
+     r.left_upper_arm.quaternion.slerp( new THREE.Quaternion( Math.sin( T / 2 ),   // x
+                                                                  0,                   // y
+                                                                  0,                   // z
+                                                                  Math.cos( T / 2 ) ), // w
+                                            0.1 );
+                                   //   this.movement = 'kick';
     }
 
-
+    this.movement = 'dance';
 
 
 

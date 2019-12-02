@@ -194,7 +194,32 @@ Robot.prototype.kick = function() {
 };
 Robot.prototype.dance = function() {
 
-  this.movement = 'dance';
+  // this.movement = 'dance';
+
+ var that = this;
+      setInterval(function() {
+        var random = Math.floor(Math.random() * 5);
+        switch(random) {
+        case 0:
+            that.raiseLeftArm();
+            break;
+        case 1:
+            that.lowerLeftArm();
+            break;
+        case 2:
+            that.raiseRightArm();
+            break;
+        case 3:
+            that.lowerRightArm();
+            break;
+        case 4:
+            that.kick();
+            break;
+        }
+      }, 150);
+
+
+
 
 };
 Robot.prototype.onAnimate = function() {
