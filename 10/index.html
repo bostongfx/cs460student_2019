@@ -1,0 +1,249 @@
+<html>
+	<head>
+	<script src='base64.js' type='text/javascript'></script>
+	<script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+	<script src="https://threejs.org/examples/js/loaders/PLYLoader.js" type="text/javascript"></script>
+  <script>
+	var loadedGeom;
+	var loaded = false;
+	var fileCreated = false;
+    window.onload = function() {
+	  //loadedGeom;
+	  var loader = new THREE.PLYLoader();
+	  loader.load("teapot.ply", function(geometry){
+		loadedGeom = geometry;
+		loaded = true;
+		console.log("loaded");
+	  });
+	
+
+	  
+	  setInterval(createFile, 1000);
+
+
+    };
+
+	function createFile(){
+
+		if(!loaded || fileCreated)
+			return false;
+		console.log("Creating File");
+		var VERTICES = loadedGeom.attributes.position.array;
+		var INDICES =  loadedGeom.index.array;
+		//VERTICES = new Float32Array([0.,0.,0., 0.,1.,0., 1.,0.,0.])
+		//INDICES = new Uint16Array([0,1,2])
+		
+		var MAX_X = Number.NEGATIVE_INFINITY; 
+		var MAX_Y = Number.NEGATIVE_INFINITY; 
+		var MAX_Z = Number.NEGATIVE_INFINITY; 
+		var MIN_X = Number.POSITIVE_INFINITY;
+		var MIN_Y = Number.POSITIVE_INFINITY;
+		var MIN_Z =	Number.POSITIVE_INFINITY;
+		var MAX = Number.NEGATIVE_INFINITY;
+		var MIN = Number.POSITIVE_INFINITY;
+		
+		var index = 0;
+		VERTICES.forEach(function(element){
+			var currElem = index % 3;
+			
+			switch(currElem){
+				case 0: //X
+					MAX_X = Math.max(MAX_X, element);
+					MIN_X = Math.min(MIN_X, element);
+					break;
+				case 1: //Y
+					MAX_Y = Math.max(MAX_Y, element);
+					MIN_Y = Math.min(MIN_Y, element);
+					break;
+				case 2: //Z
+					MAX_Z = Math.max(MAX_Z, element);
+					MIN_Z = Math.min(MIN_Z, element);
+					break;
+				default: //Shouldn't happen
+					console.error("Unexpected vertex index value");
+					return false;
+					break;
+			}
+			index++;
+		});
+		
+		INDICES.forEach(function(element){
+			MAX = Math.max(MAX, element);
+			MIN = Math.min(MIN, element);
+		});		
+	
+		HOWMANYBYTES_V = VERTICES.length * 4;
+		HOWMANYBYTES_I = INDICES.length * 2;
+	
+		BASE64_Vertices = base64.b64encode(VERTICES);
+		BASE64_Indices = base64.b64encode(INDICES);
+	
+	
+		gltf = {
+	
+			"asset": {
+				"version": "2.0",
+				"generator": "CS460 Magic Fingers"
+			},
+	
+			"accessors": [
+			
+				{
+			
+					"bufferView": 0,
+			
+					"byteOffset": 0,
+			
+					"componentType": 5126,
+			
+					"count": VERTICES.length / 3,
+			
+					"type": "VEC3",
+			
+					"max": [MAX_X, MAX_Y, MAX_Z],
+			
+					"min": [MIN_X, MIN_Y, MIN_Z]
+			
+				},
+			
+				{
+			
+					"bufferView": 1,
+			
+					"byteOffset": 0,
+			
+					"componentType": 5123,
+			
+					"count": INDICES.length,
+			
+					"type": "SCALAR",
+			
+					"max": [MAX],
+			
+					"min": [MIN]
+			
+				}
+			
+			], 
+			
+		
+			
+			"bufferViews": [
+			
+				{
+			
+					"buffer": 0,
+			
+					"byteOffset": 0,
+			
+					"byteLength": HOWMANYBYTES_V,
+			
+					"target": 34962
+			
+				},
+			
+				{
+			
+					"buffer": 1,
+			
+					"byteOffset": 0,
+			
+					"byteLength": HOWMANYBYTES_I,
+			
+					"target": 34963
+			
+				}
+			
+			],
+			
+			
+			
+			"buffers": [
+			
+				{
+			
+					"uri": "data:application/octet-stream;base64," + BASE64_Vertices,
+			
+					"byteLength": HOWMANYBYTES_V
+			
+				},
+			
+				{
+			
+					"uri": "data:application/octet-stream;base64," + BASE64_Indices,
+			
+					"byteLength": HOWMANYBYTES_I
+			
+				}
+			
+			],
+			
+			
+			
+			"meshes": [
+			
+				{ 
+			
+					"primitives": [{
+			
+						"mode": 4,
+			
+						"attributes": {
+			
+							"POSITION": 0
+			
+						},
+			
+						"indices": 1
+			
+					}]
+					
+				}
+			
+			],
+			
+		
+			
+			"nodes": [
+			
+				{
+			
+					"mesh": 0
+			
+				}
+			
+			],
+			
+		
+			
+			"scenes": [
+			
+				{
+			
+					"nodes": [
+			
+						0
+			
+					]
+			
+				}
+			
+			],
+			
+		
+			
+			"scene": 0
+			
+		}
+	
+		window.document.body.innerHTML = JSON.stringify(gltf)
+		fileCreated = true;
+	}
+	
+
+  </script>
+	</head>
+	<body>
+
+	</body>
+</html>
