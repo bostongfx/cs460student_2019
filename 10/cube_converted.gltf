@@ -1,0 +1,115 @@
+{
+  "asset": {
+    "generator": "3D Buildere .",
+    "version": "2.0"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "matrix": [
+        25.001249313354492,
+        0,
+        0,
+        0,
+        0,
+        -0.0000022859273940412095,
+        -19.175746917724609,
+        0,
+        0,
+        19.175746917724609,
+        -0.0000022859273940412095,
+        0,
+        -0.5,
+        1.4400887948795571E-7,
+        1.2080339193344116,
+        1
+      ]
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0
+          },
+          "mode": 4,
+          "indices": 1,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Green",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.015208514407277107,
+          0.49693304300308228,
+          0.072271861135959625,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 1
+      },
+      "alphaMode": "OPAQUE"
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "byteOffset": 0,
+      "count": 8,
+      "componentType": 5126,
+      "type": "VEC3",
+      "min": [
+        0,
+        0.042998004704713821,
+        0
+      ],
+      "max": [
+        0.039998002350330353,
+        0.082998007535934448,
+        0.039998002350330353
+      ]
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 0,
+      "count": 36,
+      "componentType": 5125,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 96,
+      "byteStride": 12,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 96,
+      "byteLength": 144,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 240,
+      "uri": "data:application/octet-stream;base64,AAAAAK0eMD3y1CM98tQjPa0eMD3y1CM9AAAAANz6qT3y1CM98tQjPdz6qT0AAAAAAAAAAK0eMD0AAAAAAAAAANz6qT0AAAAA8tQjPa0eMD0AAAAA8tQjPdz6qT3y1CM9AAAAAAEAAAACAAAAAwAAAAQAAAAFAAAABAAAAAMAAAAGAAAABwAAAAIAAAABAAAABAAAAAYAAAABAAAABAAAAAIAAAAFAAAABwAAAAEAAAAGAAAABQAAAAIAAAAHAAAABAAAAAAAAAACAAAABgAAAAMAAAAHAAAAAQAAAAAAAAAEAAAABwAAAAMAAAAFAAAA"
+
+    }
+  ]
+}
