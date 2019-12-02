@@ -1,0 +1,61 @@
+html, body {
+  /* font color */
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #efefef;
+}
+
+header {
+  background-color: black;
+  color: white;
+  height: 120px;
+
+}
+
+
+h1 {
+  margin: 0px;
+  padding: 10px;
+  text-transform: uppercase;
+  line-height: 2em;
+}
+
+#logo {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+#fileInput {
+  padding: 15px;
+  font-size: 1em;
+}
+
+
+.imageDisplay {
+  width:30%;
+}
+.small {
+  max-width: 300px;
+}
+
+canvas, img {
+  /* border: 1px solid black; */
+  margin: 15px;
+}
+
+.main {
+  position: absolute;
+  right: 0px;
+  top: 130px;
+}
+
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 33.33%;
+  padding: 5px;
+}

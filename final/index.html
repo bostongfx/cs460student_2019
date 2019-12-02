@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <link rel="shortcut icon" href="gfx/cs460.png" type="image/gif">
+    <link rel="stylesheet" href="styles.css">
+
+    <title>CS460 Final</title>
+    <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
+    <script src="opencv.js" async onload="onOpenCvReady()"></script>
+
+</head>
+
+<body>
+  <header>
+    <h1>opencv image processing</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </header>
+
+  <input type='file' id='fileInput' accept='image/*'/>
+  <div class="row">
+      <div class="imageDisplay">
+          <img id='srcImage'></img>
+      </div>
+      <div class="imageDisplay">
+          <canvas id='outputCanvas'></canvas>
+      </div>
+  </div>
+  </body>
+  <script type="text/javascript">
+      let imgElement = document.getElementById('srcImage')
+      let inputElement = document.getElementById('fileInput');
+      inputElement.addEventListener("change", (e) => {
+          imgElement.src = URL.createObjectURL(e.target.files[0]);
+      }, false);
+      imgElement.onload = function() {
+          let mat = cv.imread(imgElement);
+          cv.imshow('outputCanvas', mat);
+          mat.delete();
+      }
+
+      controller = {
+          "Gray": function(){
+              let mat = cv.imread(imgElement);
+              cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
+              cv.imshow('outputCanvas', mat);
+              mat.delete();
+          },
+      }
+
+      var gui = new dat.GUI();
+      var colors = gui.addFolder( "Colors" );
+      colors.add( controller, 'Gray' );
+      colors.open();
+
+      function onOpenCvReady() {
+        console.log( 'OpenCV Ready', cv);
+
+        let imgElement = document.getElementById('srcImage')
+        imgElement.src = 'gfx/cs460.png';
+        imgElement.onload = function() {
+        }
+
+
+
+
+      }
+  </script>
+
+</html>
