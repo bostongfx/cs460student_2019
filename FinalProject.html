@@ -55,7 +55,7 @@
         //scene.add(cube);
         vector = new THREE.Vector3(0.,0.,0.);
         direction = camara.getWorldDirection(vector);
-        var angleVector = directio.clone(); // copy the camara vector
+        var shadowVector = direction.clone(); // copy the camara vector
         shadowVector.z = 0;                  // then set the new vector on the ground
         angle = direction.angleTo(shadowVector); // angle of camara viewing the 3d object
         slices = getSlices(cube, angle, direction.normalize(), 2000); // gets the slices of the cube into an array
@@ -70,18 +70,16 @@
           var boundrySphere = obj3d.geometry.computeBoundingSphere().boundingSphere; //assuming it is an array
           boundry = makeSphere(boundrySphere, obj3d.position.x, obj3d.position.y, obj3d.position.z);
           var raycaster = new THREE.Raycaster();
-           boxPosVec = new THREE.vector3(boundry.position.x,boundry.position.y,boundry.position.z)
+           boxPosVec = new THREE.vector3(obj3d.position.x, obj3d.position.y, obj3d.position.z)
           raycaster.set(direction, boxPosVec.normalize()); //direction is teh camara's vector view, BoxPosVec needs to be normalize to set the raycaster
           coordOfInter = raycaster.intersectObject(obj3d).point; // coordinates in 3d space in which it interesects the object also the starting point for slicing. I am assuming the coord is a 3d vector
-          PL = makePlane(coordOfInter); //first slice
-
-
+          for(int i = 0; i < Slicenumber) {
+            THREE.Plane(coordOfInter).lookAt(direction); //first slice
+          }
+          
 
         }
-        function makePlane(coor, angleOfCamara) {
-          plane = THREE.Plane(coor.x,coor.y,coor.z); //might not need angle and just do vectors to make the angle of the plane
-          plane.rotateZ(angleOfCamara);
-        }
+
 
         function makeSphere(elements, x, y, z) {
         
