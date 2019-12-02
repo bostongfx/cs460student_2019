@@ -5,24 +5,9 @@
 
     window.onload = function() {
 
-      VERTICES = new Float32Array([0.,0.,0., 0.,1.,0., 1.,0.,0.])
-      INDICES = new Uint16Array([0,1,2])
 
-      HOWMANY = 3
-      MAX_X = 1. 
-      MAX_Y = 1.
-      MAX_Z = 0.
-      MIN_X = 0.
-      MIN_Y =  0.
-      MIN_Z = 0.
-      MAX = 2
-      MIN = 0
-
-      HOWMANYBYTES_V = 9*4
-      HOWMANYBYTES_I = 3*2
-
-      BASE64_Vertices = base64.b64encode(VERTICES);
-      BASE64_Indices = base64.b64encode(INDICES);
+      with open('Armadillo.ply', 'r') as f:
+      lines = f.readlines()
 
 
       gltf = {
