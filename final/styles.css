@@ -21,6 +21,16 @@ h1 {
   line-height: 2em;
 }
 
+tr {
+  min-height:150px;
+}
+
+td {
+  padding: 10px 0px 0px 10px;
+  text-align: center;
+  vertical-align: top;
+}
+
 #logo {
   position: absolute;
   right: 10px;
@@ -37,18 +47,19 @@ h1 {
   font-size: 1em;
   font-weight:600;
   background-color: black;
-  position: absolute;
   width: 100px;
   height: 36px;
   padding: 8px;
-  top: 10px;
-  right: 10px;
   border-radius: 2px;
   border: none;
   cursor: pointer;
 }
 #addBtn:hover {
   background-color: #3a3a3a;
+}
+
+#gui {
+  overflow-x: visible;
 }
 
 .imageDisplay {
@@ -59,7 +70,7 @@ h1 {
 }
 
 canvas, img {
-  /* border: 1px solid black; */
+  border: 1px solid black;
   margin: 15px;
 }
 

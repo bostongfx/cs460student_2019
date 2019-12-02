@@ -27,24 +27,30 @@
         <div class="imageDisplay">
             <canvas id='outputCanvas'></canvas>
         </div>
-    </div>
-  -->
-    <table id="imageTable">
-        <tr>
-            <td>
-                <div class="imageDisplay">
-                    <img id='srcImage'></img>
-                </div>
-            </td>
-            <td>
-                <div class="imageDisplay">
-                    <canvas id='outputCanvas'></canvas>
-                </div>
-            </td>
-        </tr>
-    </table>
+    </div> -->
 
-    <button type="button" id="addBtn" onclick="addTransformation()">Try it</button>
+
+  <div>
+    <table  id="imageTable" width="0" cellspacing="0" cellpadding="0" border="0">
+    <tbody><tr>
+        <td>
+              <img id='srcImage'></img>
+        </td>
+        <td>
+              <canvas id='outputCanvas'></canvas>
+        </td>
+    </tr>
+    <tr>
+      <td>
+        <button type="button" id="addBtn" onclick="addTransformation()">Try it</button>
+
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+
 
 
 
@@ -71,6 +77,7 @@
       }
 
       var gui = new dat.GUI();
+      gui.domElement.id = 'gui';
       var colors = gui.addFolder( "Colors" );
       colors.add( controller, 'Gray' );
       colors.open();
@@ -85,17 +92,17 @@
       }
 
       function addTransformation() {
-          var table = document.getElementById("imageTable");
-          let imgElement = document.getElementById('srcImage')
-          imgElement.src = 'gfx/cs460.png';
-          let imgElement = document.getElementById('srcImage')
-          imgElement.src = 'gfx/cs460.png';
-
-          var row = table.insertRow(0);
-          var cell1 = row.insertCell(0);
-          var cell2 = row.insertCell(1);
-          cell1.innerHTML = document.getElementById('srcImage');
-          cell2.innerHTML = document.getElementById('outputCanvas');
+          // var table = document.getElementById("imageTable");
+          // let imgElement = document.getElementById('srcImage')
+          // imgElement.src = 'gfx/cs460.png';
+          // let imgElement = document.getElementById('srcImage')
+          // imgElement.src = 'gfx/cs460.png';
+          //
+          // var row = table.insertRow(0);
+          // var cell1 = row.insertCell(0);
+          // var cell2 = row.insertCell(1);
+          // cell1.innerHTML = document.getElementById('srcImage');
+          // cell2.innerHTML = document.getElementById('outputCanvas');
       }
   </script>
 
