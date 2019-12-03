@@ -30,9 +30,10 @@
     </div> -->
 
 
-  <div>
+  <div style="margin-bottom:30px;">
     <table  id="imageTable" width="0" cellspacing="0" cellpadding="0" border="0">
-    <tbody><tr>
+    <tbody>
+      <tr>
         <td>
               <img id='srcImage'></img>
         </td>
@@ -42,17 +43,13 @@
     </tr>
     <tr>
       <td>
-        <button type="button" id="addBtn" onclick="addTransformation()">Try it</button>
-
+        <button type="button" id="addBtn" onclick="addTransformation()">Make Src</button>
       </td>
+      <td id="srcErr"></td>
     </tr>
     </tbody>
   </table>
 </div>
-
-
-
-
 
   </body>
   <script type="text/javascript">
@@ -74,6 +71,14 @@
               cv.imshow('outputCanvas', mat);
               mat.delete();
           },
+          "Binary": function(){
+              let mat = cv.imread(imgElement);
+              // You can try more different parameters
+              cv.threshold(mat, mat, 177, 200, cv.THRESH_BINARY);
+              cv.imshow('outputCanvas', mat);
+              mat.delete();
+          },
+
       }
 
       var gui = new dat.GUI();
@@ -81,6 +86,11 @@
       var colors = gui.addFolder( "Colors" );
       colors.add( controller, 'Gray' );
       colors.open();
+      var threshold = gui.addFolder("Threshold");
+      threshold.add( controller, 'Binary' );
+      threshold.open();
+
+
 
       function onOpenCvReady() {
           console.log( 'OpenCV Ready', cv);
@@ -92,17 +102,37 @@
       }
 
       function addTransformation() {
-          // var table = document.getElementById("imageTable");
-          // let imgElement = document.getElementById('srcImage')
-          // imgElement.src = 'gfx/cs460.png';
-          // let imgElement = document.getElementById('srcImage')
-          // imgElement.src = 'gfx/cs460.png';
-          //
-          // var row = table.insertRow(0);
-          // var cell1 = row.insertCell(0);
-          // var cell2 = row.insertCell(1);
-          // cell1.innerHTML = document.getElementById('srcImage');
-          // cell2.innerHTML = document.getElementById('outputCanvas');
+        if(isCanvasBlank(document.getElementById('outputCanvas'))) {
+            document.getElementById('srcErr').innerHTML = 'Can not copy blank canvas.';
+            return;
+        }
+          document.getElementById('srcErr').innerHTML = '';
+
+          var table = document.getElementById("imageTable");
+          var row = table.insertRow(0);
+          var cell1 = row.insertCell(0);
+          var cell2 = row.insertCell(1);
+          let mat1 = cv.imread(document.getElementById('srcImage'));
+          let mat2 = cv.imread(document.getElementById('outputCanvas'));
+
+          cell1.innerHTML = '<canvas id="newCanvas1"><canvas>'
+          cell2.innerHTML = '<canvas id="newCanvas2"><canvas>'
+          cv.imshow('newCanvas1', mat1);
+          cv.imshow('newCanvas2', mat2);
+          cv.imshow('srcImage'.src, mat2);
+
+
+          mat1.delete();
+          mat2.delete();
+      }
+      function isCanvasBlank(canvas) {
+          const context = canvas.getContext('2d');
+
+          const pixelBuffer = new Uint32Array(
+              context.getImageData(0, 0, canvas.width, canvas.height).data.buffer
+          );
+
+          return !pixelBuffer.some(color => color !== 0);
       }
   </script>
 
