@@ -20,18 +20,9 @@
     </header>
 
     <input type='file' id='fileInput' accept='image/*'/>
-    <!-- <div class="row">
-        <div class="imageDisplay">
-            <img id='srcImage'></img>
-        </div>
-        <div class="imageDisplay">
-            <canvas id='outputCanvas'></canvas>
-        </div>
-    </div> -->
-
 
   <div style="margin-bottom:30px;">
-    <table  id="imageTable" width="0" cellspacing="0" cellpadding="0" border="0">
+    <table id="imageTable" width="80%" cellspacing="0" cellpadding="0" border="0">
     <tbody>
       <tr>
         <td>
@@ -43,7 +34,7 @@
     </tr>
     <tr>
       <td>
-        <button type="button" id="addBtn" onclick="addTransformation()">Make Src</button>
+        <button type="button" id="addBtn" onclick="addTransformation()">New</button>
       </td>
       <td id="srcErr"></td>
     </tr>
@@ -63,34 +54,58 @@
           cv.imshow('outputCanvas', mat);
           mat.delete();
       }
+      gray = false;
 
       controller = {
           "Gray": function(){
+            gray = true;
+            if (isCanvasBlank(document.getElementById('outputCanvas'))) {
               let mat = cv.imread(imgElement);
               cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
               cv.imshow('outputCanvas', mat);
               mat.delete();
-          },
-          "Binary": function(){
-              let mat = cv.imread(imgElement);
-              // You can try more different parameters
-              cv.threshold(mat, mat, 127, 200, cv.THRESH_BINARY);
+            }
+            else {
+              let mat = cv.imread(document.getElementById('outputCanvas'));
+              cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
               cv.imshow('outputCanvas', mat);
               mat.delete();
-          },
-
+            }
+          }
       }
+
+      var BinaryThresh = function() {
+        this.thresh =  127;
+        this.alpha =  127;
+      };
 
       var gui = new dat.GUI();
       gui.domElement.id = 'gui';
       var colors = gui.addFolder( "Colors" );
       colors.add( controller, 'Gray' );
       colors.open();
-      var threshold = gui.addFolder("Threshold");
-      threshold.add( controller, 'Binary' );
-      threshold.open();
+      var b_threshold = gui.addFolder("Binary Threshold");
+      var bin = new BinaryThresh();
+      b_threshold.add(bin, 'thresh', 0, 255).onChange( function(val) {
+          let mat = cv.imread(imgElement);
+          if (gray) {
+            cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+          }
+          cv.threshold(mat, mat, val, bin.alpha, cv.THRESH_BINARY);
+          cv.imshow('outputCanvas', mat);
+          mat.delete();
+      }); // Min and max
+      b_threshold.add(bin, 'alpha', 0, 255).onChange( function(val) {
+          let mat = cv.imread(imgElement);
+          if (gray) {
+            cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+          }
+          cv.threshold(mat, mat, bin.thresh, val, cv.THRESH_BINARY);
+          cv.imshow('outputCanvas', mat);
+          mat.delete();
+      }); // Min and max
 
-
+      b_threshold.open();
 
       function onOpenCvReady() {
           console.log( 'OpenCV Ready', cv);
@@ -98,6 +113,8 @@
           let imgElement = document.getElementById('srcImage')
           imgElement.src = 'gfx/cs460.png';
           imgElement.onload = function() {
+
+
           }
       }
 
@@ -134,6 +151,7 @@
 
           return !pixelBuffer.some(color => color !== 0);
       }
+
   </script>
 
 </html>

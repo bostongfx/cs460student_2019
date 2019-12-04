@@ -29,6 +29,7 @@ td {
   padding: 10px 0px 0px 10px;
   text-align: center;
   vertical-align: top;
+  width: 50%;
 }
 
 #logo {
@@ -72,6 +73,7 @@ td {
 canvas, img {
   border: 1px solid black;
   margin: 15px;
+  max-width: 100%;
 }
 
 .main {
