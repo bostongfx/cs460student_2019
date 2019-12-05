@@ -109,42 +109,47 @@
           };
 
           var Thresh = function() {
-            this.thresh =  127;
-            this.alpha =  255;
-            this.type = 'Binary';
-            this.code = cv.THRESH_BINARY;
+              this.thresh =  127;
+              this.alpha =  255;
+              this.type = 'Binary';
+              this.code = cv.THRESH_BINARY;
+              this.block = 3;
+              this.c = 0;
+              this.adaptiveM = false;
+              this.adaptiveG = false;
+              this.adapt = cv.ADAPTIVE_THRESH_MEAN_C
           };
 
           controller = {
               "Gray": function(){
-                gray = true;
-                if (isCanvasBlank(document.getElementById('outputCanvas'))) {
-                  let mat = cv.imread(imgElement);
-                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
-                  cv.imshow('outputCanvas', mat);
-                  mat.delete();
-                }
-                else {
-                  let mat = cv.imread(document.getElementById('outputCanvas'));
-                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
-                  cv.imshow('outputCanvas', mat);
-                  mat.delete();
-                }
+                  gray = true;
+                  if (isCanvasBlank(document.getElementById('outputCanvas'))) {
+                      let mat = cv.imread(imgElement);
+                      cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
+                      cv.imshow('outputCanvas', mat);
+                      mat.delete();
+                  }
+                  else {
+                      let mat = cv.imread(document.getElementById('outputCanvas'));
+                      cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
+                      cv.imshow('outputCanvas', mat);
+                      mat.delete();
+                  }
               },
               "HSV": function(){
-                hsv = true;
-                if (isCanvasBlank(document.getElementById('outputCanvas'))) {
-                  let mat = cv.imread(imgElement);
-                  cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV);
-                  cv.imshow('outputCanvas', mat);
-                  mat.delete();
-                }
-                else {
-                  let mat = cv.imread(document.getElementById('outputCanvas'));
-                  cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV);
-                  cv.imshow('outputCanvas', mat);
-                  mat.delete();
-                }
+                  hsv = true;
+                  if (isCanvasBlank(document.getElementById('outputCanvas'))) {
+                      let mat = cv.imread(imgElement);
+                      cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV);
+                      cv.imshow('outputCanvas', mat);
+                      mat.delete();
+                  }
+                  else {
+                      let mat = cv.imread(document.getElementById('outputCanvas'));
+                      cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV);
+                      cv.imshow('outputCanvas', mat);
+                      mat.delete();
+                  }
               }
           }
 
@@ -170,13 +175,30 @@
                   case 'Triangle': bin.code = cv.THRESH_TRIANGLE;gray=true;break;
               }
           });
+          var adaptM = b_threshold.add(bin, 'adaptiveM').name('Adaptive Mean').listen();
+          var adaptG = b_threshold.add(bin, 'adaptiveG').name('Adaptive Gaussian').listen();
+          adaptM.onChange(function(val) {
+            bin.adaptiveM = val;
+            if (val) {
+              bin.adaptiveG = false;
+            }
+          });
+          adaptG.onChange(function(val) {
+            bin.adaptiveG = val;
+            if (val) {
+              bin.adaptiveM = false;
+            }
+          });
           b_threshold.add(bin, 'thresh', 0, 255).onChange( function(val) {
+              if(bin.adaptiveM || bin.adaptiveG){
+                return;
+              }
               let mat = cv.imread(imgElement);
               if (gray) {
-                cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
               }
               if (hsv) {
-                cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
+                  cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
               }
               cv.threshold(mat, mat, val, bin.alpha, bin.code);
               cv.imshow('outputCanvas', mat);
@@ -185,12 +207,26 @@
           b_threshold.add(bin, 'alpha', 0, 255).onChange( function(val) {
               let mat = cv.imread(imgElement);
               if (gray) {
-                cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
               }
               if (hsv) {
-                cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
+                  cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
               }
-              cv.threshold(mat, mat, bin.thresh, val, bin.code);
+              if((bin.adaptiveM || bin.adaptiveG) && (bin.type == 'Binary' || bin.type == 'Binary Inv')){
+                if(bin.adaptiveM){
+                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+                  cv.adaptiveThreshold(mat, mat, val, cv.ADAPTIVE_THRESH_MEAN_C, bin.code, bin.block, bin.c);
+                  gray = true;
+                }
+                else {
+                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+                  cv.adaptiveThreshold(mat, mat, val, cv.ADAPTIVE_THRESH_GAUSSIAN_C, bin.code, bin.block, bin.c);
+                  gray = true;
+                }
+              }
+              else {
+                cv.threshold(mat, mat, bin.thresh, val, bin.code);
+              }
               cv.imshow('outputCanvas', mat);
               mat.delete();
           });
@@ -233,12 +269,12 @@
       }
 
       function exportImg() {
-        var dl = document.getElementById('dl');
-        var canvas = document.getElementById('outputCanvas');
-        var dataURL = canvas.toDataURL('image/jpeg', 1.0).replace("image/png", "image/octet-stream");
+          var dl = document.getElementById('dl');
+          var canvas = document.getElementById('outputCanvas');
+          var dataURL = canvas.toDataURL('image/jpeg', 1.0).replace("image/png", "image/octet-stream");
 
-        dl.setAttribute('download', 'export.png');
-        dl.setAttribute('href', dataURL);
+          dl.setAttribute('download', 'export.png');
+          dl.setAttribute('href', dataURL);
       }
 
       function isCanvasBlank(canvas) {
