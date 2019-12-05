@@ -61,57 +61,37 @@
       };
 
       gray = false;
+      hsv = false;
 
-      controller = {
-          "Gray": function(){
-            gray = true;
-            if (isCanvasBlank(document.getElementById('outputCanvas'))) {
-              let mat = cv.imread(imgElement);
-              cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
-              cv.imshow('outputCanvas', mat);
-              mat.delete();
-            }
-            else {
-              let mat = cv.imread(document.getElementById('outputCanvas'));
-              cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
-              cv.imshow('outputCanvas', mat);
-              mat.delete();
-            }
-          }
-      }
-
-      var BinaryThresh = function() {
-        this.thresh =  127;
-        this.alpha =  255;
-      };
-
-      var gui = new dat.GUI();
-      gui.domElement.id = 'gui';
-      var colors = gui.addFolder( "Colors" );
-      colors.add( controller, 'Gray' );
-      colors.open();
-      var b_threshold = gui.addFolder("Binary Threshold");
-      var bin = new BinaryThresh();
-      b_threshold.add(bin, 'thresh', 0, 255).onChange( function(val) {
-          let mat = cv.imread(imgElement);
-          if (gray) {
-            cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
-          }
-          cv.threshold(mat, mat, val, bin.alpha, cv.THRESH_BINARY);
-          cv.imshow('outputCanvas', mat);
-          mat.delete();
-      }); // Min and max
-      b_threshold.add(bin, 'alpha', 0, 255).onChange( function(val) {
-          let mat = cv.imread(imgElement);
-          if (gray) {
-            cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
-          }
-          cv.threshold(mat, mat, bin.thresh, val, cv.THRESH_BINARY);
-          cv.imshow('outputCanvas', mat);
-          mat.delete();
-      }); // Min and max
-
-      b_threshold.open();
+      // var bin_inv = new BinaryThresh();
+      // var b_threshold_inv = gui.addFolder("Binary Threshold Inv");
+      // b_threshold_inv.add(bin_inv, 'thresh', 0, 255).onChange( function(val) {
+      //     let mat = cv.imread(imgElement);
+      //     if (gray) {
+      //       cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+      //     }
+      //     if (hsv) {
+      //       cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
+      //     }
+      //     cv.threshold(mat, mat, val, bin.alpha, cv.THRESH_BINARY_INV);
+      //     cv.imshow('outputCanvas', mat);
+      //     mat.delete();
+      // });
+      // b_threshold_inv.add(bin_inv, 'alpha', 0, 255).onChange( function(val) {
+      //     let mat = cv.imread(imgElement);
+      //     if (gray) {
+      //       cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+      //     }
+      //     if (hsv) {
+      //       cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
+      //     }
+      //     cv.threshold(mat, mat, bin.thresh, val, cv.THRESH_BINARY_INV);
+      //     cv.imshow('outputCanvas', mat);
+      //     mat.delete();
+      // });
+      //
+      //
+      // b_threshold_inv.open();
 
 
       function openCvReady() {
@@ -127,6 +107,94 @@
               cv.imshow('outputCanvas', mat);
               mat.delete();
           };
+
+          var Thresh = function() {
+            this.thresh =  127;
+            this.alpha =  255;
+            this.type = 'Binary';
+            this.code = cv.THRESH_BINARY;
+          };
+
+          controller = {
+              "Gray": function(){
+                gray = true;
+                if (isCanvasBlank(document.getElementById('outputCanvas'))) {
+                  let mat = cv.imread(imgElement);
+                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
+                  cv.imshow('outputCanvas', mat);
+                  mat.delete();
+                }
+                else {
+                  let mat = cv.imread(document.getElementById('outputCanvas'));
+                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
+                  cv.imshow('outputCanvas', mat);
+                  mat.delete();
+                }
+              },
+              "HSV": function(){
+                hsv = true;
+                if (isCanvasBlank(document.getElementById('outputCanvas'))) {
+                  let mat = cv.imread(imgElement);
+                  cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV);
+                  cv.imshow('outputCanvas', mat);
+                  mat.delete();
+                }
+                else {
+                  let mat = cv.imread(document.getElementById('outputCanvas'));
+                  cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV);
+                  cv.imshow('outputCanvas', mat);
+                  mat.delete();
+                }
+              }
+          }
+
+          var gui = new dat.GUI();
+          gui.domElement.id = 'gui';
+          var colors = gui.addFolder( "Colors" );
+          colors.add( controller, 'Gray' );
+          colors.add( controller, 'HSV' );
+          colors.open();
+          var b_threshold = gui.addFolder("Threshold");
+          var bin = new Thresh();
+          bin.type = cv.THRESH_BINARY;
+          var threshType = b_threshold.add(bin, 'type', ['Binary', 'Binary Inv',
+             'Trunc', 'To Zero', 'Otsu', 'Triangle']).listen();
+          threshType.onChange(function(val) {
+              bin.type = val;
+              switch(val) {
+                  case 'Binary': bin.code = cv.THRESH_BINARY;break;
+                  case 'Binary Inv': bin.code = cv.THRESH_BINARY_INV;break;
+                  case 'Trunc': bin.code = cv.THRESH_TRUNC;break;
+                  case 'To Zero': bin.code = cv.THRESH_TOZERO;break;
+                  case 'Otsu': bin.code = cv.THRESH_OTSU;gray=true;break;
+                  case 'Triangle': bin.code = cv.THRESH_TRIANGLE;gray=true;break;
+              }
+          });
+          b_threshold.add(bin, 'thresh', 0, 255).onChange( function(val) {
+              let mat = cv.imread(imgElement);
+              if (gray) {
+                cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+              }
+              if (hsv) {
+                cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
+              }
+              cv.threshold(mat, mat, val, bin.alpha, bin.code);
+              cv.imshow('outputCanvas', mat);
+              mat.delete();
+          });
+          b_threshold.add(bin, 'alpha', 0, 255).onChange( function(val) {
+              let mat = cv.imread(imgElement);
+              if (gray) {
+                cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+              }
+              if (hsv) {
+                cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
+              }
+              cv.threshold(mat, mat, bin.thresh, val, bin.code);
+              cv.imshow('outputCanvas', mat);
+              mat.delete();
+          });
+          b_threshold.open();
         };
       }
 
@@ -159,6 +227,9 @@
           let mat = cv.imread(imgElement);
           cv.imshow('outputCanvas', mat);
           mat.delete();
+          gray = false;
+          hsv = false;
+
       }
 
       function exportImg() {
