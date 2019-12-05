@@ -22,12 +22,16 @@
     <!-- <p >OpenCV.js is loading...</p> -->
     <div id="status" class="loader"></div>
 
-    <input type='file' id='fileInput' accept='image/*'/>
 
   <img id='srcImage' style="display:none;"></img>
   <div style="margin-bottom:30px;">
     <table id="imageTable" width="75%" cellspacing="0" cellpadding="0" border="0" style="display:none;">
     <tbody>
+      <tr>
+        <td>
+          <input type='file' id='fileInput' accept='image/*'/>
+        </td>
+      </tr>
       <tr>
         <td style="width:100%">
               <canvas id='outputCanvas'></canvas>
