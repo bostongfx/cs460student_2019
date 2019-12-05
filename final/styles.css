@@ -3,6 +3,8 @@ html, body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
+  height: 100%;
+
   background: #efefef;
 }
 
@@ -13,7 +15,6 @@ header {
 
 }
 
-
 h1 {
   margin: 0px;
   padding: 10px;
@@ -21,15 +22,10 @@ h1 {
   line-height: 2em;
 }
 
-tr {
-  min-height:150px;
-}
 
 td {
-  padding: 10px 0px 0px 10px;
   text-align: center;
   vertical-align: top;
-  width: 50%;
 }
 
 #logo {
@@ -43,7 +39,7 @@ td {
   font-size: 1em;
 }
 
-#addBtn {
+button {
   color: white;
   font-size: 1em;
   font-weight:600;
@@ -54,23 +50,15 @@ td {
   border-radius: 2px;
   border: none;
   cursor: pointer;
+  margin-left: 100px;
+  margin-right: 100px;
 }
-#addBtn:hover {
+
+button:hover {
   background-color: #3a3a3a;
 }
 
-#gui {
-  overflow-x: visible;
-}
-
-.imageDisplay {
-  width:30%;
-}
-.small {
-  max-width: 300px;
-}
-
-canvas, img {
+canvas {
   border: 1px solid black;
   margin: 15px;
   max-width: 100%;
@@ -78,15 +66,10 @@ canvas, img {
 
 .main {
   position: absolute;
-  right: 0px;
-  top: 130px;
+  top: 120px;
+  right: 20px;
 }
 
-.row {
-  display: flex;
-}
-
-.column {
-  flex: 33.33%;
-  padding: 5px;
+#gui {
+  overflow-x: visible;
 }

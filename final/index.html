@@ -9,7 +9,7 @@
 
     <title>CS460 Final</title>
     <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
-    <script src="opencv.js" async onload="onOpenCvReady()"></script>
+    <script async src="opencv.js" onload="openCvReady();" type="text/javascript"></script>
 
 </head>
 
@@ -19,22 +19,26 @@
       <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
     </header>
 
+    <p id="status">OpenCV.js is loading...</p>
+
     <input type='file' id='fileInput' accept='image/*'/>
 
+  <img id='srcImage' style="display:none;"></img>
   <div style="margin-bottom:30px;">
-    <table id="imageTable" width="80%" cellspacing="0" cellpadding="0" border="0">
+    <table id="imageTable" width="75%" cellspacing="0" cellpadding="0" border="0">
     <tbody>
       <tr>
-        <td>
-              <img id='srcImage'></img>
-        </td>
-        <td>
+        <td style="width:100%">
               <canvas id='outputCanvas'></canvas>
         </td>
     </tr>
     <tr>
-      <td>
-        <button type="button" id="addBtn" onclick="addTransformation()">New</button>
+      <td style="width:40%padding: 10px 0px 0px 10px;">
+        <button class="button" type="button" id="resetBtn" onclick="reset()">Reset</button>
+        <a class="button" id="dl" onclick="exportImg()"><button type="button">Export</button></a>
+
+        <!--  -->
+
       </td>
       <td id="srcErr"></td>
     </tr>
@@ -49,11 +53,13 @@
       inputElement.addEventListener("change", (e) => {
           imgElement.src = URL.createObjectURL(e.target.files[0]);
       }, false);
+
       imgElement.onload = function() {
           let mat = cv.imread(imgElement);
           cv.imshow('outputCanvas', mat);
           mat.delete();
-      }
+      };
+
       gray = false;
 
       controller = {
@@ -76,7 +82,7 @@
 
       var BinaryThresh = function() {
         this.thresh =  127;
-        this.alpha =  127;
+        this.alpha =  255;
       };
 
       var gui = new dat.GUI();
@@ -107,41 +113,63 @@
 
       b_threshold.open();
 
-      function onOpenCvReady() {
+
+      function openCvReady() {
+        cv['onRuntimeInitialized']=()=>{
           console.log( 'OpenCV Ready', cv);
+          document.getElementById('status').style.display = 'none';
 
           let imgElement = document.getElementById('srcImage')
           imgElement.src = 'gfx/cs460.png';
+
           imgElement.onload = function() {
-
-
-          }
+              let mat = cv.imread(imgElement);
+              cv.imshow('outputCanvas', mat);
+              mat.delete();
+          };
+        };
       }
 
-      function addTransformation() {
-        if(isCanvasBlank(document.getElementById('outputCanvas'))) {
-            document.getElementById('srcErr').innerHTML = 'Can not copy blank canvas.';
-            return;
-        }
-          document.getElementById('srcErr').innerHTML = '';
+      // function addTransformation() {
+      //   if(isCanvasBlank(document.getElementById('outputCanvas'))) {
+      //       document.getElementById('srcErr').innerHTML = 'Can not copy blank canvas.';
+      //       return;
+      //   }
+      //     document.getElementById('srcErr').innerHTML = '';
+      //
+      //     var table = document.getElementById("imageTable");
+      //     var row = table.insertRow(0);
+      //     var cell1 = row.insertCell(0);
+      //     var cell2 = row.insertCell(1);
+      //     let mat1 = cv.imread(document.getElementById('srcImage'));
+      //     let mat2 = cv.imread(document.getElementById('outputCanvas'));
+      //
+      //     cell1.innerHTML = '<canvas id="newCanvas1"><canvas>'
+      //     cell2.innerHTML = '<canvas id="newCanvas2"><canvas>'
+      //     cv.imshow('newCanvas1', mat1);
+      //     cv.imshow('newCanvas2', mat2);
+      //     cv.imshow('srcImage'.src, mat2);
+      //
+      //
+      //     mat1.delete();
+      //     mat2.delete();
+      // }
 
-          var table = document.getElementById("imageTable");
-          var row = table.insertRow(0);
-          var cell1 = row.insertCell(0);
-          var cell2 = row.insertCell(1);
-          let mat1 = cv.imread(document.getElementById('srcImage'));
-          let mat2 = cv.imread(document.getElementById('outputCanvas'));
-
-          cell1.innerHTML = '<canvas id="newCanvas1"><canvas>'
-          cell2.innerHTML = '<canvas id="newCanvas2"><canvas>'
-          cv.imshow('newCanvas1', mat1);
-          cv.imshow('newCanvas2', mat2);
-          cv.imshow('srcImage'.src, mat2);
-
-
-          mat1.delete();
-          mat2.delete();
+      function reset() {
+          let mat = cv.imread(imgElement);
+          cv.imshow('outputCanvas', mat);
+          mat.delete();
       }
+
+      function exportImg() {
+        var dl = document.getElementById('dl');
+        var canvas = document.getElementById('outputCanvas');
+        var dataURL = canvas.toDataURL('image/jpeg', 1.0).replace("image/png", "image/octet-stream");
+
+        dl.setAttribute('download', 'export.png');
+        dl.setAttribute('href', dataURL);
+      }
+
       function isCanvasBlank(canvas) {
           const context = canvas.getContext('2d');
 
