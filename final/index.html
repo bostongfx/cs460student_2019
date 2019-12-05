@@ -187,6 +187,7 @@
           var adaptG = b_threshold.add(bin, 'adaptiveG').name('Adaptive Gau').listen();
           adaptM.onChange(function(val) {
             bin.adaptiveM = val;
+            gray = true;
             if (val) {
               bin.adaptiveG = false;
             }
@@ -222,14 +223,11 @@
               }
               if((bin.adaptiveM || bin.adaptiveG) && (bin.type == 'Binary' || bin.type == 'Binary Inv')){
                 if(bin.adaptiveM){
-                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
                   cv.adaptiveThreshold(mat, mat, val, cv.ADAPTIVE_THRESH_MEAN_C, bin.code, bin.block, bin.c);
-                  gray = true;
                 }
                 else {
-                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
                   cv.adaptiveThreshold(mat, mat, val, cv.ADAPTIVE_THRESH_GAUSSIAN_C, bin.code, bin.block, bin.c);
-                  gray = true;
+
                 }
               }
               else {
