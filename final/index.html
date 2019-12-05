@@ -19,11 +19,10 @@
       <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
     </header>
 
-    <!-- <p >OpenCV.js is loading...</p> -->
-    <div id="status" class="loader"></div>
-
+  <div id="status" class="loader"></div>
 
   <img id='srcImage' style="display:none;"></img>
+
   <div style="margin-bottom:30px;">
     <table id="imageTable" width="75%" cellspacing="0" cellpadding="0" border="0" style="display:none;">
     <tbody>
@@ -41,16 +40,12 @@
       <td style="width:40%padding: 10px 0px 0px 10px;">
         <button class="button" type="button" id="resetBtn" onclick="reset()">Reset</button>
         <a class="button" id="dl" onclick="exportImg()"><button type="button">Export</button></a>
-
-        <!--  -->
-
       </td>
       <td id="srcErr"></td>
     </tr>
     </tbody>
   </table>
 </div>
-
   </body>
   <script type="text/javascript">
       let imgElement = document.getElementById('srcImage');
@@ -68,43 +63,11 @@
       gray = false;
       hsv = false;
 
-      // var bin_inv = new BinaryThresh();
-      // var b_threshold_inv = gui.addFolder("Binary Threshold Inv");
-      // b_threshold_inv.add(bin_inv, 'thresh', 0, 255).onChange( function(val) {
-      //     let mat = cv.imread(imgElement);
-      //     if (gray) {
-      //       cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
-      //     }
-      //     if (hsv) {
-      //       cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
-      //     }
-      //     cv.threshold(mat, mat, val, bin.alpha, cv.THRESH_BINARY_INV);
-      //     cv.imshow('outputCanvas', mat);
-      //     mat.delete();
-      // });
-      // b_threshold_inv.add(bin_inv, 'alpha', 0, 255).onChange( function(val) {
-      //     let mat = cv.imread(imgElement);
-      //     if (gray) {
-      //       cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
-      //     }
-      //     if (hsv) {
-      //       cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
-      //     }
-      //     cv.threshold(mat, mat, bin.thresh, val, cv.THRESH_BINARY_INV);
-      //     cv.imshow('outputCanvas', mat);
-      //     mat.delete();
-      // });
-      //
-      //
-      // b_threshold_inv.open();
-
-
       function openCvReady() {
         cv['onRuntimeInitialized']=()=>{
           console.log( 'OpenCV Ready', cv);
           document.getElementById('status').style.display = 'none';
           document.getElementById('imageTable').style.display = 'block';
-
 
           let imgElement = document.getElementById('srcImage')
           imgElement.src = 'gfx/cs460.png';
@@ -120,8 +83,11 @@
               this.alpha =  255;
               this.type = 'Binary';
               this.code = cv.THRESH_BINARY;
+              this.otsu = false;
+              this.triangle = false;
               this.block = 3;
-              this.c = 0;
+              this.maxval = 255;
+              this.c = 2;
               this.adaptiveM = false;
               this.adaptiveG = false;
               this.adapt = cv.ADAPTIVE_THRESH_MEAN_C
@@ -165,13 +131,38 @@
           var colors = gui.addFolder( "Colors" );
           colors.add( controller, 'Gray' );
           colors.add( controller, 'HSV' );
+          colors.add( controller, ['R', 'G', 'B'])
           colors.open();
           var b_threshold = gui.addFolder("Threshold");
           var bin = new Thresh();
           bin.type = cv.THRESH_BINARY;
           var threshType = b_threshold.add(bin, 'type', ['Binary', 'Binary Inv',
-             'Trunc', 'To Zero', 'Otsu', 'Triangle']).name('Type').listen();
+             'Trunc', 'To Zero']).name('Type').listen();
           threshType.setValue('Binary');
+          var otsu = b_threshold.add(bin, 'otsu').name('Otsu').listen();
+          otsu.onChange(function(val){
+            bin.otsu = val;
+            if(val){
+                bin.triangle = false;
+            }
+            let mat = cv.imread(imgElement);
+            cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+            cv.threshold(mat, mat, bin.thresh, bin.alpha, cv.THRESH_OTSU);
+            cv.imshow('outputCanvas', mat);
+            mat.delete();
+          });
+          var triangle = b_threshold.add(bin, 'triangle').name('Triangle').listen();
+          triangle.onChange(function(val){
+            bin.triangle = val;
+            if(val){
+                bin.otsu = false;
+            }
+            let mat = cv.imread(imgElement);
+            cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+            cv.threshold(mat, mat, bin.thresh, bin.alpha, cv.THRESH_TRIANGLE);
+            cv.imshow('outputCanvas', mat);
+            mat.delete();
+          });
           threshType.onChange(function(val) {
               bin.type = val;
               switch(val) {
@@ -179,12 +170,59 @@
                   case 'Binary Inv': bin.code = cv.THRESH_BINARY_INV;break;
                   case 'Trunc': bin.code = cv.THRESH_TRUNC;break;
                   case 'To Zero': bin.code = cv.THRESH_TOZERO;break;
-                  case 'Otsu': bin.code = cv.THRESH_OTSU;gray=true;break;
-                  case 'Triangle': bin.code = cv.THRESH_TRIANGLE;gray=true;break;
               }
           });
-          var adaptM = b_threshold.add(bin, 'adaptiveM').name('Adaptive Mean').listen();
-          var adaptG = b_threshold.add(bin, 'adaptiveG').name('Adaptive Gau').listen();
+          b_threshold.add(bin, 'thresh', 0, 255, 1).name('Thresh').onChange( function(val) {
+              let mat = cv.imread(imgElement);
+              if (gray) {
+                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+              }
+              if (hsv) {
+                  cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
+              }
+              cv.threshold(mat, mat, val, bin.alpha, bin.code);
+              cv.imshow('outputCanvas', mat);
+              mat.delete();
+          });
+          b_threshold.add(bin, 'alpha', 0, 255, 1).name('Max Val').onChange( function(val) {
+              // var canvas = document.getElementById('outputCanvas');
+              // const context = canvas.getContext('2d', { alpha: false });
+              // context.clearRect(0, 0, canvas.width, canvas.height);
+
+
+              let mat = cv.imread(imgElement);
+              if (gray) {
+                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+              }
+              if (hsv) {
+                  cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
+              }
+              cv.threshold(mat, mat, bin.thresh, val, bin.code);
+
+              cv.imshow('outputCanvas', mat);
+              mat.delete();
+          });
+          b_threshold.open();
+
+
+          var a_threshold = gui.addFolder("Adaptive Thresh (Requires 'Binary'/'Inv')");
+          var adaptM = a_threshold.add(bin, 'adaptiveM').name('Adaptive Mean').listen();
+          var adaptG = a_threshold.add(bin, 'adaptiveG').name('Adaptive Gau').listen();
+          a_threshold.add(bin, 'maxval', 0, 255, 1).name('Max Val').onChange( function(val) {
+            let mat = cv.imread(imgElement);
+            cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+            if((bin.adaptiveM || bin.adaptiveG) && (bin.type == 'Binary' || bin.type == 'Binary Inv')){
+              if(bin.adaptiveM){
+                cv.adaptiveThreshold(mat, mat, val, cv.ADAPTIVE_THRESH_MEAN_C, bin.code, bin.block, bin.c);
+              }
+              else {
+                cv.adaptiveThreshold(mat, mat, val, cv.ADAPTIVE_THRESH_GAUSSIAN_C, bin.code, bin.block, bin.c);
+              }
+            }
+            cv.imshow('outputCanvas', mat);
+            mat.delete();
+          });
+
           adaptM.onChange(function(val) {
             bin.adaptiveM = val;
             gray = true;
@@ -199,72 +237,49 @@
               bin.adaptiveM = false;
             }
           });
-          b_threshold.add(bin, 'thresh', 0, 255).name('Thresh').onChange( function(val) {
-              if(bin.adaptiveM || bin.adaptiveG){
-                return;
-              }
+          var vals = [];
+          for (i = 1; i <= 115; i +=2){
+            vals.push(i);
+          }
+          a_threshold.add(bin, 'block', vals).name('Block Size').onChange( function(val) {
+            bin.block = parseInt(val);
               let mat = cv.imread(imgElement);
-              if (gray) {
-                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
-              }
-              if (hsv) {
-                  cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
-              }
-              cv.threshold(mat, mat, val, bin.alpha, bin.code);
-              cv.imshow('outputCanvas', mat);
-              mat.delete();
-          });
-          b_threshold.add(bin, 'alpha', 0, 255).name('Max Val').onChange( function(val) {
-              let mat = cv.imread(imgElement);
-              if (gray) {
-                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
-              }
-              if (hsv) {
-                  cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
-              }
+              cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+
               if((bin.adaptiveM || bin.adaptiveG) && (bin.type == 'Binary' || bin.type == 'Binary Inv')){
                 if(bin.adaptiveM){
-                  cv.adaptiveThreshold(mat, mat, val, cv.ADAPTIVE_THRESH_MEAN_C, bin.code, bin.block, bin.c);
+                  cv.adaptiveThreshold(mat, mat, bin.maxval, cv.ADAPTIVE_THRESH_MEAN_C, bin.code, parseInt(val), bin.c);
                 }
                 else {
-                  cv.adaptiveThreshold(mat, mat, val, cv.ADAPTIVE_THRESH_GAUSSIAN_C, bin.code, bin.block, bin.c);
-
+                  cv.adaptiveThreshold(mat, mat, bin.maxval, cv.ADAPTIVE_THRESH_GAUSSIAN_C, bin.code, parseInt(val), bin.c);
                 }
-              }
-              else {
-                cv.threshold(mat, mat, bin.thresh, val, bin.code);
               }
               cv.imshow('outputCanvas', mat);
               mat.delete();
           });
-          b_threshold.open();
+          a_threshold.add(bin, 'c', -20, 20, 1).name('C').onChange( function(val) {
+              let mat = cv.imread(imgElement);
+              cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+
+              if((bin.adaptiveM || bin.adaptiveG) && (bin.type == 'Binary' || bin.type == 'Binary Inv')){
+                if(bin.adaptiveM){
+                  cv.adaptiveThreshold(mat, mat, bin.maxval, cv.ADAPTIVE_THRESH_MEAN_C, bin.code, bin.block, val);
+                }
+                else {
+                  cv.adaptiveThreshold(mat, mat, bin.maxval, cv.ADAPTIVE_THRESH_GAUSSIAN_C, bin.code, bin.block, val);
+                }
+              }
+              cv.imshow('outputCanvas', mat);
+              mat.delete();
+          });
+          a_threshold.open();
+
+
+          var filter = gui.addFolder("Filters");
+
+
         };
       }
-
-      // function addTransformation() {
-      //   if(isCanvasBlank(document.getElementById('outputCanvas'))) {
-      //       document.getElementById('srcErr').innerHTML = 'Can not copy blank canvas.';
-      //       return;
-      //   }
-      //     document.getElementById('srcErr').innerHTML = '';
-      //
-      //     var table = document.getElementById("imageTable");
-      //     var row = table.insertRow(0);
-      //     var cell1 = row.insertCell(0);
-      //     var cell2 = row.insertCell(1);
-      //     let mat1 = cv.imread(document.getElementById('srcImage'));
-      //     let mat2 = cv.imread(document.getElementById('outputCanvas'));
-      //
-      //     cell1.innerHTML = '<canvas id="newCanvas1"><canvas>'
-      //     cell2.innerHTML = '<canvas id="newCanvas2"><canvas>'
-      //     cv.imshow('newCanvas1', mat1);
-      //     cv.imshow('newCanvas2', mat2);
-      //     cv.imshow('srcImage'.src, mat2);
-      //
-      //
-      //     mat1.delete();
-      //     mat2.delete();
-      // }
 
       function reset() {
           let mat = cv.imread(imgElement);
