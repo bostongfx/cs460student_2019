@@ -163,7 +163,8 @@
           var bin = new Thresh();
           bin.type = cv.THRESH_BINARY;
           var threshType = b_threshold.add(bin, 'type', ['Binary', 'Binary Inv',
-             'Trunc', 'To Zero', 'Otsu', 'Triangle']).listen();
+             'Trunc', 'To Zero', 'Otsu', 'Triangle']).name('Type').listen();
+          threshType.setValue('Binary');
           threshType.onChange(function(val) {
               bin.type = val;
               switch(val) {
@@ -176,7 +177,7 @@
               }
           });
           var adaptM = b_threshold.add(bin, 'adaptiveM').name('Adaptive Mean').listen();
-          var adaptG = b_threshold.add(bin, 'adaptiveG').name('Adaptive Gaussian').listen();
+          var adaptG = b_threshold.add(bin, 'adaptiveG').name('Adaptive Gau').listen();
           adaptM.onChange(function(val) {
             bin.adaptiveM = val;
             if (val) {
@@ -189,7 +190,7 @@
               bin.adaptiveM = false;
             }
           });
-          b_threshold.add(bin, 'thresh', 0, 255).onChange( function(val) {
+          b_threshold.add(bin, 'thresh', 0, 255).name('Thresh').onChange( function(val) {
               if(bin.adaptiveM || bin.adaptiveG){
                 return;
               }
@@ -204,7 +205,7 @@
               cv.imshow('outputCanvas', mat);
               mat.delete();
           });
-          b_threshold.add(bin, 'alpha', 0, 255).onChange( function(val) {
+          b_threshold.add(bin, 'alpha', 0, 255).name('Max Val').onChange( function(val) {
               let mat = cv.imread(imgElement);
               if (gray) {
                   cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
