@@ -103,6 +103,21 @@
             this.sigSpace = 75;
           }
 
+          var Morph = function() {
+            this.iter = 1;
+          }
+
+          var Contour = function(){
+            // this.contours
+            // this.contourIdx
+            // this.color
+            // this.thickness
+            // this.lineTypw
+            // this.heirarchy
+            // this.maxLevel
+            // this.offset
+          }
+
           controller = {
               "Gray": function(){
                   gray = true;
@@ -118,9 +133,98 @@
                     cv.imshow('outputCanvas', mat);
                     mat.delete();
               },
-              'channel': function(){
+              'channel': function(){},
+              'Erosion': function() {
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let dst = new cv.Mat();
+                let M = cv.Mat.ones(5, 5, cv.CV_8U);
+                let anchor = new cv.Point(-1, -1);
 
+                cv.erode(src, dst, M, anchor, mor.iter, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+                cv.imshow('outputCanvas', dst);
+                src.delete(); dst.delete(); M.delete();
+              },
+              'Dilation': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let dst = new cv.Mat();
+                let M = cv.Mat.ones(5, 5, cv.CV_8U);
+                let anchor = new cv.Point(-1, -1);
+
+                cv.dilate(src, dst, M, anchor, mor.iter, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+                cv.imshow('outputCanvas', dst);
+                src.delete(); dst.delete(); M.delete();
+              },
+              'Open': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let dst = new cv.Mat();
+                let M = cv.Mat.ones(5, 5, cv.CV_8U);
+                let anchor = new cv.Point(-1, -1);
+                cv.morphologyEx(src, dst, cv.MORPH_OPEN, M, anchor, mor.iter,
+                                cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+                cv.imshow('outputCanvas', dst);
+                src.delete(); dst.delete(); M.delete();
+              },
+              'Close': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let dst = new cv.Mat();
+                let M = cv.Mat.ones(5, 5, cv.CV_8U);
+                cv.morphologyEx(src, dst, cv.MORPH_CLOSE, M);
+                cv.imshow('outputCanvas', dst);
+                src.delete(); dst.delete(); M.delete();
+              },
+              'Gradient': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let dst = new cv.Mat();
+                let M = cv.Mat.ones(5, 5, cv.CV_8U);
+                cv.morphologyEx(src, dst, cv.MORPH_CLOSE, M);
+                cv.imshow('outputCanvas', dst);
+                src.delete(); dst.delete(); M.delete();
+              },
+              'Top Hat': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                cv.cvtColor(src, src, cv.COLOR_RGBA2RGB);
+                let dst = new cv.Mat();
+                let M = cv.Mat.ones(5, 5, cv.CV_8U);
+                cv.morphologyEx(src, dst, cv.MORPH_GRADIENT, M);
+                cv.imshow('outputCanvas', dst);
+                src.delete(); dst.delete(); M.delete();
+              },
+              'Black Hat': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                cv.cvtColor(src, src, cv.COLOR_RGBA2RGB);
+                let dst = new cv.Mat();
+                let M = cv.Mat.ones(53, 53, cv.CV_8U);
+                cv.morphologyEx(src, dst, cv.MORPH_BLACKHAT, M);
+                cv.imshow('outputCanvas', dst);
+                src.delete(); dst.delete(); M.delete();
+              },
+              'Get Structuring Element': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                cv.cvtColor(src, src, cv.COLOR_RGBA2RGB);
+                let dst = new cv.Mat();
+                let M = new cv.Mat();
+                let ksize = new cv.Size(5, 5);
+                M = cv.getStructuringElement(cv.MORPH_CROSS, ksize);
+                cv.morphologyEx(src, dst, cv.MORPH_GRADIENT, M);
+                cv.imshow('outputCanvas', dst);
+                src.delete(); dst.delete(); M.delete();
+              },
+              'Draw Contours': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let dst = cv.Mat.zeros(src.cols, src.rows, cv.CV_8UC3);
+                let contours = new cv.MatVector();
+                let hierarchy = new cv.Mat();
+                cv.findContours(src, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
+                // draw contours with random Scalar
+                for (let i = 0; i < contours.size(); ++i) {
+                    let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255),
+                                              Math.round(Math.random() * 255));
+                    cv.drawContours(dst, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
+                }
+                cv.imshow('outputCanvas', dst);
+                src.delete(); dst.delete(); contours.delete(); hierarchy.delete();
               }
+
           }
 
           var gui = new dat.GUI();
@@ -139,25 +243,19 @@
               r = true;
               let ch = rgbaPlanes.get(0);
               cv.imshow('outputCanvas', ch);
-              src.delete();
-              ch.delete();
-              rgbaPlanes.delete();
+              src.delete(); ch.delete(); rgbaPlanes.delete();
             }
             if(val == 'G') {
               g = true;
               let ch = rgbaPlanes.get(1);
               cv.imshow('outputCanvas', ch);
-              src.delete();
-              ch.delete();
-              rgbaPlanes.delete();
+              src.delete(); ch.delete(); rgbaPlanes.delete();
             }
             if(val == 'B') {
               b = true;
               let ch = rgbaPlanes.get(2);
               cv.imshow('outputCanvas', ch);
-              src.delete();
-              ch.delete();
-              rgbaPlanes.delete();
+              src.delete(); ch.delete(); rgbaPlanes.delete();
             }
           });
 
@@ -221,7 +319,6 @@
                   cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
               }
               cv.threshold(mat, mat, bin.thresh, val, bin.code);
-
               cv.imshow('outputCanvas', mat);
               mat.delete();
           });
@@ -317,8 +414,7 @@
               cv.bilateralFilter(src, dst, fil.d, fil.sigColor, fil.sigSpace, cv.BORDER_DEFAULT);
             }
             cv.imshow('outputCanvas', dst);
-            src.delete();
-            dst.delete();
+            src.delete(); dst.delete();
           });
 
           var ks = filter.add(fil, 'ksize', kern).name('Kernel Size').listen();
@@ -334,8 +430,7 @@
               cv.medianBlur(src, dst, fil.ksize);
             }
             cv.imshow('outputCanvas', dst);
-            src.delete();
-            dst.delete();
+            src.delete(); dst.delete();
           });
           var sx = filter.add(fil, 'sigX', 0, 15, 1).name('Sigma X').listen();
           sx.onChange(function(val){
@@ -346,8 +441,7 @@
               cv.GaussianBlur(src, dst, ksize, val, fil.sigY, cv.BORDER_DEFAULT);
               cv.imshow('outputCanvas', dst);
             }
-            src.delete();
-            dst.delete();
+            src.delete(); dst.delete();
           });
           var sy = filter.add(fil, 'sigY', 0, 15, 1).name('Sigma Y').listen();
           sy.onChange(function(val){
@@ -358,8 +452,7 @@
               cv.GaussianBlur(src, dst, ksize, fil.sigX, val, cv.BORDER_DEFAULT);
               cv.imshow('outputCanvas', dst);
             }
-            src.delete();
-            dst.delete();
+            src.delete(); dst.delete();
           });
 
           var di = filter.add(fil, 'd', 1, 15, 1).name('Diameter').listen();
@@ -371,8 +464,7 @@
               cv.bilateralFilter(src, dst, val, fil.sigColor, fil.sigSpace, cv.BORDER_DEFAULT);
               cv.imshow('outputCanvas', dst);
             }
-            src.delete();
-            dst.delete();
+            src.delete(); dst.delete();
           });
           var sc = filter.add(fil, 'sigColor', 0, 255, 1).name('Sigma Color').listen();
           sc.onChange(function(val){
@@ -383,8 +475,7 @@
               cv.bilateralFilter(src, dst, fil.d, val, fil.sigSpace, cv.BORDER_DEFAULT);
               cv.imshow('outputCanvas', dst);
             }
-            src.delete();
-            dst.delete();
+            src.delete(); dst.delete();
           });
           var ss = filter.add(fil, 'sigSpace', 0, 255, 1).name('Sigma Space').listen();
           ss.onChange(function(val){
@@ -395,13 +486,24 @@
               cv.bilateralFilter(src, dst, fil.d, fil.sigColor, val, cv.BORDER_DEFAULT);
               cv.imshow('outputCanvas', dst);
             }
-            src.delete();
-            dst.delete();
+            src.delete(); dst.delete();
           });
 
-          var morph = gui.addFolder("Morphology");
-          var contours = gui.addFolder("Contours");
+          var morpho = gui.addFolder("Morphology");
+          var mor = new Morph();
+          var erosion = morpho.add(controller, 'Erosion');
+          var dilation = morpho.add(controller, 'Dilation');
+          var open = morpho.add(controller, 'Open');
+          var close = morpho.add(controller, 'Close');
+          morpho.add(mor, 'iter', 1, 10, 1).name('Iterations').listen();
+          var gradient  = morpho.add(controller, 'Gradient');
+          var top = morpho.add(controller, 'Top Hat');
+          var black = morpho.add(controller, 'Black Hat');
+          var getStruct = morpho.add(controller, 'Get Structuring Element');
 
+          var contours = gui.addFolder("Contours");
+          var con = new Contour();
+          var drawcon = contours.add(controller, 'Draw Contours');
         };
       }
 
@@ -418,18 +520,15 @@
           var dl = document.getElementById('dl');
           var canvas = document.getElementById('outputCanvas');
           var dataURL = canvas.toDataURL('image/jpeg', 1.0).replace("image/png", "image/octet-stream");
-
           dl.setAttribute('download', 'export.png');
           dl.setAttribute('href', dataURL);
       }
 
       function isCanvasBlank(canvas) {
           const context = canvas.getContext('2d');
-
           const pixelBuffer = new Uint32Array(
               context.getImageData(0, 0, canvas.width, canvas.height).data.buffer
           );
-
           return !pixelBuffer.some(color => color !== 0);
       }
 
