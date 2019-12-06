@@ -6,12 +6,12 @@
     <script type="text/javascript" src="../../js/xtk_edge.js"></script>
     <link rel="stylesheet" type="text/css" href="../../styles/fonts.css"/>
     <style>
-      html, body {
+      html, body { 
         background-color:#000;
         margin: 0;
         padding: 0;
         height: 100%;
-        overflow: hidden !important;
+        overflow: hidden !important;  
         font-family: din_condensed;
         font-size: 18pt;
       }
@@ -23,7 +23,7 @@
         // create a new test_renderer
         r = new X.renderer3D();
         r.init();
-
+        
         // UMASS BOSTON
         //
         // create a cube
@@ -49,15 +49,15 @@
 
         // setup the camera
         r.camera.position = [00, 00, 60];
-
+        
         // .. and render it
         r.render();
-
+        
       };
 
       clicked = false;
       window.onclick = function() {
-
+        
         if (clicked) return; // sometimes you click again by accident,
                              // and restart the animation.. let's not!
 
@@ -79,7 +79,7 @@
         setTimeout(function() {
           umassboston.visible = true;
         }, 400);
-
+        
         setTimeout(function() {
           umassboston.visible = false;
           r.camera.position = [0, 0, -25];
@@ -96,24 +96,40 @@
 
         var rotateCounter = 0;
 
-        var spinner1 = setInterval(function(){
+        var spinner0 = setInterval(function() {
           rotateCounter += 1;
+          bostongfx.transform.rotateX(1);
 
-          // console.log(rotateCounter*2);
-          if (rotateCounter*2 >= 90) {
-            clearInterval(spinner1); // this is not time-based now...
+          if (rotateCounter > 90) {
+            clearInterval(spinner0);
 
-            bostongfx.visible = false;
+            rotateCounter = 0;
 
-            // now the real CS460 logo..
-            create_cs460_logo();
-            return;
+            var spinner1 = setInterval(function(){
+              rotateCounter += 1;
+
+              // console.log(rotateCounter*2);
+              if (rotateCounter*2 >= 90) {
+                clearInterval(spinner1); // this is not time-based now...
+
+                bostongfx.visible = false;
+
+                // now the real CS460 logo..
+                create_cs460_logo();
+                return;
+
+              }
+
+              bostongfx.transform.rotateY(rotateCounter*2);
+            },100);
+
 
           }
 
-          bostongfx.transform.rotateY(rotateCounter*2);
-        },100);
 
+        }, 10);
+
+        
 
 
       };
@@ -134,23 +150,23 @@
         cs460logo.points = new X.triplets(648000);
         cs460logo.normals = new X.triplets(648000);
         cs460logo.colors = new X.triplets(648000);
-
+        
         // and set the type to POINTS
         cs460logo.type = 'POINTS';
-
+        
         // create the points, normals and colors
         for ( var x = 0; x < 60; x++) {
           for ( var y = 0; y < 60; y++) {
             for ( var z = 0; z < 60; z++) {
-
+              
               cs460logo.points.add(x, y, z);
               cs460logo.normals.add(1, 1, 1);
               cs460logo.colors.add(x/60, y/60, z/60);
-
+              
             }
           }
         }
-
+        
         // add the object
         r.add(cs460logo);
 
@@ -158,7 +174,7 @@
         r.camera.position = [500, 500, 500];
 
         setTimeout(zoom_into_cs460logo, 2000);
-
+        
       };
 
 
@@ -169,15 +185,15 @@
 
           // we can stop once we are far away enough
           if (r.camera.view[14] > 1000) {
-            clearInterval(zoomer);
-            // console.log('zooming done');
+            clearInterval(zoomer); 
+            // console.log('zooming done'); 
 
             setTimeout(function() {
               document.getElementById('caption').style.display = 'none';
 
               start_content();
             }, 2000);
-
+            
             return;
 
           }
@@ -203,20 +219,20 @@
         voice.load();
 
         frames = ['content1', 'content2', 'content3', 'content4', 'content5', null];
-        times = [0, // Today...
-                 1500, //
-                 4000, // And
-                 5500, //
-                 8500, // this is lecture 19
-                 12000];
+        times = [0, // Today... 
+                 1200, // 
+                 4500, // And
+                 6000, // 
+                 11500, // this is lecture 10
+                 15000];
 
         //
         // this is (like the whole animation concept), a little hacky!!
         //
         for (var f in frames) {
-
+    
           setTimeout(function(f) {
-
+            
             if (f > 0) {
               document.getElementById(frames[f-1]).style.display = 'none';
             }
@@ -233,11 +249,11 @@
                     return;
                   }
                   music.volume -= .05;
-
+                  
                 }, 500);
               },3000);
 
-
+              
             }
 
           }.bind(this,f), times[f]);
@@ -255,20 +271,20 @@
       <source src="bensound-evolution.mp3">
     </audio>
     <audio id='voice'>
-      <source src="lecture25.mp3">
+      <source src="lecture10.mp3">
     </audio>
   </div>
     <div id='caption' style='display:none;position: absolute;color:white;top:45%;left:50%;margin-left:50px;font-size:440%'>CS460</div>
 
     <div id='content1' style='display:none;position: absolute;color:white;top:25%;left:30%;margin-left:50px;font-size:440%'>Today...</div>
 
-    <div id='content2' style='display:none;position: absolute;color:white;top:30%;left:20%;margin-left:50px;font-size:440%'>We will learn about textures..</div>
+    <div id='content2' style='display:none;position: absolute;color:white;top:30%;left:20%;margin-left:50px;font-size:440%'>We will continue our vanilla WebGL code...</div>
 
     <div id='content3' style='display:none;position: absolute;color:white;top:20%;left:10%;margin-left:50px;font-size:440%'>And...</div>
 
-    <div id='content4' style='display:none;position: absolute;color:white;top:35%;left:20%;margin-left:50px;font-size:440%'>We will use them to decorate geometries!</div>
+    <div id='content4' style='display:none;position: absolute;color:white;top:35%;left:20%;margin-left:50px;font-size:440%'>We will learn about rendering primitives, indexed geometries, and other tricks!</div>
 
-    <div id='content5' style='display:none;position: absolute;color:white;top:45%;left:40%;margin-left:50px;font-size:440%'>This is lecture 25.</div>
+    <div id='content5' style='display:none;position: absolute;color:white;top:45%;left:40%;margin-left:50px;font-size:440%'>This is lecture 10.</div>    
 
   </body>
 </html>
