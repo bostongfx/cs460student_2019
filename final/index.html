@@ -93,36 +93,33 @@
               this.adapt = cv.ADAPTIVE_THRESH_MEAN_C
           };
 
+          var Blur = function() {
+            this.ksize = 3;
+            this.sigX = 0;
+            this.sigY = 0;
+            this.type = 'Gaussian Blur';
+            this.d = 9;
+            this.sigColor = 75;
+            this.sigSpace = 75;
+          }
+
           controller = {
               "Gray": function(){
                   gray = true;
-                  if (isCanvasBlank(document.getElementById('outputCanvas'))) {
-                      let mat = cv.imread(imgElement);
-                      cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
-                      cv.imshow('outputCanvas', mat);
-                      mat.delete();
-                  }
-                  else {
-                      let mat = cv.imread(document.getElementById('outputCanvas'));
-                      cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
-                      cv.imshow('outputCanvas', mat);
-                      mat.delete();
-                  }
+                    let mat = cv.imread(document.getElementById('outputCanvas'));
+                    cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
+                    cv.imshow('outputCanvas', mat);
+                    mat.delete();
               },
               "HSV": function(){
-                  hsv = true;
-                  if (isCanvasBlank(document.getElementById('outputCanvas'))) {
-                      let mat = cv.imread(imgElement);
-                      cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV);
-                      cv.imshow('outputCanvas', mat);
-                      mat.delete();
-                  }
-                  else {
-                      let mat = cv.imread(document.getElementById('outputCanvas'));
-                      cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV);
-                      cv.imshow('outputCanvas', mat);
-                      mat.delete();
-                  }
+                    hsv = true;
+                    let mat = cv.imread(document.getElementById('outputCanvas'));
+                    cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV);
+                    cv.imshow('outputCanvas', mat);
+                    mat.delete();
+              },
+              'channel': function(){
+
               }
           }
 
@@ -131,8 +128,40 @@
           var colors = gui.addFolder( "Colors" );
           colors.add( controller, 'Gray' );
           colors.add( controller, 'HSV' );
-          colors.add( controller, ['R', 'G', 'B'])
-          colors.open();
+          var channelrgb = colors.add( controller, 'channel', ['R', 'G', 'B']).name('Channel').listen();
+          channelrgb.onChange(function(val){
+
+            let src = cv.imread(document.getElementById('outputCanvas'));
+            let rgbaPlanes = new cv.MatVector();
+            cv.split(src, rgbaPlanes);
+
+            if(val == 'R') {
+              r = true;
+              let ch = rgbaPlanes.get(0);
+              cv.imshow('outputCanvas', ch);
+              src.delete();
+              ch.delete();
+              rgbaPlanes.delete();
+            }
+            if(val == 'G') {
+              g = true;
+              let ch = rgbaPlanes.get(1);
+              cv.imshow('outputCanvas', ch);
+              src.delete();
+              ch.delete();
+              rgbaPlanes.delete();
+            }
+            if(val == 'B') {
+              b = true;
+              let ch = rgbaPlanes.get(2);
+              cv.imshow('outputCanvas', ch);
+              src.delete();
+              ch.delete();
+              rgbaPlanes.delete();
+            }
+          });
+
+
           var b_threshold = gui.addFolder("Threshold");
           var bin = new Thresh();
           bin.type = cv.THRESH_BINARY;
@@ -164,7 +193,6 @@
             mat.delete();
           });
           threshType.onChange(function(val) {
-              bin.type = val;
               switch(val) {
                   case 'Binary': bin.code = cv.THRESH_BINARY;break;
                   case 'Binary Inv': bin.code = cv.THRESH_BINARY_INV;break;
@@ -185,11 +213,6 @@
               mat.delete();
           });
           b_threshold.add(bin, 'alpha', 0, 255, 1).name('Max Val').onChange( function(val) {
-              // var canvas = document.getElementById('outputCanvas');
-              // const context = canvas.getContext('2d', { alpha: false });
-              // context.clearRect(0, 0, canvas.width, canvas.height);
-
-
               let mat = cv.imread(imgElement);
               if (gray) {
                   cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
@@ -202,7 +225,6 @@
               cv.imshow('outputCanvas', mat);
               mat.delete();
           });
-          b_threshold.open();
 
 
           var a_threshold = gui.addFolder("Adaptive Thresh (Requires 'Binary'/'Inv')");
@@ -242,7 +264,7 @@
             vals.push(i);
           }
           a_threshold.add(bin, 'block', vals).name('Block Size').onChange( function(val) {
-            bin.block = parseInt(val);
+              bin.block = parseInt(val);
               let mat = cv.imread(imgElement);
               cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
 
@@ -257,7 +279,7 @@
               cv.imshow('outputCanvas', mat);
               mat.delete();
           });
-          a_threshold.add(bin, 'c', -20, 20, 1).name('C').onChange( function(val) {
+          a_threshold.add(bin, 'c', -40, 40, 1).name('C').onChange( function(val) {
               let mat = cv.imread(imgElement);
               cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
 
@@ -272,11 +294,113 @@
               cv.imshow('outputCanvas', mat);
               mat.delete();
           });
-          a_threshold.open();
 
-
+          var kern = [];
+          for (i = 3; i <= 115; i +=2){
+            kern.push(i);
+          }
           var filter = gui.addFolder("Filters");
+          var fil = new Blur();
+          var filtype = filter.add(fil, 'type', ['Gaussian Blur', 'Median Blur', 'Bilateral Filter']).name('Type').listen();
+          filtype.onChange(function(){
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            let ksize = new cv.Size(fil.ksize, fil.ksize);
+            if(fil.type == 'Gaussian Blur'){
+              cv.GaussianBlur(src, dst, ksize, fil.sigX, fil.sigY, cv.BORDER_DEFAULT);
+            }
+            else if (fil.type == 'Median Blur') {
+              cv.medianBlur(src, dst, fil.ksize);
+            }
+            else if (fil.type == 'Bilateral Filter') {
+              cv.cvtColor(src, src, cv.COLOR_RGBA2RGB, 0);
+              cv.bilateralFilter(src, dst, fil.d, fil.sigColor, fil.sigSpace, cv.BORDER_DEFAULT);
+            }
+            cv.imshow('outputCanvas', dst);
+            src.delete();
+            dst.delete();
+          });
 
+          var ks = filter.add(fil, 'ksize', kern).name('Kernel Size').listen();
+          ks.onChange(function(val){
+            fil.ksize = parseInt(val);
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            let ksize = new cv.Size(parseInt(val), parseInt(val));
+            if(fil.type == 'Gaussian Blur'){
+              cv.GaussianBlur(src, dst, ksize, fil.sigX, fil.sigY, cv.BORDER_DEFAULT);
+            }
+            else if (fil.type == 'Median Blur') {
+              cv.medianBlur(src, dst, fil.ksize);
+            }
+            cv.imshow('outputCanvas', dst);
+            src.delete();
+            dst.delete();
+          });
+          var sx = filter.add(fil, 'sigX', 0, 15, 1).name('Sigma X').listen();
+          sx.onChange(function(val){
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            let ksize = new cv.Size(fil.ksize, fil.ksize);
+            if(fil.type == 'Gaussian Blur'){
+              cv.GaussianBlur(src, dst, ksize, val, fil.sigY, cv.BORDER_DEFAULT);
+              cv.imshow('outputCanvas', dst);
+            }
+            src.delete();
+            dst.delete();
+          });
+          var sy = filter.add(fil, 'sigY', 0, 15, 1).name('Sigma Y').listen();
+          sy.onChange(function(val){
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            let ksize = new cv.Size(fil.ksize, fil.ksize);
+            if(fil.type == 'Gaussian Blur'){
+              cv.GaussianBlur(src, dst, ksize, fil.sigX, val, cv.BORDER_DEFAULT);
+              cv.imshow('outputCanvas', dst);
+            }
+            src.delete();
+            dst.delete();
+          });
+
+          var di = filter.add(fil, 'd', 1, 15, 1).name('Diameter').listen();
+          di.onChange(function(val){
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            cv.cvtColor(src, src, cv.COLOR_RGBA2RGB, 0);
+            if(fil.type == 'Bilateral Filter') {
+              cv.bilateralFilter(src, dst, val, fil.sigColor, fil.sigSpace, cv.BORDER_DEFAULT);
+              cv.imshow('outputCanvas', dst);
+            }
+            src.delete();
+            dst.delete();
+          });
+          var sc = filter.add(fil, 'sigColor', 0, 255, 1).name('Sigma Color').listen();
+          sc.onChange(function(val){
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            cv.cvtColor(src, src, cv.COLOR_RGBA2RGB, 0);
+            if(fil.type == 'Bilateral Filter') {
+              cv.bilateralFilter(src, dst, fil.d, val, fil.sigSpace, cv.BORDER_DEFAULT);
+              cv.imshow('outputCanvas', dst);
+            }
+            src.delete();
+            dst.delete();
+          });
+          var ss = filter.add(fil, 'sigSpace', 0, 255, 1).name('Sigma Space').listen();
+          ss.onChange(function(val){
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            cv.cvtColor(src, src, cv.COLOR_RGBA2RGB, 0);
+            if(fil.type == 'Bilateral Filter') {
+              cv.bilateralFilter(src, dst, fil.d, fil.sigColor, val, cv.BORDER_DEFAULT);
+              cv.imshow('outputCanvas', dst);
+            }
+            src.delete();
+            dst.delete();
+          });
+
+          var morph = gui.addFolder("Morphology");
+          var contours = gui.addFolder("Contours");
 
         };
       }
