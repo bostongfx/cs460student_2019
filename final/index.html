@@ -113,7 +113,8 @@
             // this.color
             // this.thickness
             // this.lineTypw
-            // this.heirarchy
+            this.hierarchy = 'RETR_LIST';
+            this.hierval = cv.RETR_LIST;
             // this.maxLevel
             // this.offset
           }
@@ -212,9 +213,12 @@
               'Draw Contours': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
                 let dst = cv.Mat.zeros(src.cols, src.rows, cv.CV_8UC3);
+                cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
+                // cv.threshold(src, src, 120, 200, cv.THRESH_BINARY);
                 let contours = new cv.MatVector();
                 let hierarchy = new cv.Mat();
-                cv.findContours(src, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
+                // You can try more different parameters
+                cv.findContours(src, contours, hierarchy, con.hierval, cv.CHAIN_APPROX_SIMPLE);
                 // draw contours with random Scalar
                 for (let i = 0; i < contours.size(); ++i) {
                     let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255),
@@ -224,7 +228,6 @@
                 cv.imshow('outputCanvas', dst);
                 src.delete(); dst.delete(); contours.delete(); hierarchy.delete();
               }
-
           }
 
           var gui = new dat.GUI();
@@ -504,6 +507,17 @@
           var contours = gui.addFolder("Contours");
           var con = new Contour();
           var drawcon = contours.add(controller, 'Draw Contours');
+          var hier = contours.add(con, 'hierarchy',['RETR_LIST',
+          'RETR_TREE', 'RETR_CCOMP', 'RETR_EXTERNAL']).name('Hierarchy').listen();
+          hier.onChange(function(val){
+            console.log(val);
+            switch(val) {
+                case 'RETR_LIST': con.hierval = cv.RETR_LIST;break;
+                case 'RETR_TREE': con.hierval = cv.RETR_TREE;break;
+                case 'RETR_CCOMP': con.hierval = cv.RETR_CCOMP;break;
+                case 'RETR_EXTERNAL': con.hierval = cv.RETR_EXTERNAL;break;
+              }
+          });
         };
       }
 
@@ -513,7 +527,6 @@
           mat.delete();
           gray = false;
           hsv = false;
-
       }
 
       function exportImg() {
