@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>CS460 Computer Graphics at the University of Massachusetts Boston</title>
+    <script type="text/javascript" src="../../js/xtk_edge.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../styles/fonts.css"/>
+    <style>
+      html, body {
+        background-color:#000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+        font-family: din_condensed;
+        font-size: 18pt;
+      }
+    </style>
+
+    <script type='text/javascript'>
+      window.onload = function() {
+
+        var param = window.location.search.substring(1);
+        if (param != "") {
+          document.getElementById('title').innerHTML = decodeURIComponent(param);
+        }
+
+        // create a new test_renderer
+        r = new X.renderer3D();
+        r.init();
+
+        // create a new X.object
+        obj = new X.object();
+
+        // add the points, normals and colors
+        //
+        // this means 648000 / 3 == 216000 vertices
+        // on my work machine I could set 24000000 / 3 == 8 mio vertices
+        obj.points = new X.triplets(648000);
+        obj.normals = new X.triplets(648000);
+        obj.colors = new X.triplets(648000);
+
+        // and set the type to POINTS
+        obj.type = 'POINTS';
+
+        // create the points, normals and colors
+        for ( var x = 0; x < 60; x++) {
+          for ( var y = 0; y < 60; y++) {
+            for ( var z = 0; z < 60; z++) {
+
+              obj.points.add(x, y, z);
+              obj.normals.add(1, 1, 1);
+              obj.colors.add(x/60, y/60, z/60);
+
+            }
+          }
+        }
+
+        // add the object
+        r.add(obj);
+
+        // setup the camera
+        r.camera.position = [500, 500, 500];
+
+        // .. and render it
+        r.render();
+
+      };
+
+      clicked = false;
+      window.onclick = function() {
+
+        if (clicked) {
+          return;
+        }
+
+        clicked=true;
+
+        // start the music
+        var music = document.getElementById('music');
+        music.autoplay = true;
+        music.load();
+
+        setTimeout(function() {
+          fadeout();
+        },4800)
+
+
+      }
+
+      function fadeout() {
+
+        document.getElementById('caption').style.display = 'none';
+
+        var zoomer = setInterval(function() {
+
+          // we can stop once we are far away enough
+          if (r.camera.view[14] > 1000) {
+            clearInterval(zoomer);
+            console.log('zooming done');
+
+            document.getElementById('title').style.display = 'block';
+
+            return;
+          }
+
+          // zoom in
+          r.camera.zoomIn();
+
+        }, 10);
+      };
+
+    </script>
+  </head>
+  <body>
+    <div style="visibility:hidden">
+      <audio id='music'>
+        <source src="music.mp3">
+      </audio>
+    </div>
+    <div id='title' style='display:none;position: absolute;color:white;top:15%;left:20%;margin-left:50px;font-size:440%'>Final Project</div>
+    <div id='caption' style='position: absolute;color:white;top:45%;left:50%;margin-left:50px;font-size:440%'>CS460</div>
+  </body>
+</html>
