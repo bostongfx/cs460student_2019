@@ -32,29 +32,44 @@
   // 15 x 10 不会崩溃
   // cannot load 900 x 600
   // layer1
-  for(var i = 0; i < 15; i++){
-    for(var j = 0; j < 10; j++){
-    var cube1 = new X.cube();
-    cube1.center = [i * 2, j * 2, 0];
-    cube1.lengthX = cube1.lengthY = cube1.lengthZ = 1;
-    cube1.color = [150 % i, 150 % j, 1];
+//   for(var i = 0; i < 15; i++){
+//     for(var j = 0; j < 10; j++){
+//       var cube1 = new X.cube();
+//       cube1.center = [i * 2, j * 2, 0];
+//       cube1.lengthX = cube1.lengthY = cube1.lengthZ = 1;
+//       cube1.color = [150 % i, 150 % j, 1];
 
-    layer.add(cube1);
-    layer.render();
-    }
-  }
+//       layer.add(cube1);
+//       layer.render();
+//     }
+//   }
 
-  // layer2
-  for(var i = 0; i < 15; i++){
-    for(var j = 0; j < 10; j++){
-      var cube2 = new X.cube();
-      cube2.center = [i * 2 - 10, j * 2 - 10, 2];
-      cube2.lengthX = cube2.lengthY = cube2.lengthZ = 1;
-      cube2.color = [180 % i, 180 % j, 2];
+//   // layer2
+//   for(var i = 0; i < 15; i++){
+//     for(var j = 0; j < 10; j++){
+//       var cube2 = new X.cube();
+//       cube2.center = [i * 2 - 10, j * 2 - 10, 2];
+//       cube2.lengthX = cube2.lengthY = cube2.lengthZ = 1;
+//       cube2.color = [180 % i, 180 % j, 2];
 
-      layer.add(cube2)
-      layer.render();
-    }
+//       layer.add(cube2)
+//       layer.render();
+//     }
+//   }
+
+  // layer 3D
+  for(var i = 0; i < 10; i++){
+      for(var j = 0; j < 10; j++){
+          for(var z = 0; z < 5; z++){
+              var cube = new X.cube();
+              cube.center = [i * 2, j * 2, z * 2];
+              cube.lengthX = cube.lengthY = cube.lengthZ = 1;
+              cube.color = [150 % i, 150 % j, 150 % z];
+
+              layer.add(cube);
+              layer.render();
+          }
+      }
   }
 
   }
