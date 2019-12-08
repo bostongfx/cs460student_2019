@@ -1,22 +1,51 @@
 <html>
   <head>
-    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-    <meta content="utf-8" http-equiv="encoding">
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  
+  <style>
+  body {
+  background-color: black;
+  color: white; /* font color */
+  font-family: sans-serif;
+  padding: 0;
+  height: 100%;
+  overflow: hidden !important;
+  }
+  #logo {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  }
+  </style>
+  <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+  
+  <script type = "text/javascript">
+  
+  window.onload = function(){
     
-    <style>
-      body {
-        background-color: black;
-        color: white; /* font color */
-        font-family: sans-serif;
-        padding: 0;
-        height: 100%;
-        overflow: hidden !important;
+    //create the layer1 of 3D cubes
+    layer1 = new X.renderer3D();
+    layer1.init();
+
+    //create a 900 x 600 pixels
+    for(var i = 0; i < 9; i++){
+      for(var j = 0; j < 6; j++){
+        var cube1 = new X.cube();
+        cube1.center = [i * 2, j * 2, 0];
+        cube1.lengthX = cube1.lengthY = cube1.lengthZ = 1;
+        cube1.color = [150 % i, 150 % j, 1];
+
+        layer1.add(cube1);
+        layer1.render();
       }
-      #logo {
-        position: absolute;
-        right: 10px;
-        top: 10px;
-      }
-    </style>
+    }
+
+  }
+
+  </script>
   </head>
+  <body>
+
+  </body>
 </html>
