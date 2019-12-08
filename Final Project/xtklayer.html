@@ -29,11 +29,9 @@
   layer.init();
 
   // create a 15 x 10 pixels
-  // 15 x 10 不会崩溃
-  // cannot load 900 x 600
   // layer1
-  for(var i = 0; i < 15; i++){
-    for(var j = 0; j < 10; j++){
+  for(var i = 0; i < 30; i++){
+    for(var j = 0; j < 20; j++){
       var cube1 = new X.cube();
       cube1.center = [i * 2, j * 2, 0];
       cube1.lengthX = cube1.lengthY = cube1.lengthZ = 1;
@@ -45,8 +43,8 @@
   layer.render();
 
   // layer2
-  for(var i = 0; i < 15; i++){
-    for(var j = 0; j < 10; j++){
+  for(var i = 0; i < 30; i++){
+    for(var j = 0; j < 20; j++){
       var cube2 = new X.cube();
       cube2.center = [i * 2 - 10, j * 2 - 10, 2];
       cube2.lengthX = cube2.lengthY = cube2.lengthZ = 1;
