@@ -1,0 +1,53 @@
+       
+       var btnSphere = app.CreateButton("Add Sphere +");
+       btnSphere.SetOnTouch(function()
+       {
+           var xpos = txtXPos.GetText();
+           var ypos = txtYPos.GetText();
+           var zpos = txtZPos.GetText();
+           
+           var rVal  = skbRed.GetValue();
+           var gVal  = skbGreen.GetValue();
+           var bVal  = skbBlue.GetValue();
+           
+           var sphereName = "sphere" + countSphere;
+           
+           var code = ""
+           code += (sphereName + " = new X.sphere();")
+           code += (sphereName + ".center" + " = [" + xpos + "," + ypos + "," + zpos + "];")
+           code += (sphereName + ".color" + " = [" + rVal + "," + gVal + "," + bVal + " ];")
+           code += ("r.add( " + sphereName + ");")
+           
+app.SaveText("sphereVar", code);
+countSphere++;
+app.Execute(app.LoadText("sphereVar"))
+app.Execute("r.render();")
+});
+layDebug.AddChild(btnSphere);
+
+
+    /*
+    app.Script( "controlDrawer.js" );
+  
+       var cube1 = xds.cube("cubetest", 0, cubecounter,0,0,01,1,0);
+        app.Execute(cube1);
+        var sphere1 = xds.sphere("spheretest",0,spherecounter,50,0,0,0,1,0,1);
+        app.Execute( sphere1 );
+        */
+        
+
+ 
+ 
+               
+                  /*
+                   var cubeName = "cube" + countCube;
+                  var code = ""
+                  code += (cubeName + " = new X.cube();")
+                  code += (cubeName + ".center" + " = [" + xpos + "," + ypos + "," + zpos + "];")
+                  code += (cubeName + ".color" + " = [" + rVal + "," + gVal + "," + bVal + " ];")
+                  code += ("r.add( " + cubeName + ");")
+                  app.SaveText("cubeVar", code);
+                  countCube++;
+                  app.Execute(app.LoadText("cubeVar"))
+                  app.Execute("r.render();")
+                  */

@@ -1,0 +1,351 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width">
+    <script src='file:///android_asset/app.js'></script>
+     <script type="text/javascript" src="js/xtk_edge.js"></script>
+</head>
+<script>
+
+var drawerWidth = 0.45;
+var r;
+var xds;
+
+//Called after application is started.
+function OnStart()
+{
+    app.SetOptions("ignoreerrors");
+    r = new X.renderer3D();
+    r.init();
+    xds = new dsx();
+    var cubecounter = xds.counter("cube");
+    var spherecounter = xds.counter("sphere");
+    var generalcounter = xds.counter("general");
+    var layDebug = app.CreateLayout("linear", "VTop");
+    var edt = app.CreateTextEdit("", drawerWidth, 0.18, "nospell,mono");
+    btnDebug = app.CreateButton("Execute Code");
+    btnDebug.SetOnTouch(function ()
+    {
+        var code = edt.GetText();
+        app.Execute(code);
+        app.Execute('r.render();');
+        app.CloseDrawer("left");
+        app.SetClipboardText(edt.GetText());
+        edt.SetText("");
+    }
+    );
+    layDebug.AddChild(edt);
+    layDebug.AddChild(btnDebug);
+
+    var txtXPos = app.CreateTextEdit("0", drawerWidth / 3, null, "singleline,numbers");
+    txtXPos.SetHint("X-Pos");
+    var txtYPos = app.CreateTextEdit("0", drawerWidth / 3, null, "singleline,numbers");
+    txtYPos.SetHint("Y-Pos");
+    var txtZPos = app.CreateTextEdit("0", drawerWidth / 3, null, "singleline,numbers");
+    txtZPos.SetHint("Z-Pos");
+    var layXYZPos = app.CreateLayout("linear", "horizontal");
+    layXYZPos.AddChild(txtXPos);
+    layXYZPos.AddChild(txtYPos);
+    layXYZPos.AddChild(txtZPos);
+    layDebug.AddChild(layXYZPos);
+    var labelRed = app.CreateText("Red:0.0");
+    var skbRed = app.CreateSeekBar(drawerWidth, -1);
+    skbRed.SetRange(1.0);
+    skbRed.SetValue(0);
+    skbRed.SetOnChange(function ()
+    {
+        labelRed.SetText("Red:" + skbRed.GetValue());
+    }
+    );
+    var labelGreen = app.CreateText("Green:0.0");
+    var skbGreen = app.CreateSeekBar(drawerWidth, -1);
+    skbGreen.SetRange(1.0);
+    skbGreen.SetValue(0);
+    skbGreen.SetOnChange(function ()
+    {
+        labelGreen.SetText("Green:" + skbGreen.GetValue());
+    }
+    );
+    var labelBlue = app.CreateText("Blue:0.0");
+    var skbBlue = app.CreateSeekBar(drawerWidth, -1);
+    skbBlue.SetRange(1.0);
+    skbBlue.SetValue(0);
+    skbBlue.SetOnChange(function ()
+    {
+        labelBlue.SetText("Blue:" + skbBlue.GetValue());
+    }
+    );
+    var createHexagon = app.CreateButton("Make Hexagon Array");
+    createHexagon.SetOnTouch(function ()
+    {
+        var items = [
+            "HexagonA", "HexagonB", "HexagonC",
+            "HexagonD", "HexagonE", "HexagonF",
+            "HexagonG", "HexagonH", "HexagonI",
+            "HexagonJ", "HexagonK", "HexagonL"
+        ]
+        var xpos = [
+            0, -9, -12, -9, 0, 3,
+        ];
+        // 0,-36,-48,
+        // -36,0,12
+        var ypos = [
+            0, 0, 4.5,
+            9, 9, 4.5,
+        ];
+        // 0, 0, 18,
+        // 36,36,18
+        var zpos = [
+            0, 0, 0,
+            0, 0, 0,
+        ];
+        // 0,0,0,
+        // 0,0,0,
+        for (var i in xpos)
+        {
+            var x = xpos[i]
+                x *= 3;
+            var y = ypos[i];
+            y *= 3;
+            var z = zpos[i];
+            z *= 3;
+
+            var code = ""
+                code += (items[i] + " = new X.cube();")
+                code += (items[i] + ".scale" + " = [3,3,3];");
+            code += (items[i] + ".center" + " = [" + x + "," + y + "," + z + "];")
+            code += (items[i] + ".color" + " = [" + 0 + "," + 0 + "," + 1 + " ];")
+            code += ("r.add( " + items[i] + ");")
+            app.Execute(code);
+        }
+        app.Execute("r.render()");
+    }
+    )
+    layDebug.AddChild(createHexagon);
+    btnspch = app.CreateButton("start speech");
+    btnspch.SetOnTouch(function ()
+    {
+        speech = app.CreateSpeechRec();
+        speech.SetOnReady(function ()
+        {
+            app.ShowPopup("Listening...", "Short");
+        }
+        );
+        speech.SetOnResult(function (results)
+        {
+            if (results[0].split(",")[0] == "Cube")
+            {
+                var rVal = skbRed.GetValue();
+                var gVal = skbGreen.GetValue();
+                var bVal = skbBlue.GetValue();
+                var xpos = txtXPos.GetText();
+                var ypos = txtYPos.GetText();
+                var zpos = txtZPos.GetText();
+                var name = results[0].split(",")[1] || "voicecube";
+                var rVal = skbRed.GetValue();
+                var gVal = skbGreen.GetValue();
+                var bVal = skbBlue.GetValue();
+                
+                app.Execute(xds.voicecube(name, xpos, ypos, zpos, rVal, gVal, bVal));
+                generalcounter++;
+        
+                app.ShowPopup(name);
+            }
+        }
+        );
+        speech.SetOnError(function ()
+        {
+            app.ShowPopup("Please speak more clearly!");
+        }
+        );
+        speech.Recognize();
+    }
+    );
+    layDebug.AddChild(btnspch);
+    layRGB = app.CreateLayout("linear", "Vertical");
+    layRGB.AddChild(labelRed);
+    layRGB.AddChild(skbRed);
+    layRGB.AddChild(labelGreen);
+    layRGB.AddChild(skbGreen);
+    layRGB.AddChild(labelBlue);
+    layRGB.AddChild(skbBlue);
+    layDebug.AddChild(layRGB);
+
+    var btnCube = app.CreateButton("Add Cube +");
+    btnCube.SetOnTouch(function ()
+    {
+        var xpos = txtXPos.GetText();
+        var ypos = txtYPos.GetText();
+        var zpos = txtZPos.GetText();
+        var rVal = skbRed.GetValue();
+        var gVal = skbGreen.GetValue();
+        var bVal = skbBlue.GetValue();
+        var code = xds.cube("cube" + cubecounter, xpos, ypos, zpos, rVal, gVal, bVal)
+            cubecounter++
+            app.Execute(code)
+            // alert(cubecounter)
+    }
+    );
+    layDebug.AddChild(btnCube);
+    var btnSphere = app.CreateButton("Add Sphere +");
+    btnSphere.SetOnTouch(function ()
+    {
+        var xpos = txtXPos.GetText();
+        var ypos = txtYPos.GetText();
+        var zpos = txtZPos.GetText();
+        var rVal = skbRed.GetValue();
+        var gVal = skbGreen.GetValue();
+        var bVal = skbBlue.GetValue();
+        var code = xds.sphere("sphere" + spherecounter, xpos, ypos, zpos, rVal, gVal, bVal)
+            spherecounter++
+            app.Execute(code)
+            // alert(spherecounter)
+    }
+    );
+    layDebug.AddChild(btnSphere);
+    objlist = app.CreateList(",",drawerWidth,0.63);
+    
+    btnobjlst = app.CreateButton("getobjs");
+    btnobjlst.SetOnTouch(function(){
+//        alert()
+// var objtmp = "";
+objlist.SetList();
+var objtmplst = xds.getobjlst();
+for (var i in objtmplst)
+{
+ objlist.AddItem(objtmplst[i].split(":")[0],objtmplst[i].split(":")[1]);
+}
+// alert(objtmp);
+
+
+// objlist.SetList();
+// alert(xds.getobjlst());
+        });
+        
+        // layDebug.AddChild(objlist);
+        // layDebug.AddChild(btnobjlst);
+        
+        layObjDebug = app.CreateLayout("linear","VTop");
+        layObjDebug.AddChild(objlist);
+        layObjDebug.AddChild(btnobjlst);
+        
+    // set camera further away!
+    r.camera.position = [0, 0, 1000];
+    // render everything!
+    r.render();
+        app.AddDrawer(layObjDebug, "right", drawerWidth);
+
+    app.AddDrawer(layDebug, "left", drawerWidth);
+}
+
+
+function dsx()
+{
+    dsx.objectsarray = [];
+    var objlst = [];
+    //create new xtk obj counter
+    this.counter = function (name)
+    {
+        //counter name
+        this.name = name;
+        var cname = "counter_" + this.name
+            //counter as new variable (integer counter)
+            this.cnt = cname;
+        //set count to 0
+        cname = 0;
+        //return counter object
+        return cname;
+    }
+    this.cube = function (name, x, y, z, r, g, b)
+    {
+        //obj counter
+        //   this.counter = counter;
+        //increment counter by 1
+        //   counter+=1;
+        // alert(this.counter)
+   dsx.objlstput(name,"cube");
+   var code = ""
+            code += (name + " = new X.cube(); \n ")
+            code += (name + ".center" + " = [" + x + "," + y + "," + z + "]; \n ")
+            code += (name + ".color" + " = [" + r + "," + g + "," + b + " ]; \n ")
+            code += ("r.add( " + name + "); \n ")
+            code += ("r.render(); \n ");
+        return code;
+    }
+    
+    this.voicecube = function (name, x, y, z, r, g, b)
+    {
+        //obj counter
+        //   this.counter = counter;
+        //increment counter by 1
+        //   counter+=1;
+        // alert(this.counter)
+   dsx.objlstput(name,"cube");
+   var code = ""
+            code += (name + " = new X.cube(); \n ")
+            code += (name + ".center" + " = [" + x + "," + y + "," + z + "]; \n ")
+            code += (name + ".color" + " = [" + r + "," + g + "," + b + " ]; \n ")
+            code += ("r.add( " + name + "); \n ")
+            code += ("r.render(); \n ");
+        return code;
+    }
+    
+    this.sphere = function (name, x, y, z, r, g, b)
+    {
+        dsx.objlstput(name,"sphere");
+        var code = ""
+            code += (name + " = new X.sphere(); \n ")
+            code += (name + ".center" + " = [" + x + "," + y + "," + z + "]; \n ")
+            code += (name + ".color" + " = [" + r + "," + g + "," + b + " ]; \n ")
+            code += ("r.add( " + name + "); \n ")
+            code += ("r.render(); \n ");
+        return code;
+    }
+    dsx.objlstput = function (item, type)
+    {
+        this.item = item;
+        this.type = type;
+        dsx.objectsarray.push(this.item + ":" + this.type);
+    }
+    
+    this.getobjlst = function ()
+    {
+        return dsx.objectsarray;
+    }
+    this.objlstget = function (name)
+    {
+        this.name = name;
+        this.idx = 0;
+        if (dsx.objectsarray.includes(this.name))
+        {
+            this.idx = dsx.objectsarray.indexOf(this.name);
+        }
+        return dsx.objectsarray[this.idx];
+    }
+}
+
+</script>
+ 
+<style>
+      body {
+        background-color: clear;
+        color: white; /* font color */
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+        }
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+      
+</style>
+
+<body onload="app.Start()">
+<div id="logo"><img style="height:60px" src="./Img/cs460.png"></div>
+
+	
+</body>
+</html>
