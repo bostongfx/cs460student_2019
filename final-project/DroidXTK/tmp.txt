@@ -51,3 +51,70 @@ layDebug.AddChild(btnSphere);
                   app.Execute(app.LoadText("cubeVar"))
                   app.Execute("r.render();")
                   */
+                  
+                  
+                  
+           /*var fileName = rootPath + "/" + name + ".txt"
+    var stuff = 
+     {
+      "name": name,
+      "color": {
+        "r": r,
+        "g": g,
+        "b": b,
+        "a": 1.0
+      },
+      "position": {
+        "x": x ,
+        "y": y,
+        "z": z
+      }
+    }
+    
+    dsx.writeAsJson(fileName,stuff);
+    var newobj = dsx.readAsJson(fileName);
+    alert(newobj.name);
+    */
+   /* 
+   //debug
+   alert("name-" + newobj.name 
+   + "\n" + "name-" + newobj.name + "\n"
+   + "\n" + "color\n" 
+   + "red-" +  newobj.color.r + "\n"
+   + "green-" + newobj.color.g + "\n"
+   + "blue-" + newobj.color.b + "\n")
+   */
+   
+   // alert(objTmp.name);
+            //obj counter
+            //   this.counter = counter;
+            //increment counter by 1
+            //   counter+=1;
+            // alert(this.counter)
+            // dsx.objlstput(name, "cube");
+            // var fileName = rootPath + "/" + name + ".txt"
+           /* var stuff = 
+             {
+              "name": name,
+              "color": {
+                "r": r,
+                "g": g,
+                "b": b,
+                "a": 1.0
+              },
+              "position": {
+                "x": x ,
+                "y": y,
+                "z": z
+              }
+            }*/
+            
+    
+       // alert(objTmp.name);
+    
+    //obj counter
+    //   this.counter = counter;
+    //increment counter by 1
+    //   counter+=1;
+    // alert(this.counter)
+    // dsx.objlstput(name, "cube");
