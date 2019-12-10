@@ -157,7 +157,6 @@
 
                     app.Execute(xds.voicecube(name, xpos, ypos, zpos, rVal, gVal, bVal));
                     generalcounter++;
-
                     app.ShowPopup(name);
                 }
             }
@@ -220,7 +219,7 @@
         
         var layObjDebug = app.CreateLayout("linear", "VTop");
 
-        var objlist = app.CreateList(",",0.45)
+        var objlist = app.CreateList(",",0.45,0.63)
         objlist.SetOnTouch(
             function(title,body,image,index){alert(image);})
         var btnobjlst = app.CreateButton("getobjs");
@@ -253,14 +252,16 @@
         {
             app.DeleteFolder(rootPath);
             app.MakeFolder(rootPath);
+            cubecounter = 0;
+            spherecounter = 0;
+            generalcounter = 0;
         }
         );
         
-        layObjDebug.AddChild(objlist);
+ 
         layObjDebug.AddChild(btnobjlst);
+        layObjDebug.AddChild(objlist);
         layObjDebug.AddChild(btnClearJsonData);
-        
-
         r.camera.position = [0, 0, 1000];
         r.render();
         
@@ -321,8 +322,7 @@
             dsx.setobj(name, x, y, z, r, g, b);
             // var objTmp = dsx.getobj(name, x, y, z, r, g, b);
             //dsx.objlstput(name, "sphere");
-           
-           
+            
             var code = ""
                 code += (name + " = new X.sphere(); \n ")
                 code += (name + ".center" + " = [" + x + "," + y + "," + z + "]; \n ")
@@ -346,7 +346,7 @@
         
         this.objlstproto = function (list)
         {
-            var objList = app.ListFolder(rootPath,null,null,"files,fullpath,alphasort");
+            var objList = app.ListFolder(rootPath,null,null,"files,fullpath,Alphasort");
             var items = [];
             for (var i in objList)
             {
@@ -360,10 +360,8 @@
            // alert(RGBAToHexA(colortmp));
         //   RGBAToHexA(colortmp)
            list.AddItem(fntmp.name, fntmp.color.hex, objList[i]);
-            
             }
             //return dsx.objectsarray;
-        
         }
         
     
@@ -435,7 +433,7 @@
 <style>
 body 
 {
-    background-color: clear;
+    background-color: darkgray;
     color: white; /* font color */
     font-family: sans-serif;
     margin: 0;
