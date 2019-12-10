@@ -70,7 +70,7 @@
           document.getElementById('imageTable').style.display = 'block';
 
           let imgElement = document.getElementById('srcImage')
-          imgElement.src = 'gfx/cs460.png';
+          imgElement.src = 'gfx/messi5.jpg';
 
           imgElement.onload = function() {
               let mat = cv.imread(imgElement);
@@ -138,78 +138,68 @@
               'channel': function(){},
               'Erosion': function() {
                 let src = cv.imread(document.getElementById('outputCanvas'));
-                let dst = new cv.Mat();
                 let M = cv.Mat.ones(5, 5, cv.CV_8U);
                 let anchor = new cv.Point(-1, -1);
-
-                cv.erode(src, dst, M, anchor, mor.iter, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
-                cv.imshow('outputCanvas', dst);
-                src.delete(); dst.delete(); M.delete();
+                cv.erode(src, src, M, anchor, mor.iter, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
               },
               'Dilation': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
-                let dst = new cv.Mat();
                 let M = cv.Mat.ones(5, 5, cv.CV_8U);
                 let anchor = new cv.Point(-1, -1);
-
-                cv.dilate(src, dst, M, anchor, mor.iter, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
-                cv.imshow('outputCanvas', dst);
-                src.delete(); dst.delete(); M.delete();
+                cv.dilate(src, src, M, anchor, mor.iter, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
               },
               'Open': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
-                let dst = new cv.Mat();
                 let M = cv.Mat.ones(5, 5, cv.CV_8U);
                 let anchor = new cv.Point(-1, -1);
-                cv.morphologyEx(src, dst, cv.MORPH_OPEN, M, anchor, mor.iter,
+                cv.morphologyEx(src, src, cv.MORPH_OPEN, M, anchor, mor.iter,
                                 cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
-                cv.imshow('outputCanvas', dst);
-                src.delete(); dst.delete(); M.delete();
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
               },
               'Close': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
-                let dst = new cv.Mat();
                 let M = cv.Mat.ones(5, 5, cv.CV_8U);
-                cv.morphologyEx(src, dst, cv.MORPH_CLOSE, M);
-                cv.imshow('outputCanvas', dst);
-                src.delete(); dst.delete(); M.delete();
+                cv.morphologyEx(src, src, cv.MORPH_CLOSE, M);
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
               },
               'Gradient': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
-                let dst = new cv.Mat();
                 let M = cv.Mat.ones(5, 5, cv.CV_8U);
-                cv.morphologyEx(src, dst, cv.MORPH_CLOSE, M);
-                cv.imshow('outputCanvas', dst);
-                src.delete(); dst.delete(); M.delete();
+                cv.morphologyEx(src, src, cv.MORPH_CLOSE, M);
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
               },
               'Top Hat': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
                 cv.cvtColor(src, src, cv.COLOR_RGBA2RGB);
-                let dst = new cv.Mat();
                 let M = cv.Mat.ones(5, 5, cv.CV_8U);
-                cv.morphologyEx(src, dst, cv.MORPH_GRADIENT, M);
-                cv.imshow('outputCanvas', dst);
-                src.delete(); dst.delete(); M.delete();
+                cv.morphologyEx(src, src, cv.MORPH_GRADIENT, M);
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
               },
               'Black Hat': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
                 cv.cvtColor(src, src, cv.COLOR_RGBA2RGB);
-                let dst = new cv.Mat();
                 let M = cv.Mat.ones(53, 53, cv.CV_8U);
-                cv.morphologyEx(src, dst, cv.MORPH_BLACKHAT, M);
-                cv.imshow('outputCanvas', dst);
-                src.delete(); dst.delete(); M.delete();
+                cv.morphologyEx(src, src, cv.MORPH_BLACKHAT, M);
+                cv.imshow('outputCanvas', src);
+                src.delete();  M.delete();
               },
               'Get Structuring Element': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
                 cv.cvtColor(src, src, cv.COLOR_RGBA2RGB);
-                let dst = new cv.Mat();
                 let M = new cv.Mat();
                 let ksize = new cv.Size(5, 5);
                 M = cv.getStructuringElement(cv.MORPH_CROSS, ksize);
-                cv.morphologyEx(src, dst, cv.MORPH_GRADIENT, M);
-                cv.imshow('outputCanvas', dst);
-                src.delete(); dst.delete(); M.delete();
+                cv.morphologyEx(src, src, cv.MORPH_GRADIENT, M);
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
               },
               'Draw Contours': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
@@ -224,11 +214,11 @@
                 for (let i = 0; i < contours.size(); ++i) {
                     let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255),
                                               Math.round(Math.random() * 255));
-                    cv.drawContours(dst, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
+                    // cv.drawContours(dst, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
 
-                    // if(cv.contourArea(contours[i], false) >= con.minArea){
-                    //   cv.drawContours(dst, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
-                    // }
+                    if(cv.contourArea(contours.get(i), false) >= con.minArea){
+                      cv.drawContours(dst, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
+                    }
                 }
                 cv.imshow('outputCanvas', dst);
                 src.delete(); dst.delete(); contours.delete(); hierarchy.delete();
@@ -501,9 +491,9 @@
           var mor = new Morph();
           var erosion = morpho.add(controller, 'Erosion');
           var dilation = morpho.add(controller, 'Dilation');
+          morpho.add(mor, 'iter', 1, 10, 1).name('Iterations').listen();
           var open = morpho.add(controller, 'Open');
           var close = morpho.add(controller, 'Close');
-          morpho.add(mor, 'iter', 1, 10, 1).name('Iterations').listen();
           var gradient  = morpho.add(controller, 'Gradient');
           var top = morpho.add(controller, 'Top Hat');
           var black = morpho.add(controller, 'Black Hat');
@@ -525,24 +515,24 @@
           });
           var mina = contours.add(con, 'minArea', 0, 1000).name('Min Area').listen()
           mina.onChange(function(val) {
-            // let src = cv.imread(document.getElementById('outputCanvas'));
-            // let dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
-            // cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
-            // // cv.threshold(src, src, 120, 200, cv.THRESH_BINARY);
-            // let contours = new cv.MatVector();
-            // let hierarchy = new cv.Mat();
-            // // You can try more different parameters
-            // cv.findContours(src, contours, hierarchy, con.hierval, cv.CHAIN_APPROX_SIMPLE);
-            // // draw contours with random Scalar
-            // for (let i = 0; i < contours.size(); ++i) {
-            //     let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255),
-            //                               Math.round(Math.random() * 255));
-            //     if(cv.contourArea(contours[i], false) >= con.minArea){
-            //       cv.drawContours(dst, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
-            //     }
-            // }
-            // cv.imshow('outputCanvas', dst);
-            // src.delete(); dst.delete(); contours.delete(); hierarchy.delete();
+            let src = cv.imread(document.getElementById('outputCanvas'));
+            let dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
+            cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
+            // cv.threshold(src, src, 120, 200, cv.THRESH_BINARY);
+            let contours = new cv.MatVector();
+            let hierarchy = new cv.Mat();
+            // You can try more different parameters
+            cv.findContours(src, contours, hierarchy, con.hierval, cv.CHAIN_APPROX_SIMPLE);
+            // draw contours with random Scalar
+            for (let i = 0; i < contours.size(); ++i) {
+                let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255),
+                                          Math.round(Math.random() * 255));
+                if(cv.contourArea(contours.get(i), false) >= con.minArea){
+                  cv.drawContours(dst, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
+                }
+            }
+            cv.imshow('outputCanvas', dst);
+            src.delete(); dst.delete(); contours.delete(); hierarchy.delete();
           });
         };
       }
