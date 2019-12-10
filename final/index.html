@@ -517,8 +517,12 @@
                 case 'RETR_EXTERNAL': con.hierval = cv.RETR_EXTERNAL;break;
               }
           });
-          var mina = contours.add(con, 'minArea', 0, 1000).name('Min Area').listen()
+          var mina = contours.add(con, 'minArea', 0, 20).name('Min Area Small').listen()
+          var minaLarge = contours.add(con, 'minArea', 0, 100000, 100).name('Min Area Large').listen()
           mina.onChange(function(val) {
+            controller['Draw Contours']();
+          });
+          minaLarge.onChange(function(val) {
             controller['Draw Contours']();
           });
 
