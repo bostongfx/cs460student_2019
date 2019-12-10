@@ -222,6 +222,14 @@
                 }
                 cv.imshow('outputCanvas', dst);
                 src.delete(); dst.delete(); contours.delete(); hierarchy.delete();
+              },
+              'Down Sample': function() {
+                let src = cv.imread(imgElement);
+                let dst = new cv.Mat();
+                // You can try more different parameters
+                cv.pyrDown(src, dst, new cv.Size(0, 0), cv.BORDER_DEFAULT);
+                cv.imshow('outputCanvas', dst);
+                src.delete(); dst.delete();
               }
           }
 
@@ -534,6 +542,9 @@
             cv.imshow('outputCanvas', dst);
             src.delete(); dst.delete(); contours.delete(); hierarchy.delete();
           });
+
+          var downSample = gui.addFolder('Down Sample Image')
+          var down = downSample.add(controller, 'Down Sample');
         };
       }
 
