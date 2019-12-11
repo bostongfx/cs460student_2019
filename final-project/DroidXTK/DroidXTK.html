@@ -5,18 +5,35 @@
      <script type="text/javascript" src="js/xtk_edge.js"></script>
 </head>
 <script>
-
+app.Script("setTheme.js");
+//app.Script( "sensortiltdraw.js" );
+//sens()
+// title = app.CreateList("DroidXTK" + ":" + "Powered by DroidScript",0.45,null,"DarkButton");
+// layTop = app.CreateLayout("linear","Top,Left,FillY");
+// layTop.AddChild(title);
+// app.AddLayout(layTop)
     var drawerWidth = 0.45;
     var r;
     var xds;
     var rootPath = "/sdcard/DroidXTK"
-    app.MakeFolder(rootPath);
+   app.LoadPlugin( "UIExtras" );
+   
+var red = 255;
+var green = 0;
+var blue = 0;
+var alpha = 255;
+
+ var uix = app.CreateUIExtras();
 
     //Called after application is started.
     function OnStart()
     {
+    //app.Script( "getwpcontent.js" );
+    
         app.SetOptions("ignoreerrors");
+       app.MakeFolder(rootPath);
 
+ 
         r = new X.renderer3D();
         r.init();
         xds = new dsx();
@@ -25,7 +42,8 @@
         var spherecounter = xds.counter("sphere");
         var generalcounter = xds.counter("general");
 
-        var layDebug = app.CreateLayout("linear", "VTop");
+        var layDebug = app.CreateLayout("linear", "VTop,fillxy");
+        layDebug.SetBackColor( "#2c2b2a" );
 
         var edt = app.CreateTextEdit("", drawerWidth, 0.18, "nospell,mono");
         layDebug.AddChild(edt);
@@ -42,15 +60,34 @@
         }
         );
         layDebug.AddChild(btnDebug);
+     app.LoadPlugin( "UIExtras" );
+ uix = app.CreateUIExtras();
 
-        var txtXPos = app.CreateTextEdit("0", drawerWidth / 3, null, "singleline,numbers");
-        txtXPos.SetHint("X-Pos");
-        var txtYPos = app.CreateTextEdit("0", drawerWidth / 3, null, "singleline,numbers");
-        txtYPos.SetHint("Y-Pos");
-        var txtZPos = app.CreateTextEdit("0", drawerWidth / 3, null, "singleline,numbers");
-        txtZPos.SetHint("Z-Pos");
+        var txtXPos =  uix.CreateNumberPicker( 000, "" );
+        txtXPos.SetBackColor("darkgray");
+        txtXPos.SetTextColor("lightgray");
+        txtXPos.AdjustColor( -30, -90, -10 );
+
+        txtXPos.SetRange(-1000,1000);
+        txtXPos.SetDecimalPlaces(0)
+        //app.CreateTextEdit("0", drawerWidth / 3, null, "singleline,numbers");
+        //txtXPos.SetHint("X-Pos");
+        var txtYPos = uix.CreateNumberPicker( 0, "fillxy" );
+        txtYPos.SetRange(-1000,1000);
+                txtYPos.SetBackColor("darkgray");
+
+        txtYPos.SetDecimalPlaces(0)
+        //app.CreateTextEdit("0", drawerWidth / 3, null, "singleline,numbers");
+       //txtYPos.SetHint("Y-Pos");
+        var txtZPos = uix.CreateNumberPicker( 0, "" );
+                txtZPos.SetBackColor("darkgray");
+
+        txtZPos.SetRange(-1000,1000);
+        txtZPos.SetDecimalPlaces(0)
+        //app.CreateTextEdit("0", drawerWidth / 3, null, "singleline,numbers");
+        //txtZPos.SetHint("Z-Pos");
         
-        var layXYZPos = app.CreateLayout("linear", "horizontal");
+        var layXYZPos = app.CreateLayout("linear", "Horizontal,VCenter");
         layXYZPos.AddChild(txtXPos);
         layXYZPos.AddChild(txtYPos);
         layXYZPos.AddChild(txtZPos);
@@ -147,9 +184,9 @@
                     var rVal = skbRed.GetValue();
                     var gVal = skbGreen.GetValue();
                     var bVal = skbBlue.GetValue();
-                    var xpos = txtXPos.GetText();
-                    var ypos = txtYPos.GetText();
-                    var zpos = txtZPos.GetText();
+                    var xpos = txtXPos.GetValue();
+                    var ypos = txtYPos.GetValue();
+                    var zpos = txtZPos.GetValue();
                     var name = results[0].split(",")[1] || "voicecube";
                     var rVal = skbRed.GetValue();
                     var gVal = skbGreen.GetValue();
@@ -183,9 +220,9 @@
         var btnCube = app.CreateButton("Add Cube +");
         btnCube.SetOnTouch(function ()
         {
-            var xpos = txtXPos.GetText();
-            var ypos = txtYPos.GetText();
-            var zpos = txtZPos.GetText();
+            var xpos = txtXPos.GetValue();
+            var ypos = txtYPos.GetValue();
+            var zpos = txtZPos.GetValue();
             var rVal = skbRed.GetValue();
             var gVal = skbGreen.GetValue();
             var bVal = skbBlue.GetValue();
@@ -195,6 +232,7 @@
             var code = xds.cube(cubeName, xpos, ypos, zpos, rVal, gVal, bVal)
                 cubecounter++
                 app.Execute(code)
+             app.WriteFile( rootPath + "/out.js"," \n " + code + "" ,"append" );
                 // alert(cubecounter)
         }
         );
@@ -203,9 +241,9 @@
         var btnSphere = app.CreateButton("Add Sphere +");
         btnSphere.SetOnTouch(function ()
         {
-            var xpos = txtXPos.GetText();
-            var ypos = txtYPos.GetText();
-            var zpos = txtZPos.GetText();
+            var xpos = txtXPos.GetValue();
+            var ypos = txtYPos.GetValue();
+            var zpos = txtZPos.GetValue();
             var rVal = skbRed.GetValue();
             var gVal = skbGreen.GetValue();
             var bVal = skbBlue.GetValue();
@@ -218,11 +256,19 @@
         layDebug.AddChild(btnSphere);
         
         var layObjDebug = app.CreateLayout("linear", "VTop");
-
+var picker = uix.CreateColorPickerDialog( "Pick a Color", red, green, blue, alpha );
+       picker.SetOnOk( pickok);
         var objlist = app.CreateList(",",0.45,0.63)
         objlist.SetOnTouch(
-            function(title,body,image,index){alert(image);})
+            function(title,body,image,index){
+                // alert(image);
+     
+
+picker.Show();
+
+                })
         var btnobjlst = app.CreateButton("getobjs");
+    
         btnobjlst.SetOnTouch(function ()
         {
             //        alert()
@@ -258,16 +304,36 @@
         }
         );
         
+    btnwpcg = app.CreateButton( "export" );
+    btnwpcg.SetOnTouch( function ()
+{
  
+app.SendText(  app.ReadFile( rootPath + "/out.js")  );
+//document.documentElement.outerHTML)
+
+}
+);
+bexec = app.CreateButton( "load" );
+bexec.SetOnTouch( function ()
+{
+    if(  !app.FileExists(  rootPath + "/out.js")){
+     app.WriteFile( rootPath + "/out.js" , "r.render();" );
+     }
+	        app.Execute( app.ReadFile( rootPath + "/out.js" ));
+}
+ );
+
+layObjDebug.AddChild( btnwpcg );
+layObjDebug.AddChild( bexec );
         layObjDebug.AddChild(btnobjlst);
         layObjDebug.AddChild(objlist);
         layObjDebug.AddChild(btnClearJsonData);
-        r.camera.position = [0, 0, 1000];
+        r.camera.position = [0, 0, 500];
         r.render();
-        
+         
         app.AddDrawer(layObjDebug, "right", drawerWidth);
         app.AddDrawer(layDebug, "left", drawerWidth);
-    }
+    };
 
     function dsx()
     {
@@ -428,10 +494,21 @@
     b = "0" + b;
   return "#" + r + g + b
 }
+
+function pickok(r,g,b,a)
+{
+           
+ red = r;
+ green = g;
+ blue = b;
+ var hex = picker.RGBtoHex( r, g, b );
+  app.ShowPopup( "RGB(" + r + ", " + g + ", " + b + ")" );
+
+}
 </script>
  
 <style>
-body 
+#body 
 {
     background-color: darkgray;
     color: white; /* font color */
@@ -442,18 +519,41 @@ body
     overflow: hidden !important;
 }
 
-#logo 
-{
-    position: absolute;
-    right: 10px;
-    top: 10px;
+#logo
+{   
+
+     width: auto;
+     height: 54px;
+background-color: silver;
 }
+
+#logoA
+{
+ 
+     padding :  9px;
+      float: left;
+      height: 36px;
+
+}
+
+#logoB
+{
+     padding :  9px;
+      float: right;
+        height: 36px;
+
+}
+
 
 </style>
 
     <body onload="app.Start()">
+    
         <div id="logo">
-            <img style="height:60px" src="./Img/cs460.png">
+            <img id="logoA" src="./Img/logoA.png">
+
+            <img id="logoB" src="./Img/cs460.png">
+
         </div>
     </body>
 </html>
