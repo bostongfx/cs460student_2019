@@ -62,7 +62,9 @@
                 var cube = new X.cube();
                 cube.center = [i * 2, j * 2, z * 2];
                 cube.lengthX = cube.lengthY = cube.lengthZ = 1;
-                cube.color = [150 % i, 150 % j, 150 % z];
+                // cube.color = [150 % i, 150 % j, 150 % z];
+                // cube.texture.file = "picture/mountain1.png";
+                cube.color = [0, 1, 0];
 
                 layer.add(cube);
             }
