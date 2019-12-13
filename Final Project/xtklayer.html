@@ -28,18 +28,18 @@
     layer = new X.renderer3D();
     layer.init();
 
-//   // create a 15 x 10 pixels
-//   // layer1
-//   for(var i = 0; i < 30; i++){
-//     for(var j = 0; j < 20; j++){
-//       var cube1 = new X.cube();
-//       cube1.center = [i * 2, j * 2, 0];
-//       cube1.lengthX = cube1.lengthY = cube1.lengthZ = 1;
-//       cube1.color = [150 % i, 150 % j, 1];
+  // create a 15 x 10 pixels
+  // layer1
+  for(var i = 0; i < 30; i++){
+    for(var j = 0; j < 20; j++){
+      var cube1 = new X.cube();
+      cube1.center = [i * 2, j * 2, 0];
+      cube1.lengthX = cube1.lengthY = cube1.lengthZ = 1;
+      cube1.color = [0, 1, 0];
 
-//       layer.add(cube1);
-//     }
-//   }
+      layer.add(cube1);
+    }
+  }
 //   layer.render();
 
 //   // layer2
@@ -56,20 +56,20 @@
 //   layer.render();
 
   // layer 3D
-    for(var i = 0; i < 20; i++){
-        for(var j = 0; j < 20; j++){
-            for(var z = 0; z < 10; z++){
-                var cube = new X.cube();
-                cube.center = [i * 2, j * 2, z * 2];
-                cube.lengthX = cube.lengthY = cube.lengthZ = 1;
-                // cube.color = [150 % i, 150 % j, 150 % z];
-                // cube.texture.file = "picture/mountain1.png";
-                cube.color = [0, 1, 0];
+    // for(var i = 0; i < 20; i++){
+    //     for(var j = 0; j < 20; j++){
+    //         for(var z = 0; z < 10; z++){
+    //             var cube = new X.cube();
+    //             cube.center = [i * 2, j * 2, z * 2];
+    //             cube.lengthX = cube.lengthY = cube.lengthZ = 1;
+    //             // cube.color = [150 % i, 150 % j, 150 % z];
+    //             // cube.texture.file = "picture/mountain1.png";
+    //             cube.color = [0, 1, 0];
 
-                layer.add(cube);
-            }
-        }
-    }
+    //             layer.add(cube);
+    //         }
+    //     }
+    // }
     layer.render();
 
   }
