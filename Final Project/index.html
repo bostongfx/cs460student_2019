@@ -3,12 +3,12 @@
     <meta charset="UTF-8" />
     <style>
       html, body { 
-        background-color:#000;
+        background-color:rgb(255, 255, 255);
         margin: 0;
         padding: 0;
         height: 100%;
         overflow: hidden !important;  
-        background-image: url(sky.jpg);
+        /* background-image: url(sky.jpg); */
         background-repeat: no-repeat;
         background-size: 100% 100%;
       }
@@ -21,10 +21,12 @@
     <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
 
+
     <script>
       var scene, camera, renderer, ambientLight, light, controls;
-      var floor;
+      var floor, layer1;
       var controller;
+      var floorTexture,floorGeometry, floorMaterial;
       window.onload = function() {
         scene = new THREE.Scene();
         var fov = 60;
@@ -42,17 +44,32 @@
         light = new THREE.DirectionalLight( 0xffffff, 5.0 );
         light.position.set( 10, 100, 10 );
         scene.add( light );
-        // var floorTexture = new THREE.TextureLoader().load( 'marble.jpg' );
-        // var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
-        // var floorMaterial = new THREE.MeshBasicMaterial( {
-        //   map: floorTexture,
-        //   side: THREE.DoubleSide
-        // } );
-        // floor = new THREE.Mesh( floorGeometry, floorMaterial );
-        // floor.position.y = -100;
-        // floor.rotateX(-30);
-        // scene.add( floor );
-       
+        //layer0
+        floorTexture = new THREE.TextureLoader().load( 'picture/mountain1.png' );
+        floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
+        floorMaterial = new THREE.MeshBasicMaterial( {
+          map: floorTexture,
+          side: THREE.DoubleSide
+        } );
+        floor = new THREE.Mesh( floorGeometry, floorMaterial );
+        floor.position.y = -100;
+        floor.rotateX(-30);
+        scene.add( floor );
+        
+        floorTexture = new THREE.TextureLoader().load('picture/mountain2.png');
+        floorGeometry = new THREE.PlaneBufferGeometry(1000, 1000);
+        floorMaterial = new THREE.MeshBasicMaterial({
+          map: floorTexture,
+          side: THREE.DoubleSide
+        });
+        layer1 = new THREE.Mesh(floorGeometry, floorMaterial);
+        layer1.position.y = -50;
+        layer1.rotateX(-30);
+        scene.add(layer1);
+        
+        
+        
+        controls = new THREE.TrackballControls(camera, renderer.domElement);
         
         
         animate();
@@ -68,13 +85,13 @@
           vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
           raycaster = new THREE.Raycaster();
           raycaster.setFromCamera(vp_coords_near, camera);
-          // intersects = raycaster.intersectObject(floor);
+          intersects = raycaster.intersectObject(floor);
           
           
       };
       function animate() {
         requestAnimationFrame( animate );
-       
+        
         controls.update();
         renderer.render( scene, camera );
       };

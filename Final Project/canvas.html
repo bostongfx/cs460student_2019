@@ -1,0 +1,69 @@
+<html>
+  <head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  
+  <style>
+  body {
+  background-color: rgb(255, 255, 255);
+  color: white; /* font color */
+  font-family: sans-serif;
+  padding: 0;
+  height: 100%;
+  overflow: hidden !important;
+  }
+  #logo {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  }
+  </style>
+  <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+  
+  <script type = "text/javascript">
+
+    var img = new Image();
+    img.url = 'sky.png';
+    var canvas = document.createElement("canvas");
+    var context = canvas.getContext('2d');
+    canvas.width = 200;
+    canvas.height = 100;
+    context.drawImage(img, 0, 0, 200, 100);
+  
+  window.onload = function(){
+  
+
+    getPixel('picture/mountain1.png', 10, 10);
+
+    var img = new Image();
+    img.url = 'picture/mountain1.png';
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext('2d');
+    canvas.width = 200;
+    canvas.height = 100;
+    context.drawImage(img, 0, 0, 200, 100);
+
+    //create the layer1 of 3D cubes
+    layer = new X.renderer3D();
+    layer.init();
+
+    function getPixel(url, x, y){
+        var img = new Image();
+        img.url=url;
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext('2d');
+        context.drawImage(img, 0, 0);
+        return context.getImageData(x, y, 1, 1).data;
+    }
+
+    getPixel('./sky.png', 10, 10);
+
+
+  }
+
+  </script>
+  </head>
+  <body>
+    <!-- <canvas id="canvas"></canvas> -->
+  </body>
+</html>
