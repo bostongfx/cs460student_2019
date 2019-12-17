@@ -10,6 +10,7 @@
     <title>CS460 Final</title>
     <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
     <script async src="opencv.js" onload="openCvReady();" type="text/javascript"></script>
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
 
 </head>
 
@@ -32,7 +33,7 @@
         </td>
       </tr>
       <tr>
-        <td style="width:100%">
+        <td style="width:100%;">
               <canvas id='outputCanvas'></canvas>
         </td>
     </tr>
@@ -46,6 +47,8 @@
     </tbody>
   </table>
 </div>
+<div id='XTKCanvas'></div>
+
   </body>
   <script type="text/javascript">
       let imgElement = document.getElementById('srcImage');
@@ -76,7 +79,42 @@
               let mat = cv.imread(imgElement);
               cv.imshow('outputCanvas', mat);
               mat.delete();
+
+
+              // this gets called when the site is ready
+
+              // create a new scene and renderer
+              renderer = new X.renderer3D();
+              renderer.container = 'XTKCanvas';
+              renderer.init();
+
+              // frame the art on the screen
+              renderer.camera.position = [ 0, 0, -1000];
+              let src = cv.imread(imgElement);
+              let dst = new cv.Mat();
+              cv.resize(src, dst, new cv.Size(16, 16), 0, 0, cv.INTER_LINEAR);
+              let spacing = 20;
+
+              for (let i = 0; i < dst.rows; i++) {
+                for (let j = 0; j < dst.cols; j++) {
+                  pixel = dst.ucharPtr(i, j);
+                  r = pixel[0] / 255;
+                  g = pixel[1] / 255;
+                  b = pixel[2] / 255;
+                  c = new X.cube();
+                  c.color = [r, g, b];
+                  c.transform.translateX(spacing * j);
+                  c.transform.translateY(spacing * i);
+                  renderer.add(c);
+                }
+                renderer.render();
+              }
+              src.delete();dst.delete();
+
           };
+
+
+
 
           var Thresh = function() {
               this.thresh =  127;
@@ -219,6 +257,32 @@
                 cv.pyrDown(src, dst, new cv.Size(0, 0), cv.BORDER_DEFAULT);
                 cv.imshow('outputCanvas', dst);
                 src.delete(); dst.delete();
+              },
+              'Pixelate': function() {
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let dst = new cv.Mat();
+                cv.resize(src, dst, new cv.Size(16, 16), 0, 0, cv.INTER_LINEAR);
+                let spacing = 20;
+
+                for (let i = 0; i < dst.rows; i++) {
+                  for (let j = 0; j < dst.cols; j++) {
+                    pixel = dst.ucharPtr(i, j);
+                    r = pixel[0] / 255;
+                    g = pixel[1] / 255;
+                    b = pixel[2] / 255;
+                    c = new X.cube();
+                    c.color = [r, g, b];
+                    c.transform.translateX(spacing * j);
+                    c.transform.translateY(spacing * i);
+                    renderer.add(c);
+                  }
+                  renderer.render();
+                }
+                src.delete();dst.delete();
+
+                document.getElementById('imageTable').style.display = 'none';
+                document.getElementById('XTKCanvas').getElementsByTagName( 'canvas' )[0].style.display = 'block';
+
               }
           }
 
@@ -519,8 +583,9 @@
             controller['Draw Contours']();
           });
 
-          var downSample = gui.addFolder('Down Sample Image')
-          var down = downSample.add(controller, 'Down Sample');
+          var down = gui.add(controller, 'Down Sample');
+
+          var pixelate = gui.add(controller, 'Pixelate');
         };
       }
 
@@ -547,6 +612,10 @@
           );
           return !pixelBuffer.some(color => color !== 0);
       }
+
+      window.onload = function() {
+      };
+
 
   </script>
 

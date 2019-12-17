@@ -137,3 +137,13 @@ canvas {
     transform: rotate(360deg);
   }
 }
+#XTKCanvas {
+  height: 100%;
+  width: 100%;
+}
+
+#XTKCanvas canvas {
+  display: none;
+  border: none;
+  margin: 0px;
+}
