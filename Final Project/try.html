@@ -28,8 +28,8 @@
 
   <script type="text/javascript">
 
-    // var layer = new X.renderer3D();
-    // layer.init();
+    var layer = new X.renderer3D();
+    layer.init();
   
     var c = document.getElementById("canvas"),
     w = innerWidth,
@@ -116,15 +116,19 @@
 
     //and draw with offset
     var offset = 1.1;
-    // function drawTiles(tiles) {
-    //   tiles.forEach((d,i) => ctx.putImageData(d, d.x * offset, d.y * offset));
-    // }
-
-    function drawTiles(tiles){
-        for(var d in tiles){
-            ctx.putImageData(d, d.x * offset, d.y * offset);
-        }
+    function drawTiles(tiles) {
+      tiles.forEach((d,i) => {
+        ctx.putImageData(d, d.x * offset, d.y * offset)
+        var cube = new X.cube();
+        cube.texture = d;
+        cube.center = [d.x * offset, d.y * offset, 1];
+        cube.lengthX = cube.lengthY = cube.lengthZ = d.x;
+        layer.add(cube);
+      });
     }
+
+    layer.render();
+
   
   </script>
 </html>
