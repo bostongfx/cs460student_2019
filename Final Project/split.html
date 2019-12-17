@@ -22,7 +22,7 @@
 
   </head>
   <body>
-    <input type="file" id="input" />
+    <input type="file" id="input" />  
     <canvas id="canvas"></canvas>
   </body>
 
@@ -46,17 +46,17 @@
 
     //read file input
     input.onchange = function() {
-        reader.readAsDataURL(input.files[0]);
-        reader.onload = function() {
-            img.src = reader.result;
-            img.onload = function() {
-            //start
-            init();
-            var tiles = getTiles();
-            drawTiles(tiles);
+      reader.readAsDataURL(input.files[0]);
+      reader.onload = function() {
+        img.src = reader.result;
+        img.onload = function() {
+          //start
+          init();
+          var tiles = getTiles();
+          drawTiles(tiles);
+        }
       }
-    }
-  }
+    } 
 
     function init() {
       imgW = img.width;
@@ -93,8 +93,8 @@
       var tile = [];
       //loop over rows
       for (var i = 0; i < tileDim; i++) {
-        //slice original image from x to x + tileDim, concat
-        tile.push(...imgData.slice(getIndex(x, y + i), getIndex(x + tileDim, y + i)));
+      //slice original image from x to x + tileDim, concat
+      tile.push(...imgData.slice(getIndex(x, y + i), getIndex(x + tileDim, y + i)));
       }
       //convert back to typed array and to imgdata object
       tile = new ImageData(new Uint8ClampedArray(tile), tileDim, tileDim);
@@ -108,9 +108,9 @@
     function getTiles() {
       var tiles = [];
       for (var yi = 0; yi < tileCountY; yi++) {
-        for (var xi = 0; xi < tileCountX; xi++) {
-          tiles.push(getTile(xi * tileDim, yi * tileDim));
-        }
+      for (var xi = 0; xi < tileCountX; xi++) {
+        tiles.push(getTile(xi * tileDim, yi * tileDim));
+      }
       }
       return tiles;
     }
@@ -118,7 +118,7 @@
     //and draw with offset
     var offset = 1.1;
     function drawTiles(tiles) {
-      tiles.forEach((d,i) => ctx.putImageData(d, d.x * offset, d.y * offset));
+      tiles.forEach((d) => ctx.putImageData(d, d.x * offset, d.y * offset));
       
       //more interesting effects are easy to do:
       //tiles.forEach((d,i) => ctx.putImageData(d, d.x * i * 0.01, d.y * i * 0.01));

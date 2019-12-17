@@ -1,0 +1,130 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <style>
+      body{
+      margin:0;
+      }
+
+      canvas{
+      display:block;
+      width:100%;
+      height:100%;
+      }
+
+      input{
+      position:absolute;
+      top:0;
+      }
+    </style>
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+
+  </head>
+  <body>
+    <input type="file" id="input" />  
+    <canvas id="canvas"></canvas>
+  </body>
+
+  <script type="text/javascript">
+
+    // var layer = new X.renderer3D();
+    // layer.init();
+  
+    var c = document.getElementById("canvas"),
+    w = innerWidth,
+    h = innerHeight;
+    c.width = w;
+    c.height = h;
+    var ctx = c.getContext("2d"),
+    input = document.getElementById("input"),
+    reader = new FileReader(),
+    img = new Image(); 
+    var imgW, imgH, imgData,tileDim = 50; //tile dimensions px
+    var tileCountX, tileCountY;         //how many tiles we can fit
+
+    //read file input
+    input.onchange = function() {
+      reader.readAsDataURL(input.files[0]);
+      reader.onload = function() {
+        img.src = reader.result;
+        img.onload = function() {
+          //start
+          init();
+          var tiles = getTiles();
+          drawTiles(tiles);
+        }
+      }
+    } 
+
+    
+
+    function init() {
+      imgW = img.width;
+      imgH = img.height;
+      //check how many full tiles we can fit
+      //right and bottom sides of the image will get cropped
+      tileCountX = Math.floor(imgW / tileDim);
+      tileCountY = Math.floor(imgH / tileDim);
+
+      ctx.drawImage(img, 0, 0);
+      imgData = ctx.getImageData(0, 0, imgW, imgH).data;
+      ctx.clearRect(0, 0, w, h);
+    }
+
+    //get imgdata index from img px positions
+    function indexX(x) {
+      var i = x * 4;
+      if (i > imgData.length) console.warn("X out of bounds");
+      return i;
+    }
+    function indexY(y) {
+      var i = imgW * 4 * y;
+      if (i > imgData.length) console.warn("Y out of bounds");
+      return i;
+    }
+    function getIndex(x, y) {
+      var i = indexX(x) + indexY(y);
+      if (i > imgData.length) console.warn("XY out of bounds");
+      return i;
+    }
+
+    //get a tile of size tileDim*tileDim from position xy
+    function getTile(x, y) {
+      var tile = [];
+      //loop over rows
+      for (var i = 0; i < tileDim; i++) {
+      tile.push(...imgData.slice(getIndex(x, y + i), getIndex(x + tileDim, y + i)));
+      }
+      tile = new ImageData(new Uint8ClampedArray(tile), tileDim, tileDim);
+      //save original position
+      tile.x = x;
+      tile.y = y;
+      return tile;
+    }
+
+    //generate all tiles
+    function getTiles() {
+      var tiles = [];
+      for (var y = 0; y < tileCountY; y++) {
+        for (var x = 0; x < tileCountX; x++) {
+            tiles.push(getTile(x * tileDim, y * tileDim));
+        }
+      }
+      return tiles;
+    }
+
+    //and draw with offset
+    var offset = 1.1;
+    // function drawTiles(tiles) {
+    //   tiles.forEach((d,i) => ctx.putImageData(d, d.x * offset, d.y * offset));
+    // }
+
+    function drawTiles(tiles){
+        for(var d in tiles){
+            ctx.putImageData(d, d.x * offset, d.y * offset);
+        }
+    }
+  
+  </script>
+</html>
