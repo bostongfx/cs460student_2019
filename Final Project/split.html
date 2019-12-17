@@ -28,7 +28,7 @@
 
   <script type="text/javascript">
   
-    var c = document.getElementById("canvas"),
+  var c = document.getElementById("canvas"),
     w = innerWidth,
     h = innerHeight;
     c.width = w;
@@ -36,13 +36,9 @@
     var ctx = c.getContext("2d"),
     input = document.getElementById("input"),
     reader = new FileReader(),
-    img = new Image(),
-    imgW, //px
-    imgH, //px
-    imgData,
-    tileDim = 50, //tile dimensions px
-    tileCountX, //how many tiles we can fit
-    tileCountY;
+    img = new Image(); 
+    var imgW, imgH, imgData,tileDim = 50; //tile dimensions px
+    var tileCountX, tileCountY;         //how many tiles we can fit
 
     //read file input
     input.onchange = function() {
@@ -91,9 +87,7 @@
     //get a tile of size tileDim*tileDim from position xy
     function getTile(x, y) {
       var tile = [];
-      //loop over rows
       for (var i = 0; i < tileDim; i++) {
-      //slice original image from x to x + tileDim, concat
       tile.push(...imgData.slice(getIndex(x, y + i), getIndex(x + tileDim, y + i)));
       }
       //convert back to typed array and to imgdata object
@@ -119,11 +113,6 @@
     var offset = 1.1;
     function drawTiles(tiles) {
       tiles.forEach((d) => ctx.putImageData(d, d.x * offset, d.y * offset));
-      
-      //more interesting effects are easy to do:
-      //tiles.forEach((d,i) => ctx.putImageData(d, d.x * i * 0.01, d.y * i * 0.01));
-      
-      //for efficiency in animation etc tiles should be converted to image object
     }
   
   </script>
