@@ -119,12 +119,20 @@
     function drawTiles(tiles) {
       tiles.forEach((d,i) => {
         ctx.putImageData(d, d.x * offset, d.y * offset)
+        var image = new Image();
+        image.src = d.toDataUrl("image/png");
         var cube = new X.cube();
-        cube.texture = d;
+        cube.texture = image;
         cube.center = [d.x * offset, d.y * offset, 1];
         cube.lengthX = cube.lengthY = cube.lengthZ = d.x;
         layer.add(cube);
       });
+    }
+
+    function convertCanvasToImage(canvas){
+        var image = new Image();
+        image.src = canvas.toDataUrl("image/png");
+        return image;
     }
 
     layer.render();
