@@ -141,6 +141,7 @@
           var Size = function() {
             this.numPixels = 16;
             this.spacing = 0;
+            this.rotate = true;
           }
 
           controller = {
@@ -317,7 +318,10 @@
 
                 renderer.render();
                 renderer.onRender = function() {
-                  renderer.camera.rotate([1, 0]);
+                  if(size.rotate) {
+                    renderer.camera.rotate([1, 0]);
+                  }
+
                 };
                 src.delete();dst.delete();
 
@@ -701,11 +705,13 @@
             size.numPixels = parseInt(val);
             controller['Pixelate']();
           });
-          var space = gui.add(size, 'spacing', 0, 10, 1).name('Pixel Size').listen();
+          var space = gui.add(size, 'spacing', 0, 10, 1).name('Spacing').listen();
           space.onChange(function(val) {
             size.spacing = parseInt(val);
             controller['Pixelate']();
           });
+          var rotate = gui.add(size, 'rotate', true).name('Rotate').listen();
+
 
         };
       }
