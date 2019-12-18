@@ -64,6 +64,7 @@
           mat.delete();
       };
 
+      isPixel = false;
       gray = false;
       hsv = false;
 
@@ -148,6 +149,9 @@
                     cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
                     cv.imshow('outputCanvas', mat);
                     mat.delete();
+                    if (isPixel) {
+                      controller['Pixelate']();
+                    }
               },
               "HSV": function(){
                     hsv = true;
@@ -155,6 +159,9 @@
                     cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV);
                     cv.imshow('outputCanvas', mat);
                     mat.delete();
+                    if (isPixel) {
+                      controller['Pixelate']();
+                    }
               },
               'channel': function(){},
               'Erosion': function() {
@@ -164,6 +171,9 @@
                 cv.erode(src, src, M, anchor, mor.iter, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
                 cv.imshow('outputCanvas', src);
                 src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
               },
               'Dilation': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
@@ -172,6 +182,9 @@
                 cv.dilate(src, src, M, anchor, mor.iter, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
                 cv.imshow('outputCanvas', src);
                 src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
               },
               'Open': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
@@ -181,6 +194,9 @@
                                 cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
                 cv.imshow('outputCanvas', src);
                 src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
               },
               'Close': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
@@ -188,6 +204,9 @@
                 cv.morphologyEx(src, src, cv.MORPH_CLOSE, M);
                 cv.imshow('outputCanvas', src);
                 src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
               },
               'Gradient': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
@@ -195,6 +214,9 @@
                 cv.morphologyEx(src, src, cv.MORPH_CLOSE, M);
                 cv.imshow('outputCanvas', src);
                 src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
               },
               'Top Hat': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
@@ -203,6 +225,9 @@
                 cv.morphologyEx(src, src, cv.MORPH_GRADIENT, M);
                 cv.imshow('outputCanvas', src);
                 src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
               },
               'Black Hat': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
@@ -211,6 +236,9 @@
                 cv.morphologyEx(src, src, cv.MORPH_BLACKHAT, M);
                 cv.imshow('outputCanvas', src);
                 src.delete();  M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
               },
               'Get Structuring Element': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
@@ -221,6 +249,9 @@
                 cv.morphologyEx(src, src, cv.MORPH_GRADIENT, M);
                 cv.imshow('outputCanvas', src);
                 src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
               },
               'Draw Contours': function(){
                 let src = cv.imread(document.getElementById('outputCanvas'));
@@ -240,6 +271,9 @@
                 }
                 cv.imshow('outputCanvas', dst);
                 src.delete(); dst.delete(); contours.delete(); hierarchy.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
               },
               'Down Sample': function() {
                 let src = cv.imread(imgElement);
@@ -247,8 +281,12 @@
                 cv.pyrDown(src, dst, new cv.Size(0, 0), cv.BORDER_DEFAULT);
                 cv.imshow('outputCanvas', dst);
                 src.delete(); dst.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
               },
               'Pixelate': function() {
+                isPixel = true;
                 let src = cv.imread(document.getElementById('outputCanvas'));
                 let dst = new cv.Mat();
                 cv.resize(src, dst, new cv.Size(size.numPixels, size.numPixels), 0, 0, cv.INTER_LINEAR);
@@ -295,18 +333,27 @@
               let ch = rgbaPlanes.get(0);
               cv.imshow('outputCanvas', ch);
               src.delete(); ch.delete(); rgbaPlanes.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
             }
             if(val == 'G') {
               g = true;
               let ch = rgbaPlanes.get(1);
               cv.imshow('outputCanvas', ch);
               src.delete(); ch.delete(); rgbaPlanes.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
             }
             if(val == 'B') {
               b = true;
               let ch = rgbaPlanes.get(2);
               cv.imshow('outputCanvas', ch);
               src.delete(); ch.delete(); rgbaPlanes.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
             }
           });
 
@@ -328,6 +375,9 @@
             cv.threshold(mat, mat, bin.thresh, bin.alpha, cv.THRESH_OTSU);
             cv.imshow('outputCanvas', mat);
             mat.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
           });
           var triangle = b_threshold.add(bin, 'triangle').name('Triangle').listen();
           triangle.onChange(function(val){
@@ -340,6 +390,9 @@
             cv.threshold(mat, mat, bin.thresh, bin.alpha, cv.THRESH_TRIANGLE);
             cv.imshow('outputCanvas', mat);
             mat.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
           });
           threshType.onChange(function(val) {
               switch(val) {
@@ -347,6 +400,9 @@
                   case 'Binary Inv': bin.code = cv.THRESH_BINARY_INV;break;
                   case 'Trunc': bin.code = cv.THRESH_TRUNC;break;
                   case 'To Zero': bin.code = cv.THRESH_TOZERO;break;
+              }
+              if (isPixel) {
+                controller['Pixelate']();
               }
           });
           b_threshold.add(bin, 'thresh', 0, 255, 1).name('Thresh').onChange( function(val) {
@@ -360,6 +416,9 @@
               cv.threshold(mat, mat, val, bin.alpha, bin.code);
               cv.imshow('outputCanvas', mat);
               mat.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
           });
           b_threshold.add(bin, 'alpha', 0, 255, 1).name('Max Val').onChange( function(val) {
               let mat = cv.imread(imgElement);
@@ -372,6 +431,9 @@
               cv.threshold(mat, mat, bin.thresh, val, bin.code);
               cv.imshow('outputCanvas', mat);
               mat.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
           });
 
 
@@ -391,6 +453,9 @@
             }
             cv.imshow('outputCanvas', mat);
             mat.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
           });
 
           adaptM.onChange(function(val) {
@@ -399,12 +464,18 @@
             if (val) {
               bin.adaptiveG = false;
             }
+            if (isPixel) {
+              controller['Pixelate']();
+            }
           });
           adaptG.onChange(function(val) {
             bin.adaptiveG = val;
             gray = true;
             if (val) {
               bin.adaptiveM = false;
+            }
+            if (isPixel) {
+              controller['Pixelate']();
             }
           });
           var vals = [];
@@ -426,6 +497,9 @@
               }
               cv.imshow('outputCanvas', mat);
               mat.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
           });
           a_threshold.add(bin, 'c', -40, 40, 1).name('C').onChange( function(val) {
               let mat = cv.imread(imgElement);
@@ -441,6 +515,9 @@
               }
               cv.imshow('outputCanvas', mat);
               mat.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
           });
 
           var kern = [];
@@ -466,6 +543,9 @@
             }
             cv.imshow('outputCanvas', dst);
             src.delete(); dst.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
           });
 
           var ks = filter.add(fil, 'ksize', kern).name('Kernel Size').listen();
@@ -493,6 +573,9 @@
               cv.imshow('outputCanvas', dst);
             }
             src.delete(); dst.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
           });
           var sy = filter.add(fil, 'sigY', 0, 15, 1).name('Sigma Y').listen();
           sy.onChange(function(val){
@@ -504,6 +587,9 @@
               cv.imshow('outputCanvas', dst);
             }
             src.delete(); dst.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
           });
 
           var di = filter.add(fil, 'd', 1, 15, 1).name('Diameter').listen();
@@ -516,6 +602,9 @@
               cv.imshow('outputCanvas', dst);
             }
             src.delete(); dst.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
           });
           var sc = filter.add(fil, 'sigColor', 0, 255, 1).name('Sigma Color').listen();
           sc.onChange(function(val){
@@ -527,6 +616,9 @@
               cv.imshow('outputCanvas', dst);
             }
             src.delete(); dst.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
           });
           var ss = filter.add(fil, 'sigSpace', 0, 255, 1).name('Sigma Space').listen();
           ss.onChange(function(val){
@@ -538,6 +630,9 @@
               cv.imshow('outputCanvas', dst);
             }
             src.delete(); dst.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
           });
 
           var morpho = gui.addFolder("Morphology");
@@ -565,14 +660,23 @@
                 case 'RETR_CCOMP': con.hierval = cv.RETR_CCOMP;break;
                 case 'RETR_EXTERNAL': con.hierval = cv.RETR_EXTERNAL;break;
               }
+              if (isPixel) {
+                controller['Pixelate']();
+              }
           });
           var mina = contours.add(con, 'minArea', 0, 20).name('Min Area Small').listen()
           var minaLarge = contours.add(con, 'minArea', 0, 100000, 100).name('Min Area Large').listen()
           mina.onChange(function(val) {
             controller['Draw Contours']();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
           });
           minaLarge.onChange(function(val) {
             controller['Draw Contours']();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
           });
 
           var down = gui.add(controller, 'Down Sample');
