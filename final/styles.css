@@ -143,7 +143,12 @@ canvas {
 }
 
 #XTKCanvas canvas {
-  display: none;
   border: none;
   margin: 0px;
+}
+
+
+
+#stats {
+  top: 130px;
 }
