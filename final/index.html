@@ -75,7 +75,7 @@
           document.getElementById('imageTable').style.display = 'block';
 
           let imgElement = document.getElementById('srcImage');
-          imgElement.src = 'gfx/messi5.jpg';
+          imgElement.src = 'gfx/cs460.png';
 
           imgElement.onload = function() {
               let mat = cv.imread(imgElement);
@@ -96,8 +96,8 @@
           renderer.container = 'XTKCanvas';
           renderer.init();
 
-          // frame the art on the screen
-          renderer.camera.position = [ 0, 0, -1000];
+          // frame the pixel art on the screen
+          renderer.camera.position = [ 100, 0, 1000];
           c = new X.cube();
           renderer.add(c);
 
@@ -140,6 +140,7 @@
           }
           var Size = function() {
             this.numPixels = 16;
+            this.spacing = 0;
           }
 
           controller = {
@@ -290,7 +291,15 @@
                 let src = cv.imread(document.getElementById('outputCanvas'));
                 let dst = new cv.Mat();
                 cv.resize(src, dst, new cv.Size(size.numPixels, size.numPixels), 0, 0, cv.INTER_LINEAR);
-                let spacing = 20;
+                let spacing = 20 + size.spacing;
+
+                renderer.destroy();
+                renderer = new X.renderer3D();
+                renderer.container = 'XTKCanvas';
+                renderer.init();
+
+                // frame the pixel art on the screen
+                renderer.camera.position = [ 100, 0, 1000];
 
                 for (let i = 0; i < dst.rows; i++) {
                   for (let j = 0; j < dst.cols; j++) {
@@ -300,12 +309,16 @@
                     b = pixel[2] / 255;
                     c = new X.cube();
                     c.color = [r, g, b];
-                    c.transform.translateX(spacing * j);
-                    c.transform.translateY(spacing * i);
+                    c.transform.translateX(spacing * i);
+                    c.transform.translateY(spacing * j);
                     renderer.add(c);
                   }
                 }
 
+                renderer.render();
+                renderer.onRender = function() {
+                  renderer.camera.rotate([1, 0]);
+                };
                 src.delete();dst.delete();
 
                 document.getElementById('imageTable').style.display = 'none';
@@ -683,11 +696,17 @@
 
           var pixelate = gui.add(controller, 'Pixelate');
           var size = new Size();
-          var pixels = gui.add(size, 'numPixels', [8, 16, 32]).name('Pixel Size').listen()
+          var pixels = gui.add(size, 'numPixels', [8, 16, 32, 64, 128, 256]).name('Pixel Size').listen();
           pixels.onChange(function(val) {
             size.numPixels = parseInt(val);
             controller['Pixelate']();
           });
+          var space = gui.add(size, 'spacing', 0, 10, 1).name('Pixel Size').listen();
+          space.onChange(function(val) {
+            size.spacing = parseInt(val);
+            controller['Pixelate']();
+          });
+
         };
       }
 
