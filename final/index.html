@@ -12,7 +12,6 @@
     <script src="https://threejs.org/examples/js/libs/stats.min.js" type="text/javascript"></script>
     <script async src="opencv.js" onload="openCvReady();" type="text/javascript"></script>
     <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
-
 </head>
 
 <body>
@@ -22,7 +21,6 @@
     </header>
 
   <div id="status" class="loader"></div>
-
   <img id='srcImage' style="display:none;"></img>
 
   <div style="margin-bottom:30px;">
@@ -81,7 +79,6 @@
               let mat = cv.imread(imgElement);
               cv.imshow('outputCanvas', mat);
               mat.delete();
-
           };
 
           var stats = new Stats();
@@ -96,13 +93,12 @@
           renderer.container = 'XTKCanvas';
           renderer.init();
 
-          // frame the pixel art on the screen
           renderer.camera.position = [ 100, 0, 1000];
           c = new X.cube();
           renderer.add(c);
-
           renderer.render();
 
+          /*  classes  */
 
           var Thresh = function() {
               this.thresh =  127;
@@ -143,6 +139,8 @@
             this.spacing = 0;
             this.rotate = true;
           }
+
+          /*  Controller  */
 
           controller = {
               "Gray": function(){
@@ -298,8 +296,6 @@
                 renderer = new X.renderer3D();
                 renderer.container = 'XTKCanvas';
                 renderer.init();
-
-                // frame the pixel art on the screen
                 renderer.camera.position = [ 100, 0, 1000];
 
                 for (let i = 0; i < dst.rows; i++) {
@@ -328,10 +324,10 @@
                 document.getElementById('imageTable').style.display = 'none';
                 document.getElementById('XTKCanvas').getElementsByTagName( 'canvas' )[0].style.display = 'block';
                 stats.domElement.style.cssText = 'position:absolute;top:130px;left:0px;display:block;';
-
-
               }
           }
+
+          /*    Dat.GUI    */
 
           var gui = new dat.GUI();
           gui.domElement.id = 'gui';
@@ -697,7 +693,6 @@
           });
 
           var down = gui.add(controller, 'Down Sample');
-
           var pixelate = gui.add(controller, 'Pixelate');
           var size = new Size();
           var pixels = gui.add(size, 'numPixels', [8, 16, 32, 64, 128, 256]).name('Pixel Size').listen();
@@ -711,10 +706,10 @@
             controller['Pixelate']();
           });
           var rotate = gui.add(size, 'rotate', true).name('Rotate').listen();
-
-
         };
       }
+
+      /*    Button Handlers    */
 
       function reset() {
           let mat = cv.imread(imgElement);
@@ -731,20 +726,5 @@
           dl.setAttribute('download', 'export.png');
           dl.setAttribute('href', dataURL);
       }
-
-      function isCanvasBlank(canvas) {
-          const context = canvas.getContext('2d');
-          const pixelBuffer = new Uint32Array(
-              context.getImageData(0, 0, canvas.width, canvas.height).data.buffer
-          );
-          return !pixelBuffer.some(color => color !== 0);
-      }
-
-      window.onload = function() {
-      };
-
-
   </script>
-
-
 </html>
