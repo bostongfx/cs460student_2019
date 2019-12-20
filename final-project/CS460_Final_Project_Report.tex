@@ -66,6 +66,9 @@
 %% the next command will enable that style.
 %%\citestyle{acmauthoryear}
 
+\documentclass{article}
+\usepackage{minted}
+
 %%
 %% end of the preamble, start of the body of the document source.
 \begin{document}
@@ -123,18 +126,9 @@
 \maketitle
 \newpage
 \section{Introduction}
+Using a webview container, you can modify the contents of a page easily via a console. Using an Android framework called Droidscript, you can execute custom-made codes in a webview that has the XTK framework loaded into it.
 
-TODO: Add your introduction: include why this project is important and what your contribution is.
 
-\section{Related Work}
-
-Here you can cite existing related work like XTK~\cite{XTK} or Three.js~\cite{Threejs}.
-
-\section{Method}
-
-Describe your project in detail.
-
-\subsection{Implementation}
 
 \vspace{0.09 cm}
 \textbf{Scripting Engine:}
@@ -142,9 +136,11 @@ Describe your project in detail.
 The DroidScript App contains a scripting engine which allows anyone with a bit of JavaScript knowledge to easily write Apps for their mobile phone or tablet. You can write very simple Apps with just a few buttons, or more complex ones which include dynamic graphical interfaces such as the DroidScript application itself, which is written using the very same engine.
 
 As well as creating graphical interfaces, you have access to Sensors like the Accelerometer, Compass, Light meter or other device components like Wifi, Bluetooth, Camera, GPS, SD Card, SMS, Emails, Internet and more. We're always adding new functionality to the engine, so if you want something added just let us know via email or leave a comment on the forum.
+
+\textbf{Source: } \nolinkurl{ www.androidscript.org}\newline
 \vspace{0.045 cm}
-\newline\textbf{Source: } \nolinkurl{ www.androidscript.org}\newline
-\vspace{0.045 cm}
+
+\section{Method}
 
 \textbf{App Object:}
 
@@ -172,9 +168,9 @@ The \textbf{app} object is the main driving force behind Droidscript and its eas
 \item User Information
 \end{itemize}
 
-\textbf{Source:}\nolinkurl{www.androidscript.org}\newline
+\textbf{source : }\hyperlink{www.androidscript.org}{www.androidscript.org}
 
-\newpage
+\subsection{Implementation}
 \textbf{A "Nested Bridge"}
 \vspace{0.09 cm}
 
@@ -184,113 +180,172 @@ The \textbf{app} object is the main driving force behind Droidscript and its eas
 
 \vspace{0.18 cm}
 Executes JavaScript code on live HTML/JavaScript, in an Android webview container. XTK code bridge created in JavaScript to using Droidscript framework to develop methods.
+\vspace{0.09 cm}
 
-\textbf{Android Controls}
-\begin{verbatim}
+\textbf{Android Controls: }
+
+\begin{minted}{javascript}
 //controls to initialize methods
-//buttons
 bexec = app.CreateButton("load");
 btnClearJsonData = app.CreateButton("clear json dat");
 btnCube = app.CreateButton("Add Cube +");
 btnDebug = app.CreateButton("Execute Code");
-btnobjlst = app.CreateButton("getobjs");a
+btnobjlst = app.CreateButton("getobjs");
 btnspch = app.CreateButton("start speech");
 btnSphere = app.CreateButton("Add Sphere +");
 btnwpcg = app.CreateButton("export");
 createHexagon = app.CreateButton("Make Hexagon Array");
-
 //data entry fields to store values to apply to XTK objects
-//text/textedit controls
-edt = app.CreateTextEdit("", drawerWidth, 0.18, "nospell,mono");
+edt = app.CreateTextEdit("",-1 ,0.18,"mono");
 labelBlue = app.CreateText("Blue:0.0");
 labelGreen = app.CreateText("Green:0.0");
 labelRed = app.CreateText("Red:0.0");
-
 //layouts to hold the prior objects
-layDebug = app.CreateLayout("linear", "VTop,fillxy");
-   layDebug.AddChild(btnCube);
-   layDebug.AddChild(btnDebug);
-   layDebug.AddChild(btnspch);
-   layDebug.AddChild(btnSphere);
-   layDebug.AddChild(createHexagon);
-   layDebug.AddChild(edt);
-   layDebug.AddChild(layRGB);
-   layDebug.AddChild(layXYZPos);
-layObjDebug = app.CreateLayout("linear", "VTop");
-   layObjDebug.AddChild(bexec);
-   layObjDebug.AddChild(btnClearJsonData);
-   layObjDebug.AddChild(btnobjlst);
-   layObjDebug.AddChild(btnwpcg);
-   layObjDebug.AddChild(objlist);
-layRGB = app.CreateLayout("linear", "Vertical");
-   layRGB.AddChild(labelBlue);
-   layRGB.AddChild(labelGreen);
-   layRGB.AddChild(labelRed);
-   layRGB.AddChild(skbBlue);
-   layRGB.AddChild(skbGreen);
-   layRGB.AddChild(skbRed);
-layXYZPos = app.CreateLayout("linear", "Horizontal,VCenter");
-   layXYZPos.AddChild(txtXPos);
-   layXYZPos.AddChild(txtYPos);
-   layXYZPos.AddChild(txtZPos);
-//lists
-objlist = app.CreateList(",", 0.45, 0.63);
-//seekbars
-skbBlue = app.CreateSeekBar(drawerWidth, -1);
-skbGreen = app.CreateSeekBar(drawerWidth, -1);
-skbRed = app.CreateSeekBar(drawerWidth, -1);
-speech = app.CreateSpeechRec();
+layDebug = app.CreateLayout("linear","VTop");
+layDebug.AddChild(btnCube);
+layDebug.AddChild(btnDebug);
+layDebug.AddChild(btnspch);
+layDebug.AddChild(btnSphere);
+layDebug.AddChild(createHexagon);
+layDebug.AddChild(edt);
+layDebug.AddChild(layRGB);
+layDebug.AddChild(layXYZPos);
+layObjDebug = app.CreateLayout("linear","VTop");
+layObjDebug.AddChild(bexec);
+layObjDebug.AddChild(btnClearJsonData);
+layObjDebug.AddChild(btnobjlst);
+layObjDebug.AddChild(btnwpcg);
+layObjDebug.AddChild(objlist);
+layRGB = app.CreateLayout("linear","Vertical");
+layRGB.AddChild(labelBlue);
+layRGB.AddChild(labelGreen);
+layRGB.AddChild(labelRed);
+layRGB.AddChild(skbBlue);
+layRGB.AddChild(skbGreen);
+layRGB.AddChild(skbRed);
+layXYZPos = app.CreateLayout("linear","Horizontal");
+layXYZPos.AddChild(txtXPos);
+layXYZPos.AddChild(txtYPos);
+layXYZPos.AddChild(txtZPos);
+//list to store and track objects created
+objlist = app.CreateList(",",0.45,0.63);
+//More controls to change properties post-running
+skbBlue = app.CreateSeekBar(-1,-1);
+skbGreen = app.CreateSeekBar(-1,-1);
+skbRed = app.CreateSeekBar(-1,-1);
+\end{minted}
 
-\end{verbatim}
-\subsection{Milestones}
+\newpage
 
-How did you structure the development?
+\section{Milestones}
 
-\subsubsection{Milestone 1}
+\subsection{Milestone 1}
+\textit{Date:   Wed Dec 11 19:04:09 2019 -0500}\newline
+Created a working production version, calling it DroidXTK.
 
-An example could be: The team brainstormed different designs by using a whiteboard.
+\subsection{Milestone 2}
+\textit{Date:   Mon Dec 9 15:22:42 2019 -0500}\newline
+Added android app project + resources - reorganized assets
 
-\subsubsection{Milestone 2}
+\subsection{Milestone 3}
 
-An example could be: The team chose the following design...
+\textit{Date:   Mon Dec 9 10:24:52 2019 -0500}\newline
+Wrote initial codes and prototypes.
 
-\subsubsection{Milestone 3}
+\subsection{Milestone 4}
 
-Add as many milestones as you like.
+\textit{Date:   Sat Nov 23 09:12:17 2019 -0500}\newline
+Created scripts that modify webview through app.Execute() (Executes code in webview in Droidscript)
+
+\subsection{Milestone 5}
+
+\textit{Date:   Thu Nov 21 20:45:06 2019 -0500}\newline
+Added links and repositories for project ideas.
+
+\subsection{Milestone 6}
+\textit{Date:   Thu Nov 21 11:25:40 2019 -0500}\newline
+Added final project directory, created symlinks to resources for project potentials, and created link folder to store relevant pages.
 
 \subsection{Challenges}
-
-Describe the challenges you faced.
-
-\begin{itemize}
-    \item Challenge 1: Some tricky business..
-    \item Challenge 2: Some other obstacle..
-\end{itemize}
+Getting voice recognition to work correctly, as it required numerous if/else and switch statements to properly process the code (without it "breaking" the rest of the code).
 
 \section{Results}
 
-Describe your final result. And, of course, add some images, like image~\ref{fig:example}. You can refer to the images in the text which is a nice feature of latex.
+\vspace{0.09 cm}
 
+\textbf{XTK Bridge Method:}
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=\linewidth]{gfx/cs460.png}
-  \caption{An example image.}
-  \label{fig:example}
-\end{figure}
+\begin{minted}{javascript}
+function dsx()
+{
+dsx.objectsarray = [];
+var objlst = [];
+//create new xtk obj counter
+this.counter = function (name)
+{
+//counter name
+var cname = "counter_" + name
+//counter as new variable (integer counter)
+this.cnt = cname;
+//set count to 0
+cname = 0;
+//return counter object
+return cname;
+}
+this.cube = function (name, x, y, z, r, g, b)
+{
+dsx.setobj(name, x, y, z, r, g, b);
+var code = ""
+code += (name + " = new X.cube(); \n ")
+code += (name + ".center" + " = 
+[" + x + "," + y + "," + z + "]; \n ")
+code += (name + ".color" + " = 
+[" + r + "," + g + "," + b + " ]; \n ")
+code += ("r.add( " + name + "); \n ")
+code += ("r.render(); \n ");
+return code;
+}
+
+...
+
+this.getobjlst = function ()
+{
+return dsx.objectsarray;
+}
+
+...
+
+dsx.writeAsJson = function (path, obj)
+{
+app.WriteFile(path, JSON.stringify(obj));
+}
+
+dsx.readAsJson = function (path)
+{
+if (app.FileExists(path))
+{
+return JSON.parse(app.ReadFile(path));
+}
+app.ShowPopup(path + " does not exist");
+return undefined;
+}
+
+...
+\end{minted}
 
 \section{Conclusions}
-
-Describe your final conclusions in 1-2 paragraphs. Please double-check that you removed all instructions of this template in all sections - including this one. Good luck!
-
-Your references are loaded in BibTex from references.bib!
+Had a great working prototype app, that could create several different geometry types, of which you could track their properties, change them, and create additional ones through use of my main xtk() method. The bridge created through my methods, enabled relatively unbounded access to the Android API's and frameworks, allowing them to exchange data back and forth efficiently.
 
 %%
 %% REFERENCES
 %%
 \bibliographystyle{ACM-Reference-Format}
+\biblioht
 \bibliography{references}
 
+[1] \textbf{XTK Toolkit:   }   \hyperlink{http://goxtk.com}{http://goxtk.com/}
+
+[2] \textbf{Dave Smart, Droidscript Framework:    }   \hyperlink{http://droidscript.org/}{http://droidscript.org/}
 
 \end{document}
 \endinput
