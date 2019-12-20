@@ -1,4 +1,5 @@
 function voxelPlacerMain(){
+	
 	console.log("Entered Main");
 	
 	//Scene + Renderer setup
@@ -27,8 +28,50 @@ function voxelPlacerMain(){
 
 	//Saving/loading
 	var cubes = [];
-	objectString = "";
+	var objectString = "";
 	//objectString = "0 0 0 16711680 0 10 0 682452 0 0 10 682452 10 0 0 682452 0 0 -10 682452 -10 0 0 682452 10 0 -10 682452 -10 0 -10 682452 -10 0 10 682452 10 0 10 682452 -10 10 10 682452 0 10 10 682452 10 10 10 682452 -10 10 -10 682452 0 10 -10 682452 10 10 -10 682452 10 10 0 682452 -10 10 0 682452 -10 20 10 682452 -10 20 0 682452 -10 20 -10 682452 0 20 -10 682452 10 20 -10 682452 10 20 0 682452 0 20 10 682452 0 20 0 682452 10 20 10 682452 -10 30 -10 682452 -10 30 0 682452 -10 30 10 682452 0 30 10 682452 0 30 -10 682452 0 30 0 682452 10 30 -10 682452 10 30 0 682452 10 30 10 682452 -10 40 -10 682452 -10 40 0 682452 -10 40 10 682452 0 40 -10 682452 0 40 0 682452 0 40 10 682452 10 40 -10 682452 10 40 0 682452 10 40 10 682452 -10 50 -10 682452 -10 50 0 682452 -10 50 10 682452 0 50 -10 682452 0 50 0 682452 0 50 10 682452 10 50 -10 682452 10 50 0 682452 10 50 10 682452 -10 60 10 13896202 -10 60 -10 13896202 -10 60 0 13896202 0 60 -10 13896202 10 60 -10 13896202 0 60 0 13896202 10 60 0 13896202 0 60 10 13896202 10 60 10 13896202 -10 60 20 13896202 0 60 20 13896202 10 60 20 13896202 -10 50 20 13896202 0 50 20 13896202 10 50 20 13896202 -10 60 30 13896202 0 60 30 13896202 10 60 30 13896202 -10 50 30 13896202 0 50 30 13896202 10 50 30 13896202 -10 60 40 13896202 0 60 40 13896202 10 60 40 13896202 -10 50 40 13896202 0 50 40 13896202 10 50 40 13896202 -10 60 50 13947914 0 60 50 13947914 10 60 50 13947914 -10 50 50 13947914 0 50 50 13947914 10 50 50 13947914 -10 40 50 13947914 0 40 50 13947914 10 40 50 13947914 10 30 50 13947914 -10 30 50 13947914 0 30 50 13947914 -10 70 40 13947914 -10 70 20 13947914 10 70 10 13947914 10 70 40 13947914 0 70 0 13947914 -10 70 -10 13947914 0 70 40 6149130 10 70 30 6149130 0 70 20 6149130 0 80 20 6149130 10 70 0 6149130 0 70 -10 6149130 20 70 0 6149130 10 80 30 6149130 10 90 30 6149130 10 70 20 6149130 0 80 -10 6149130 10 80 -10 6149130 -20 40 -10 6149130 -10 40 -20 6149130 -20 50 50 6149130 -20 50 40 6149130 -20 60 0 6149130 -20 50 -10 6149130 -10 40 -30 6149130 -10 70 10 6149130 -20 60 20 6149130 "
+	
+	//Loading txt
+	var fileInput = document.createElement("input");
+	fileInput.type = "file";
+	fileInput.onchange = function(e){	
+		var textLoader = new THREE.FileLoader();
+		textLoader.load(
+			e.target.files[0].name,
+			function(data){
+				objectString = data;
+				//Remove all cubes from the scene
+				cubes.forEach(function(cube){
+					scene.remove(cube);
+				});
+				cubes = [];
+				
+				//Convert string to array of ints
+				var loadedValues = objectString.split(" ");
+				var i = 0;
+				loadedValues.forEach(function(string){
+					loadedValues[i] = parseInt(string);
+					i++;
+				});
+				
+				//Create cubes, each cube is 4 values long
+				for(i = 0; i < loadedValues.length - 1; i += 4){
+					var pos = new THREE.Vector3(loadedValues[i], loadedValues[i+1], loadedValues[i+2]);
+					var cubeColor = loadedValues[i+3];
+					var loadedCubeBuffer = new THREE.BoxBufferGeometry(10, 10, 10);
+					var loadedMaterial = new THREE.MeshStandardMaterial({
+						color : cubeColor
+					});
+					var loadedCube = new THREE.Mesh(loadedCubeBuffer, loadedMaterial);
+					loadedCube.position.copy(pos);
+					scene.add(loadedCube);
+					
+				}
+			}
+	
+		);
+	}
+	
 	
 	//Geometry
 	var firstCubeBuffer = new THREE.BoxBufferGeometry(10, 10, 10);
@@ -116,35 +159,11 @@ function voxelPlacerMain(){
 				var color = cube.material.color.getHex();
 				objectString += xPos + " " + yPos + " " + zPos + " " + color + " ";
 			});
+			var blob = new Blob([objectString], {type: "text/plain"});
+			saveAs(blob, "save.txt");
 		},
 		load : function(){
-			//Remove all cubes from the scene
-			cubes.forEach(function(cube){
-				scene.remove(cube);
-			});
-			cubes = [];
-			
-			//Convert string to array of ints
-			var loadedValues = objectString.split(" ");
-			var i = 0;
-			loadedValues.forEach(function(string){
-				loadedValues[i] = parseInt(string);
-				i++;
-			});
-			
-			//Create cubes, each cube is 4 values long
-			for(i = 0; i < loadedValues.length - 1; i += 4){
-				var pos = new THREE.Vector3(loadedValues[i], loadedValues[i+1], loadedValues[i+2]);
-				var cubeColor = loadedValues[i+3];
-				var loadedCubeBuffer = new THREE.BoxBufferGeometry(10, 10, 10);
-				var loadedMaterial = new THREE.MeshStandardMaterial({
-					color : cubeColor
-				});
-				var loadedCube = new THREE.Mesh(loadedCubeBuffer, loadedMaterial);
-				loadedCube.position.copy(pos);
-				scene.add(loadedCube);
-				
-			}
+			fileInput.click();
 		}
 	};
 	var newCubeColor = 0xffffff;
