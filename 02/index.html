@@ -1,0 +1,110 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
+ 
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+    
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+ 
+    <script type="text/javascript">
+ 
+    window.onload = function() {
+
+	  // create a new scene and renderer 
+	  r = new X.renderer3D();
+      r.init();
+      
+      var temp = new X.cube();
+      var array1 = [];       // creating array maxtrix with cubes created in cells
+	  var i = 0;
+	  var j = 0;
+	  var right = 0;
+	  var up = 0;
+	  for (i = 0; i < 9; i++) {
+	      up = 0;                            //  -----
+	  	  array1.push([]);                   //  -----
+		  for (j = 0;j < 9; j++){
+		    temp = new X.cube();
+			array1[i].push(temp);
+			array1[i][j].center = [right, up, 0];
+			array1[i][j].color = [100, 100, 100];
+			r.add(temp);
+			up = up + 25;
+		  }
+		  right = right + 25;
+		  
+	  }
+
+	  var x = 0; //boundries for the colums
+	  var y = 0; // ------
+
+	  for(i = 0; i < 9; i++) {   // color the matrix
+		  if (i == 1) {   //coulums 1
+		  	  x = 2;
+			  y = 8;
+		  }
+		  if (i == 2) {   //coulums 2
+		  	  x = 1;
+			  y = 7;
+		  }
+		  if (i >= 3 && i <= 5) {   //coulums 3 to 5
+		  	  x = 0;
+			  y = 6;
+		  }
+		  
+		  if (i == 7) {   //coulums 6
+		  	  x = 2;
+			  y = 8;
+		  }
+		  if (i == 6) {   //coulums 7
+		  	  x = 1;
+			  y = 7;
+		  }
+	      if (i >= 1 && i <= 7)  {
+	  		for(j = 0; j < 9; j++) {
+				if (j >= x && j <= y) {
+				   array1[i][j].color = [255,165,0];
+				}
+
+			}
+		  }
+	  }
+	  array1[3][4].color = [0,0,0];   // white eyes
+	  array1[2][4].color = [0,0,0];
+	  array1[5][4].color = [0,0,0];
+	  array1[6][4].color = [0,0,0];
+      
+      
+ 
+      // set camera further away!
+      r.camera.position = [0, 0, 1000];
+ 
+      // render everything!
+      r.render();
+ 
+    };
+ 
+    </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
+</html>

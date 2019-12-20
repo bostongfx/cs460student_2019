@@ -1,0 +1,174 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body { 
+          background-color:#000;
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          overflow: hidden !important;  
+      }
+    </style>
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script src='ThreeCSG.js' type="text/javascript"></script>
+    <script>
+      var scene;
+      var camera;
+      var renderer; 
+      var light; 
+      var ambientLight; 
+      var controls;
+      var direction; 
+      var slices; 
+      var vector;
+      var angle;
+      var slicenumber;
+      window.onload = function(){
+        scene = new THREE.Scene();
+        var fov = 60;
+        var ratio = window.innerWidth / window.innerHeight;
+        var zNear = 1;
+        var zFar = 10000;
+        camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camera.position.set(0,0,50);
+
+        renderer = new THREE.WebGLRenderer({  });
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+
+        ambientLight = new THREE.AmbientLight();
+        scene.add( ambientLight );
+        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        light.position.set( 10, 100, 10 );
+        scene.add( light );
+
+        controls = new THREE.TrackballControls(camera, renderer.domElement); //might need the domelement
+
+
+
+
+
+        //START OF PROJECT CODE------------------------------------------------------------------------------
+
+        //TEST CUBE----
+        material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        geometry = new THREE.BoxBufferGeometry(20,20,20);
+        cube = new THREE.Mesh( geometry, material);
+        cube.position.set(0,0,0);
+        //TEST CUBE IS NOT YET ADDED TO SCENE
+
+
+        //CENTER OBJECT (cube) AROUND ITS BOUDING SPHERE AND CREATE SPHERE
+         cube.geometry.computeBoundingSphere();
+         cube.geometry.center(); //might not be right, bounding box only
+         sphereR = cube.boundingSphere.radius;
+
+         geometry = new THREE.SphereGeometry(sphereR);
+         material = new THREE.MeshStandardMaterial({color: 0x00ff00});
+         Sphere = new THREE.Mesh(geometry, material);
+        //
+
+        //SET TRACKBALL AROUND THE CENTER OF THE BOUNDING SPHERE
+
+        
+        //
+
+        //CAMERA'S VECTOR VIEWING THE WORLD SPACE
+        vector = new THREE.Vector3(0.,0.,0.);
+        direction = camera.getWorldDirection(vector); //copies the camera view vector into empty vector
+        //KNOW POSITION AND DIRECTION OF CAMERA
+
+        //CREAT RAYCAST AND GET THE INTERSECTION POINT ON THE SPHERE
+        var raycaster = new THREE.Raycaster();
+        raycaster.set(direction, (new THREE.Vector3(cube.position.x,cube.position.y,cube.position.z)).normalize());
+        coordOfInter = raycaster.intersectObject(Sphere).point;
+        //The POINT DETERMMINES THE BEGENING OF THE SLICES
+
+        //DETERMINE SLICE NUMBER AND THREECSG THE OBJECT (cube)
+        slicenumber = 10000;
+        var objtree = ThreeBPS(cube);
+        var totalgeometry;
+        var totalmesh;
+
+        for(int i = 0; i < slicenumber) {
+            //MAKE THE PLANE AT COORD ALONG THE LINE THROUGH THE SPHERE
+            geometry = new THREE.PlaneGeometry(coordOfInter);
+            material = new THREE.MeshStandardMaterial();
+            plane = new THREE.Mesh(geometry, material);
+            plane.geometry.lookAt(direction); //first slice
+            Planetree = new ThreeBPS(plane);
+            //
+
+            // ITERSECTION OF PLANE AND OBJ (cube)
+             intersection = planetree.intersect(objtree);
+
+            //
+
+            // NEXT POSITION FOR SLICE PROPORTIONAL TO THE NUMBER OF SLICES
+            coordOfInter.x =+ 2*sphereR*coordOfInter.x/slicenumber;
+            coordOfInter.y =+ 2*sphereR*coordOfInter.y/slicenumber;
+            coordOfInter.z =+ 2*sphereR*coordOfInter.z/slicenumber;
+            //
+          }
+
+          //ANIMATE FUNCTION
+          //
+        //Not finished
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //END OF PROJECT CODE------------------------------------------------------------------------------
+
+      animate();
+      function animate() {
+      requestAnimationFrame( animate );
+ 
+      controls.update();
+      renderer.render( scene, camara );
+    }
+      }
+    </script>>
+    </head>
+  <body>
+  </body>
+</html>

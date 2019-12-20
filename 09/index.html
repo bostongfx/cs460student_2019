@@ -20,7 +20,7 @@
 
     <script>
 
-      var scene, camera, renderer, effect, ambientLight, light, controls;
+      var scene, camera, renderer, effect, ambientLight, light, controls, mesh0, mesh1;
       var floor;
 
       window.onload = function() {
@@ -42,6 +42,13 @@
         directionalLight.position.set( 10, 100, 10 );
         scene.add( directionalLight );
 
+        plight0 = new THREE.PointLight(0x00ff00, 1, 100);
+        plight0.position.set(0,20,0);
+        plight1 = new THREE.PointLight(0xff0000, 1, 100);
+        plight1.position.set(0,20,0);
+        scene.add(plight0);
+        scene.add(plight1);
+
 
         // TODO Part 3 (add 2 pointlights)
 
@@ -56,12 +63,25 @@
              color: 0x21ce70
           } );
 
-          mesh = new THREE.Mesh( geometry, toonMaterial );
+          mesh0 = new THREE.Mesh( geometry, toonMaterial );
           
-          scene.add( mesh );
+          scene.add( mesh0 );
 
         } );
+        var loader2 = new THREE.PLYLoader();
+        loader2.load('armadillo.ply', function (geometry) {
 
+          geometry.computeVertexNormals();
+
+          basicMaterial = new THREE.MeshBasicMaterial( {
+             color: 0x21ce70
+          } );
+
+          mesh1 = new THREE.Mesh( geometry, basicMaterial );
+          mesh1.position.set(100,0,0);
+          scene.add( mesh1 );
+
+        } );
         // TODO Part 1, load another mesh
         // TODO Part 2, use a different material for this mesh
 
@@ -88,6 +108,26 @@
         directionalFolder.add(directionalLight.position, 'y', -100, 100);
         directionalFolder.add(directionalLight.position, 'z', -100, 100);
         directionalFolder.open();
+
+        var pointlightFolder = gui.addFolder('Point Light');
+        pointlightFolder.addColor(controller, 'color').onChange(function(value) {plight0.color.setHex(value); });
+        pointlightFolder.addColor(controller, 'color').onChange(function(value) {plight1.color.setHex(value); });
+        pointlightFolder.add(plight0.position, 'x', -100, 100);
+        pointlightFolder.add(plight0.position, 'y', -100, 100);
+        pointlightFolder.add(plight0.position, 'z', -100, 100);
+        pointlightFolder.add(plight1.position, 'x', -100, 100);
+        pointlightFolder.add(plight1.position, 'y', -100, 100);
+        pointlightFolder.add(plight1.position, 'z', -100, 100);
+        pointlightFolder.open();
+        // TODO Part 4 (control the color and position of point lights)
+
+        var materialFolder = gui.addFolder('Color of Material');
+        materialFolder.addColor(controller, 'color').onChange(function(value) {mesh0.material.color.setHex(value);});
+        materialFolder.addColor(controller, 'color').onChange(function(value) {mesh1.material.color.setHex(value);});
+        materialFolder.open();
+        // TODO Part 5 (control the color of both materials in the scene)
+
+
 
         // TODO Part 4 (control the color and position of point lights)
 
