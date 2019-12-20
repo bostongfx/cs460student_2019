@@ -240,13 +240,13 @@
 
         
         
-        // if(objects[i].obstacle.position.x < -161){
-        //   scene.remove(objects[i].obstacle);
-        // }
+        if(objects[i].obstacle.position.x < -161){
+          scene.remove(objects[i].obstacle);
+        }
 
-        // if(objects[i].outline.position.x < -161){
-        //   scene.remove(objects[i].outline);
-        // }
+        if(objects[i].outline.position.x < -161){
+          scene.remove(objects[i].outline);
+        }
 
         objects[i].obstacle.position.x += objects[i].obstacle_x_velocity;
         objects[i].outline.position.x += objects[i].outline_x_velocity;
@@ -305,27 +305,27 @@
 
 // COLLISION DETECTION
 
-      // var box = player;
-      // boxBB = new THREE.Box3().setFromObject(box);
-      // for(var i = 0; i < objects.length; i++){
-      //   var spike = objects[i].obstacle;  //spike is a copy of the obstacle
-      //   spikeBB = new THREE.Box3().setFromObject(spike);
-      //   var collision = boxBB.intersectsBox(spikeBB);
-      //   if(collision == true){
-      //    refreshPage();
+      var box = player;
+      boxBB = new THREE.Box3().setFromObject(box);
+      for(var i = 0; i < objects.length; i++){
+        var spike = objects[i].obstacle;  //spike is a copy of the obstacle
+        spikeBB = new THREE.Box3().setFromObject(spike);
+        var collision = boxBB.intersectsBox(spikeBB);
+        if(collision == true){
+         refreshPage();
        
-      //   }
+        }
 
 
-      // }
-      // for(var q = 0; q < platforms.length; q++){
-      //   var wall = platforms[q].platform;
-      //   wallBB = new THREE.Box3().setFromObject(wall);
-      //   var smash = boxBB.intersectsBox(wallBB);
-      //   if(smash == true){
-      //     refreshPage();
-      //   }
-      // }
+      }
+      for(var q = 0; q < platforms.length; q++){
+        var wall = platforms[q].platform;
+        wallBB = new THREE.Box3().setFromObject(wall);
+        var smash = boxBB.intersectsBox(wallBB);
+        if(smash == true){
+          refreshPage();
+        }
+      }
 
 
 
