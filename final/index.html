@@ -695,7 +695,8 @@
           var down = gui.add(controller, 'Down Sample');
           var pixelate = gui.add(controller, 'Pixelate');
           var size = new Size();
-          var pixels = gui.add(size, 'numPixels', [8, 16, 32, 64, 128, 256]).name('Pixel Size').listen();
+          var pixels = gui.add(size, 'numPixels', [8, 16, 32, 64]).name('Pixel Size').listen();
+          // 128, 256 too big for my gpu
           pixels.onChange(function(val) {
             size.numPixels = parseInt(val);
             controller['Pixelate']();
