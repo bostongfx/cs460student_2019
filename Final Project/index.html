@@ -1,101 +1,223 @@
 <html>
   <head>
-    <meta charset="UTF-8" />
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
     <style>
-      html, body { 
-        background-color:rgb(255, 255, 255);
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden !important;  
-        /* background-image: url(sky.jpg); */
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
+      body{
+      margin:0;
+      }
+
+      canvas{
+      display:block;
+      width:100%;
+      height:100%;
+      }
+
+      input{
+      position:absolute;
+      top:0;
       }
     </style>
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
 
-    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
-    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
-    <script src="https://threejs.org/examples/js/effects/AnaglyphEffect.js" type="text/javascript"></script>
-    <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
-    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
-    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
-
-
-    <script>
-      var scene, camera, renderer, ambientLight, light, controls;
-      var floor, layer1;
-      var controller;
-      var floorTexture,floorGeometry, floorMaterial;
-      window.onload = function() {
-        scene = new THREE.Scene();
-        var fov = 60;
-        var ratio = window.innerWidth / window.innerHeight;
-        var zNear = 1;
-        var zFar = 10000;
-        camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-        camera.position.set( 0, 0, 500);
-        renderer = new THREE.WebGLRenderer({ alpha: true });
-        renderer.setSize( window.innerWidth, window.innerHeight );
-        document.body.appendChild( renderer.domElement );
-        
-        ambientLight = new THREE.AmbientLight();
-        scene.add( ambientLight );
-        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
-        light.position.set( 10, 100, 10 );
-        scene.add( light );
-        //layer0
-        floorTexture = new THREE.TextureLoader().load( 'picture/mountain1.png' );
-        floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
-        floorMaterial = new THREE.MeshBasicMaterial( {
-          map: floorTexture,
-          side: THREE.DoubleSide
-        } );
-        floor = new THREE.Mesh( floorGeometry, floorMaterial );
-        floor.position.y = -100;
-        floor.rotateX(-30);
-        scene.add( floor );
-        
-        floorTexture = new THREE.TextureLoader().load('picture/mountain2.png');
-        floorGeometry = new THREE.PlaneBufferGeometry(1000, 1000);
-        floorMaterial = new THREE.MeshBasicMaterial({
-          map: floorTexture,
-          side: THREE.DoubleSide
-        });
-        layer1 = new THREE.Mesh(floorGeometry, floorMaterial);
-        layer1.position.y = -50;
-        layer1.rotateX(-30);
-        scene.add(layer1);
-        
-        
-        
-        controls = new THREE.TrackballControls(camera, renderer.domElement);
-        
-        
-        animate();
-      };
-      window.onclick = function(e) {
-          if (!e.shiftKey) {
-            e.preventDefault();
-            return false;
-          }
-          pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
-          vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
-                                        -( pixel_coords.y / window.innerHeight ) * 2 + 1);
-          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
-          raycaster = new THREE.Raycaster();
-          raycaster.setFromCamera(vp_coords_near, camera);
-          intersects = raycaster.intersectObject(floor);
-          
-          
-      };
-      function animate() {
-        requestAnimationFrame( animate );
-        
-        controls.update();
-        renderer.render( scene, camera );
-      };
-    </script>
   </head>
-  <body></body>
+  <body>
+    <input type="file" id="input" />  
+    <canvas id="canvas"></canvas>
+    <div id='r' style='position:absolute;top:50px;left: 100px;width:100%;height: 100%;'>
+    </div>
+  </body>
+
+  <script type="text/javascript">
+
+
+    window.onload = function() {
+
+
+      layer = new X.renderer3D();
+      layer.container = 'r';
+      layer.init();
+
+
+    
+      var c = document.getElementById("canvas");
+      w = window.innerWidth;
+      h = window.innerHeight;
+      c.width = w;
+      c.height = h;
+      ctx = c.getContext("2d"),
+      input = document.getElementById("input"),
+      reader = new FileReader();
+      
+
+
+        //read file input
+        input.onchange = function() {
+
+          // console.log(input.files)
+
+          reader.readAsDataURL(input.files[0]);
+          reader.onload = function() {
+            img = new Image(); 
+            img.src = reader.result;
+            img.onload = function() {
+
+
+
+              // imgW = img.width;
+              // imgH = img.height;
+              // //check how many full tiles we can fit
+              // //right and bottom sides of the image will get cropped
+              // tileCountX = Math.floor(imgW / tileDim);
+              // tileCountY = Math.floor(imgH / tileDim);
+
+              // ctx.drawImage(img, 0, 0);
+              // imgData = ctx.getImageData(0, 0, imgW, imgH).data;
+
+
+              // console.log(imgData);
+              
+
+              // var offset = 0;
+              // for (var i =0; i<100; i+=4) {
+
+              //   var r = imgData[i];
+              //   var g = imgData[i+1];
+              //   var b = imgData[i+2];
+              //   var a = imgData[i+3];
+
+              //   var c = new X.cube()
+              //   c.color = [r/255., g/255., b/255.];
+
+              //   c.center = [offset, 0, 0];
+
+              //   offset += 30;
+
+              //   layer.add(c);
+
+
+              // }
+
+
+              // layer.render();
+
+              //start  
+              init();
+              var tiles = getTiles();
+              drawTiles(tiles);
+
+
+
+            }
+          }
+        } 
+
+
+    }
+
+    var imgW, imgH, imgData,tileDim = 50; //tile dimensions px
+    var tileCountX, tileCountY;         //how many tiles we can fit
+
+
+    
+
+    function init() {
+      imgW = img.width;
+      imgH = img.height;
+      //check how many full tiles we can fit
+      //right and bottom sides of the image will get cropped
+      tileCountX = Math.floor(imgW / tileDim);
+      tileCountY = Math.floor(imgH / tileDim);
+
+      ctx.drawImage(img, 0, 0);
+      imgData = ctx.getImageData(0, 0, imgW, imgH).data;
+      ctx.clearRect(0, 0, w, h);
+    }
+
+    //get imgdata index from img px positions
+    function indexX(x) {
+      var i = x * 4;
+      if (i > imgData.length) console.warn("X out of bounds");
+      return i;
+    }
+    function indexY(y) {
+      var i = imgW * 4 * y;
+      if (i > imgData.length) console.warn("Y out of bounds");
+      return i;
+    }
+    function getIndex(x, y) {
+      var i = indexX(x) + indexY(y);
+      if (i > imgData.length) console.warn("XY out of bounds");
+      return i;
+    }
+
+    //get a tile of size tileDim*tileDim from position xy
+    function getTile(x, y, u, v) {
+      var tile = [];
+      //loop over rows
+      for (var i = 0; i < tileDim; i++) {
+        tile.push(...imgData.slice(getIndex(x, y + i), getIndex(x + tileDim, y + i)));
+      }
+      // tile = new ImageData(new Uint8ClampedArray(tile), tileDim, tileDim);
+      tile2 = new ImageData(new Uint8ClampedArray(tile), tileDim, tileDim);
+      //save original position
+      tile2.x = x;
+      tile2.y = y;
+      tile2.u = u;
+      tile2.v = v;
+      tile2.tiledim = tileDim;
+      tile2.rawData = new Uint8ClampedArray(tile);
+
+      return tile2;
+    }
+
+    //generate all tiles
+    function getTiles() {
+      var tiles = [];
+      for (var y = 0; y < tileCountY; y++) {
+        for (var x = 0; x < tileCountX; x++) {
+            tiles.push(getTile(x * tileDim, y * tileDim, x, y));
+        }
+      }
+      return tiles;
+    }
+
+    //and draw with offset
+    var offset = 1.1;
+    function drawTiles(tiles) {
+      tiles.forEach((d,i) => {
+
+        console.log('draw tiles')
+
+        ctx.putImageData(d, d.x * offset, d.y * offset)
+
+        offset2 = 15;
+
+        // var cube = new X.cube();
+        // cube.texture.rawData = d.rawData;
+        // cube.texture.rawDataWidth = d.tiledim;
+        // cube.texture.rawDataHeight = d.tiledim;
+        // cube.center = [d.u * offset2, d.v * offset2, 1];
+        // cube.lengthX = cube.lengthY = cube.lengthZ = 10;
+
+        // layer.add(cube);
+
+
+      });
+
+
+      layer.render();
+
+    }
+
+    function convertCanvasToImage(canvas){
+        var image = new Image();
+        image.src = canvas.toDataUrl("image/png");
+        return image;
+    }
+
+  
+  </script>
+
+
 </html>
