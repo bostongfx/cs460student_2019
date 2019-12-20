@@ -2,12 +2,12 @@
   <head>
     <meta charset="UTF-8" />
     <style>
-      html, body { 
+      html, body {
         background-color:#000;
         margin: 0;
         padding: 0;
         height: 100%;
-        overflow: hidden !important;  
+        overflow: hidden !important;
       }
     </style>
 
@@ -34,7 +34,7 @@
         renderer = new THREE.WebGLRenderer({ });
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( renderer.domElement );
-        
+
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );
 
@@ -43,8 +43,12 @@
         scene.add( directionalLight );
 
 
-        // TODO Part 3 (add 2 pointlights)
-
+        var pointlight_1 = new THREE.PointLight( 0xff0000, 1, 100 );
+        pointlight_1.position.set( 50, 50, 50 );
+        scene.add( pointlight_1 );
+        var pointlight_2 = new THREE.PointLight( 0xff0000, 1, 100 );
+        pointlight_2.position.set( 50, 50, 50 );
+        scene.add( pointlight_2 );
 
 
         var loader = new THREE.PLYLoader();
@@ -56,20 +60,37 @@
              color: 0x21ce70
           } );
 
-          mesh = new THREE.Mesh( geometry, toonMaterial );
-          
-          scene.add( mesh );
+          arm_mesh = new THREE.Mesh( geometry, toonMaterial );
+
+          arm_mesh.position.x = -100;
+          scene.add( arm_mesh );
 
         } );
 
-        // TODO Part 1, load another mesh
-        // TODO Part 2, use a different material for this mesh
 
+        loader.load('big_spider.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( {
+             color: 0x21ce70
+          } );
+
+          spi_mesh = new THREE.Mesh( geometry, material );
+
+          spi_mesh.scale.multiplyScalar( 50 );
+          spi_mesh.position.y = -100;
+          spi_mesh.rotation.x = -Math.PI/2;
+
+          scene.add( spi_mesh );
+
+        } );
 
 
         controller = {
+          'threejs_color': 0xffffff,
           'color': 0xffffff // we can use this single color
-                            // container for all colors in the scene 
+                            // container for all colors in the scene
                             // if we modify the onChange callback (see below)
 
           // TODO Bonus Part 1
@@ -89,9 +110,26 @@
         directionalFolder.add(directionalLight.position, 'z', -100, 100);
         directionalFolder.open();
 
-        // TODO Part 4 (control the color and position of point lights)
+        var pointFolder_1 = gui.addFolder('Point Light 1');
+        pointFolder_1.addColor(controller, 'color').onChange( function(value) { pointlight_1.color.setHex(value); });
+        pointFolder_1.add(pointlight_1.position, 'x', -100, 100);
+        pointFolder_1.add(pointlight_1.position, 'y', -100, 100);
+        pointFolder_1.add(pointlight_1.position, 'z', -100, 100);
+        pointFolder_1.open();
 
-        // TODO Part 5 (control the color of both materials in the scene)
+        var pointFolder_2 = gui.addFolder('Point Light 2');
+        pointFolder_2.addColor(controller, 'color').onChange( function(value) { pointlight_2.color.setHex(value); });
+        pointFolder_2.add(pointlight_2.position, 'x', -100, 100);
+        pointFolder_2.add(pointlight_2.position, 'y', -100, 100);
+        pointFolder_2.add(pointlight_2.position, 'z', -100, 100);
+        pointFolder_2.open();
+
+        var material_color = gui.addFolder('Material Color');
+        material_color.addColor(controller, 'threejs_color').onChange( function() {
+          spi_mesh.material.color.set( controller.threejs_color );
+          arm_mesh.material.color.set( controller.threejs_color );
+        });
+        material_color.open();
 
         gui.open();
 
@@ -112,7 +150,7 @@
         controls.update();
 
         renderer.render( scene, camera );
-        
+
 
       };
 

@@ -1,0 +1,409 @@
+<html>
+
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <title>CS460 Assignment 2</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      /* font color */
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden !important;
+    }
+
+    #logo {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+  </style>
+
+  <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+
+  <script type="text/javascript">
+    window.onload = function() {
+
+      // this gets called when the site is ready
+
+      // create a new scene and renderer
+      r = new X.renderer3D();
+      r.init();
+
+      // frame the art on the screen
+      r.camera.position = [ 0, 0, 1000];
+
+      // create a cube and add it! 54 times!
+      c1 = new X.cube();
+      c2 = new X.cube();
+      c3 = new X.cube();
+      c4 = new X.cube();
+      c5 = new X.cube();
+      c6 = new X.cube();
+      c7 = new X.cube();
+      c8 = new X.cube();
+      c9 = new X.cube();
+      c10 = new X.cube();
+      c11 = new X.cube();
+      c12 = new X.cube();
+      c13 = new X.cube();
+      c14 = new X.cube();
+      c15 = new X.cube();
+      c16 = new X.cube();
+      c17 = new X.cube();
+      c18 = new X.cube();
+      c19 = new X.cube();
+      c20 = new X.cube();
+      c21 = new X.cube();
+      c22 = new X.cube();
+      c23 = new X.cube();
+      c24 = new X.cube();
+      c25 = new X.cube();
+      c26 = new X.cube();
+      c27 = new X.cube();
+      c28 = new X.cube();
+      c29 = new X.cube();
+      c30 = new X.cube();
+      c31 = new X.cube();
+      c32 = new X.cube();
+      c33 = new X.cube();
+      c34 = new X.cube();
+      c35 = new X.cube();
+      c36 = new X.cube();
+      c37 = new X.cube();
+      c38 = new X.cube();
+      c39 = new X.cube();
+      c40 = new X.cube();
+      c41 = new X.cube();
+      c42 = new X.cube();
+      c43 = new X.cube();
+      c44 = new X.cube();
+      c45 = new X.cube();
+      c46 = new X.cube();
+      c47 = new X.cube();
+      c48 = new X.cube();
+      c49 = new X.cube();
+      c50 = new X.cube();
+      c51 = new X.cube();
+      c52 = new X.cube();
+      c53 = new X.cube();
+      c54 = new X.cube();
+
+      // Build from Bottom row up  and l -> R
+
+      c1.color = [.45, .45, .55];
+      c1.transform.translateX(-30);
+      c1.transform.translateY(-120);
+      c2.color = [.55, .55, .65];
+      c2.transform.translateX(0);
+      c2.transform.translateY(-120);
+      c3.color = [.45, .45, .55];
+      c3.transform.translateX(30);
+      c3.transform.translateY(-120);
+
+      // 2nd row - mouth row l -> R
+
+      c4.color = [.33, .33, .43];
+      c4.transform.translateX(-60);
+      c4.transform.translateY(-90);
+      c5.color = [.43, .43, .53];
+      c5.transform.translateX(-30);
+      c5.transform.translateY(-90);
+      c6.color = [.89, .69, .99];  // mouth c6
+      c6.transform.translateX(0);
+      c6.transform.translateY(-90);
+      c7.color = [.43, .43, .53];
+      c7.transform.translateX(30);
+      c7.transform.translateY(-90);
+      c8.color = [.33, .33, .43];
+      c8.transform.translateX(60);
+      c8.transform.translateY(-90);
+
+      // Third Row l -> R
+
+      c9.color = [.21, .21, .31];
+      c9.transform.translateX(-90);
+      c9.transform.translateY(-60);
+      c10.color = [.31, .31, .41];
+      c10.transform.translateX(-60);
+      c10.transform.translateY(-60);
+      c11.color = [.41, .41, .51];
+      c11.transform.translateX(-30);
+      c11.transform.translateY(-60);
+      c12.color = [.51, .51, .61];
+      c12.transform.translateX(0);
+      c12.transform.translateY(-60);
+      c13.color = [.41, .41, .51];
+      c13.transform.translateX(30);
+      c13.transform.translateY(-60);
+      c14.color = [.31, .31, .41];
+      c14.transform.translateX(60);
+      c14.transform.translateY(-60);
+      c15.color = [.21, .21, .31];
+      c15.transform.translateX(90);
+      c15.transform.translateY(-60);
+
+      // Middle row l -> R
+
+      c16.color = [.19, .19, .29];
+      c16.transform.translateX(-90);
+      c16.transform.translateY(-30);
+      c17.color = [.29, .29, .39];
+      c17.transform.translateX(-60);
+      c17.transform.translateY(-30);
+      c18.color = [.39, .39, .49];
+      c18.transform.translateX(-30);
+      c18.transform.translateY(-30);
+      c19.color = [.49, .49, .59];
+      c19.transform.translateX(0);
+      c19.transform.translateY(-30);
+      c20.color = [.39, .39, .49];
+      c20.transform.translateX(30);
+      c20.transform.translateY(-30);
+      c21.color = [.29, .29, .39];
+      c21.transform.translateX(60);
+      c21.transform.translateY(-30);
+      c22.color = [.19, .19, .29];
+      c22.transform.translateX(90);
+      c22.transform.translateY(-30);
+
+      //  Fifth row - eyeball Row l -> R
+
+      c23.color = [.17, .17, .27];
+      c23.transform.translateX(-90);
+      c23.transform.translateY(0);
+      c24.color = [.49, .59, .79];  // [x][]  [][]
+      c24.transform.translateX(-60);
+      c24.transform.translateY(0);
+      c25.color = [.59, .69, .89];  // [][x]  [][]
+      c25.transform.translateX(-30);
+      c25.transform.translateY(0);
+      c26.color = [.47, .47, .57];
+      c26.transform.translateX(0);
+      c26.transform.translateY(0);
+      c27.color = [.59, .69, .89];  // [][]  [x][]
+      c27.transform.translateX(30);
+      c27.transform.translateY(0);
+      c28.color = [.49, .59, .79];  // [][]  [][x]
+      c28.transform.translateX(60);
+      c28.transform.translateY(0);
+      c29.color = [.17, .17, .27];
+      c29.transform.translateX(90);
+      c29.transform.translateY(0);
+
+      // Add rotating eyelids to simulate blinking
+
+      // Left
+
+      c45.color = [0, 0, 0];
+      c45.lengthX = 21;
+      c45.lengthZ = 10;
+      c45.lengthY = 30;
+      c45.transform.translateX(-60);
+      c46.color = [0, 0, 0];
+      c46.lengthX = 21;
+      c46.lengthZ = 10;
+      c46.lengthY = 30;
+      c46.transform.translateX(-30);
+
+      c51.color = [0, 0, 0];
+      c51.lengthX = 21;
+      c51.lengthZ = 10;
+      c51.lengthY = 30;
+      c51.transform.translateX(-60);
+
+      c52.color = [0, 0, 0];
+      c52.lengthX = 21;
+      c52.lengthZ = 10;
+      c52.lengthY = 30;
+      c52.transform.translateX(-30);
+
+      // Right
+
+      c43.color = [0, 0, 0];
+      c43.lengthX = 21;
+      c43.lengthZ = 10;
+      c43.lengthY = 30;
+      c43.transform.translateX(60);
+      c44.color = [0, 0, 0];
+      c44.lengthX = 21;
+      c44.lengthZ = 10;
+      c44.lengthY = 30;
+      c44.transform.translateX(30);
+
+      c53.color = [0, 0, 0];
+      c53.lengthX = 21;
+      c53.lengthZ = 10;
+      c53.lengthY = 30;
+      c53.transform.translateX(60);
+      c54.color = [0, 0, 0];
+      c54.lengthX = 21;
+      c54.lengthZ = 10;
+      c54.lengthY = 30;
+      c54.transform.translateX(30);
+
+      // 6th row forehead row l -> R
+
+      c30.color = [.15, .15, .25];
+      c30.transform.translateX(-90);
+      c30.transform.translateY(30);
+      c31.color = [.25, .25, .35];
+      c31.transform.translateX(-60);
+      c31.transform.translateY(30);
+      c32.color = [.35, .35, .45];
+      c32.transform.translateX(-30);
+      c32.transform.translateY(30);
+      c33.color = [.45, .45, .55];
+      c33.transform.translateX(0);
+      c33.transform.translateY(30);
+      c34.color = [.35, .35, .45];
+      c34.transform.translateX(30);
+      c34.transform.translateY(30);
+      c35.color = [.25, .25, .35];
+      c35.transform.translateX(60);
+      c35.transform.translateY(30);
+      c36.color = [.15, .15, .25];
+      c36.transform.translateX(90);
+      c36.transform.translateY(30);
+
+      // Left Ear
+
+      c37.color = [.13, .13, .23];
+      c37.transform.translateX(-90);
+      c37.transform.translateY(60);
+      c38.color = [.23, .23, .33];
+      c38.transform.translateX(-60);
+      c38.transform.translateY(60);
+      c47.color = [.11, .11, .21];
+      c47.transform.translateX(-90);
+      c47.transform.translateY(90);
+      c48.color = [.21, .21, .31];
+      c48.transform.translateX(-60);
+      c48.transform.translateY(90);
+      c39.color = [.09, .09, .19];
+      c39.transform.translateX(-90);
+      c39.transform.translateY(120);
+
+      // Right Ear
+
+      c40.color = [.13, .13, .23];
+      c40.transform.translateX(90);
+      c40.transform.translateY(60);
+      c41.color = [.23, .23, .33];
+      c41.transform.translateX(60);
+      c41.transform.translateY(60);
+      c49.color = [.11, .11, .21];
+      c49.transform.translateX(90);
+      c49.transform.translateY(90);
+      c50.color = [.21, .21, .31];
+      c50.transform.translateX(60);
+      c50.transform.translateY(90);
+      c42.color = [.09, .09, .19];
+      c42.transform.translateX(90);
+      c42.transform.translateY(120);
+
+      r.add(c1);
+      r.add(c2);
+      r.add(c3);
+      r.add(c4);
+      r.add(c5);
+      r.add(c6);
+      r.add(c7);
+      r.add(c8);
+      r.add(c9);
+      r.add(c10);
+      r.add(c11);
+      r.add(c12);
+      r.add(c13);
+      r.add(c14);
+      r.add(c15);
+      r.add(c16);
+      r.add(c17);
+      r.add(c18);
+      r.add(c19);
+      r.add(c20);
+      r.add(c21);
+      r.add(c22);
+      r.add(c23);
+      r.add(c24);
+      r.add(c25);
+      r.add(c26);
+      r.add(c27);
+      r.add(c28);
+      r.add(c29);
+      r.add(c30);
+      r.add(c31);
+      r.add(c32);
+      r.add(c33);
+      r.add(c34);
+      r.add(c35);
+      r.add(c36);
+      r.add(c37);
+      r.add(c38);
+      r.add(c39);
+      r.add(c40);
+      r.add(c41);
+      r.add(c42);
+      r.add(c43);
+      r.add(c44);
+      r.add(c45);
+      r.add(c46);
+      r.add(c47);
+      r.add(c48);
+      r.add(c49);
+      r.add(c50);
+      r.add(c51);
+      r.add(c52);
+      r.add(c53);
+      r.add(c54);
+
+      // render everything!
+      r.render();
+
+      r.onRender = function() {
+        r.camera.rotate([1, 0]);
+        c43.transform.rotateX(1);
+        c44.transform.rotateX(1);
+        c45.transform.rotateX(1);
+        c46.transform.rotateX(1);
+        c51.transform.rotateX(-1);
+        c52.transform.rotateX(-1);
+        c53.transform.rotateX(-1);
+        c54.transform.rotateX(-1);
+      };
+
+      // Blink the eyes by toggleing opacity
+      setInterval(function() {
+
+        // randomly generate eye color
+        var R = Math.random();
+        var G = Math.random();
+        var B = Math.random();
+
+        c24.color = [R, G, B];
+        c25.color = [R, G, B];
+        c27.color = [R, G, B];
+        c28.color = [R, G, B];
+
+        // flashing lights
+        var x = (c24.opacity == 0 ? 1 : 0);
+        c24.opacity = x;
+        c25.opacity = x;
+        c27.opacity = x;
+        c28.opacity = x;
+      }, 100);
+
+    };
+  </script>
+</head>
+
+<body>
+  <h1>CS460 Assignment 2</h1>
+  <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+</body>
+
+</html>

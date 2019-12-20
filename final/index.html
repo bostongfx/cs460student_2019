@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <link rel="shortcut icon" href="gfx/cs460.png" type="image/gif">
+    <link rel="stylesheet" href="styles.css">
+
+    <title>CS460 Final</title>
+    <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/libs/stats.min.js" type="text/javascript"></script>
+    <script async src="opencv.js" onload="openCvReady();" type="text/javascript"></script>
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+</head>
+
+<body>
+    <header>
+      <h1>opencv image processing</h1>
+      <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+    </header>
+
+  <div id="status" class="loader"></div>
+  <img id='srcImage' style="display:none;"></img>
+
+  <div style="margin-bottom:30px;">
+    <table id="imageTable" width="75%" cellspacing="0" cellpadding="0" border="0" style="display:none;">
+    <tbody>
+      <tr>
+        <td>
+          <input type='file' id='fileInput' accept='image/*'/>
+        </td>
+      </tr>
+      <tr>
+        <td style="width:100%;">
+              <canvas id='outputCanvas'></canvas>
+        </td>
+    </tr>
+    <tr>
+      <td style="width:40%padding: 10px 0px 0px 10px;">
+        <button class="button" type="button" id="resetBtn" onclick="reset()">Reset</button>
+        <a class="button" id="dl" onclick="exportImg()"><button type="button">Export</button></a>
+      </td>
+      <td id="srcErr"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div id='XTKCanvas'></div>
+
+  </body>
+  <script type="text/javascript">
+      let imgElement = document.getElementById('srcImage');
+      let inputElement = document.getElementById('fileInput');
+      inputElement.addEventListener("change", (e) => {
+          imgElement.src = URL.createObjectURL(e.target.files[0]);
+      }, false);
+
+      imgElement.onload = function() {
+          let mat = cv.imread(imgElement);
+          cv.imshow('outputCanvas', mat);
+          mat.delete();
+      };
+
+      isPixel = false;
+      gray = false;
+      hsv = false;
+
+      function openCvReady() {
+        cv['onRuntimeInitialized']=()=>{
+          console.log( 'OpenCV Ready', cv);
+          document.getElementById('status').style.display = 'none';
+          document.getElementById('imageTable').style.display = 'block';
+
+          let imgElement = document.getElementById('srcImage');
+          imgElement.src = 'gfx/cs460.png';
+
+          imgElement.onload = function() {
+              let mat = cv.imread(imgElement);
+              cv.imshow('outputCanvas', mat);
+              mat.delete();
+          };
+
+          var stats = new Stats();
+          stats.domElement.style.cssText = 'position:absolute;top:130px;left:0px;display:none;';
+          document.body.appendChild(stats.dom);
+          requestAnimationFrame(function loop(){
+            stats.update();
+            requestAnimationFrame(loop)
+          });
+
+          renderer = new X.renderer3D();
+          renderer.container = 'XTKCanvas';
+          renderer.init();
+
+          renderer.camera.position = [ 100, 0, 1000];
+          c = new X.cube();
+          renderer.add(c);
+          renderer.render();
+
+          /*  classes  */
+
+          var Thresh = function() {
+              this.thresh =  127;
+              this.alpha =  255;
+              this.type = 'Binary';
+              this.code = cv.THRESH_BINARY;
+              this.otsu = false;
+              this.triangle = false;
+              this.block = 3;
+              this.maxval = 255;
+              this.c = 2;
+              this.adaptiveM = false;
+              this.adaptiveG = false;
+              this.adapt = cv.ADAPTIVE_THRESH_MEAN_C
+          };
+
+          var Blur = function() {
+            this.ksize = 3;
+            this.sigX = 0;
+            this.sigY = 0;
+            this.type = 'Gaussian Blur';
+            this.d = 9;
+            this.sigColor = 75;
+            this.sigSpace = 75;
+          }
+
+          var Morph = function() {
+            this.iter = 1;
+          }
+
+          var Contour = function(){
+            this.hierarchy = 'RETR_LIST';
+            this.hierval = cv.RETR_LIST;
+            this.minArea = 0;
+          }
+          var Size = function() {
+            this.numPixels = 16;
+            this.spacing = 5;
+            this.rotate = true;
+          }
+
+          /*  Controller  */
+
+          controller = {
+              "Gray": function(){
+                  gray = true;
+                    let mat = cv.imread(document.getElementById('outputCanvas'));
+                    cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
+                    cv.imshow('outputCanvas', mat);
+                    mat.delete();
+                    if (isPixel) {
+                      controller['Pixelate']();
+                    }
+              },
+              "HSV": function(){
+                    hsv = true;
+                    let mat = cv.imread(document.getElementById('outputCanvas'));
+                    cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV);
+                    cv.imshow('outputCanvas', mat);
+                    mat.delete();
+                    if (isPixel) {
+                      controller['Pixelate']();
+                    }
+              },
+              'channel': function(){},
+              'Erosion': function() {
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let M = cv.Mat.ones(5, 5, cv.CV_8U);
+                let anchor = new cv.Point(-1, -1);
+                cv.erode(src, src, M, anchor, mor.iter, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
+              },
+              'Dilation': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let M = cv.Mat.ones(5, 5, cv.CV_8U);
+                let anchor = new cv.Point(-1, -1);
+                cv.dilate(src, src, M, anchor, mor.iter, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
+              },
+              'Open': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let M = cv.Mat.ones(5, 5, cv.CV_8U);
+                let anchor = new cv.Point(-1, -1);
+                cv.morphologyEx(src, src, cv.MORPH_OPEN, M, anchor, mor.iter,
+                                cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
+              },
+              'Close': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let M = cv.Mat.ones(5, 5, cv.CV_8U);
+                cv.morphologyEx(src, src, cv.MORPH_CLOSE, M);
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
+              },
+              'Gradient': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let M = cv.Mat.ones(5, 5, cv.CV_8U);
+                cv.morphologyEx(src, src, cv.MORPH_CLOSE, M);
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
+              },
+              'Top Hat': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                cv.cvtColor(src, src, cv.COLOR_RGBA2RGB);
+                let M = cv.Mat.ones(5, 5, cv.CV_8U);
+                cv.morphologyEx(src, src, cv.MORPH_GRADIENT, M);
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
+              },
+              'Black Hat': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                cv.cvtColor(src, src, cv.COLOR_RGBA2RGB);
+                let M = cv.Mat.ones(53, 53, cv.CV_8U);
+                cv.morphologyEx(src, src, cv.MORPH_BLACKHAT, M);
+                cv.imshow('outputCanvas', src);
+                src.delete();  M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
+              },
+              'Get Structuring Element': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                cv.cvtColor(src, src, cv.COLOR_RGBA2RGB);
+                let M = new cv.Mat();
+                let ksize = new cv.Size(5, 5);
+                M = cv.getStructuringElement(cv.MORPH_CROSS, ksize);
+                cv.morphologyEx(src, src, cv.MORPH_GRADIENT, M);
+                cv.imshow('outputCanvas', src);
+                src.delete(); M.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
+              },
+              'Draw Contours': function(){
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
+                cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
+                // cv.threshold(src, src, 120, 200, cv.THRESH_BINARY);
+                let contours = new cv.MatVector();
+                let hierarchy = new cv.Mat();
+                cv.findContours(src, contours, hierarchy, con.hierval, cv.CHAIN_APPROX_SIMPLE);
+                // draw contours with random Scalar
+                for (let i = 0; i < contours.size(); ++i) {
+                    let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255),
+                                              Math.round(Math.random() * 255));
+                    if(cv.contourArea(contours.get(i), false) >= con.minArea){
+                      cv.drawContours(dst, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
+                    }
+                }
+                cv.imshow('outputCanvas', dst);
+                src.delete(); dst.delete(); contours.delete(); hierarchy.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
+              },
+              'Down Sample': function() {
+                let src = cv.imread(imgElement);
+                let dst = new cv.Mat();
+                cv.pyrDown(src, dst, new cv.Size(0, 0), cv.BORDER_DEFAULT);
+                cv.imshow('outputCanvas', dst);
+                src.delete(); dst.delete();
+                if (isPixel) {
+                  controller['Pixelate']();
+                }
+              },
+              'Pixelate': function() {
+                isPixel = true;
+                let src = cv.imread(document.getElementById('outputCanvas'));
+                let dst = new cv.Mat();
+                cv.resize(src, dst, new cv.Size(size.numPixels, size.numPixels), 0, 0, cv.INTER_LINEAR);
+                let spacing = 20 + size.spacing;
+
+                renderer.destroy();
+                renderer = new X.renderer3D();
+                renderer.container = 'XTKCanvas';
+                renderer.init();
+                renderer.camera.position = [ 100, 0, 1000];
+
+                for (let i = 0; i < dst.rows; i++) {
+                  for (let j = 0; j < dst.cols; j++) {
+                    pixel = dst.ucharPtr(i, j);
+                    r = pixel[0] / 255;
+                    g = pixel[1] / 255;
+                    b = pixel[2] / 255;
+                    c = new X.cube();
+                    c.color = [r, g, b];
+                    c.transform.translateX(spacing * i);
+                    c.transform.translateY(spacing * j);
+                    renderer.add(c);
+                  }
+                }
+
+                renderer.render();
+                renderer.onRender = function() {
+                  if(size.rotate) {
+                    renderer.camera.rotate([1, 0]);
+                  }
+
+                };
+                src.delete();dst.delete();
+
+                document.getElementById('imageTable').style.display = 'none';
+                document.getElementById('XTKCanvas').getElementsByTagName( 'canvas' )[0].style.display = 'block';
+                stats.domElement.style.cssText = 'position:absolute;top:130px;left:0px;display:block;';
+              }
+          }
+
+          /*    Dat.GUI    */
+
+          var gui = new dat.GUI();
+          gui.domElement.id = 'gui';
+          var colors = gui.addFolder( "Colors" );
+          colors.add( controller, 'Gray' );
+          colors.add( controller, 'HSV' );
+          var channelrgb = colors.add( controller, 'channel', ['R', 'G', 'B']).name('Channel').listen();
+          channelrgb.onChange(function(val){
+
+            let src = cv.imread(document.getElementById('outputCanvas'));
+            let rgbaPlanes = new cv.MatVector();
+            cv.split(src, rgbaPlanes);
+
+            if(val == 'R') {
+              r = true;
+              let ch = rgbaPlanes.get(0);
+              cv.imshow('outputCanvas', ch);
+              src.delete(); ch.delete(); rgbaPlanes.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
+            }
+            if(val == 'G') {
+              g = true;
+              let ch = rgbaPlanes.get(1);
+              cv.imshow('outputCanvas', ch);
+              src.delete(); ch.delete(); rgbaPlanes.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
+            }
+            if(val == 'B') {
+              b = true;
+              let ch = rgbaPlanes.get(2);
+              cv.imshow('outputCanvas', ch);
+              src.delete(); ch.delete(); rgbaPlanes.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
+            }
+          });
+
+
+          var b_threshold = gui.addFolder("Threshold");
+          var bin = new Thresh();
+          bin.type = cv.THRESH_BINARY;
+          var threshType = b_threshold.add(bin, 'type', ['Binary', 'Binary Inv',
+             'Trunc', 'To Zero']).name('Type').listen();
+          threshType.setValue('Binary');
+          var otsu = b_threshold.add(bin, 'otsu').name('Otsu').listen();
+          otsu.onChange(function(val){
+            bin.otsu = val;
+            if(val){
+                bin.triangle = false;
+            }
+            let mat = cv.imread(imgElement);
+            cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+            cv.threshold(mat, mat, bin.thresh, bin.alpha, cv.THRESH_OTSU);
+            cv.imshow('outputCanvas', mat);
+            mat.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
+          });
+          var triangle = b_threshold.add(bin, 'triangle').name('Triangle').listen();
+          triangle.onChange(function(val){
+            bin.triangle = val;
+            if(val){
+                bin.otsu = false;
+            }
+            let mat = cv.imread(imgElement);
+            cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+            cv.threshold(mat, mat, bin.thresh, bin.alpha, cv.THRESH_TRIANGLE);
+            cv.imshow('outputCanvas', mat);
+            mat.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
+          });
+          threshType.onChange(function(val) {
+              switch(val) {
+                  case 'Binary': bin.code = cv.THRESH_BINARY;break;
+                  case 'Binary Inv': bin.code = cv.THRESH_BINARY_INV;break;
+                  case 'Trunc': bin.code = cv.THRESH_TRUNC;break;
+                  case 'To Zero': bin.code = cv.THRESH_TOZERO;break;
+              }
+              if (isPixel) {
+                controller['Pixelate']();
+              }
+          });
+          b_threshold.add(bin, 'thresh', 0, 255, 1).name('Thresh').onChange( function(val) {
+              let mat = cv.imread(imgElement);
+              if (gray) {
+                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+              }
+              if (hsv) {
+                  cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
+              }
+              cv.threshold(mat, mat, val, bin.alpha, bin.code);
+              cv.imshow('outputCanvas', mat);
+              mat.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
+          });
+          b_threshold.add(bin, 'alpha', 0, 255, 1).name('Max Val').onChange( function(val) {
+              let mat = cv.imread(imgElement);
+              if (gray) {
+                  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+              }
+              if (hsv) {
+                  cv.cvtColor(mat, mat, cv.COLOR_RGB2HSV, 0);
+              }
+              cv.threshold(mat, mat, bin.thresh, val, bin.code);
+              cv.imshow('outputCanvas', mat);
+              mat.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
+          });
+
+
+          var a_threshold = gui.addFolder("Adaptive Thresh (Requires 'Binary'/'Inv')");
+          var adaptM = a_threshold.add(bin, 'adaptiveM').name('Adaptive Mean').listen();
+          var adaptG = a_threshold.add(bin, 'adaptiveG').name('Adaptive Gau').listen();
+          a_threshold.add(bin, 'maxval', 0, 255, 1).name('Max Val').onChange( function(val) {
+            let mat = cv.imread(imgElement);
+            cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+            if((bin.adaptiveM || bin.adaptiveG) && (bin.type == 'Binary' || bin.type == 'Binary Inv')){
+              if(bin.adaptiveM){
+                cv.adaptiveThreshold(mat, mat, val, cv.ADAPTIVE_THRESH_MEAN_C, bin.code, bin.block, bin.c);
+              }
+              else {
+                cv.adaptiveThreshold(mat, mat, val, cv.ADAPTIVE_THRESH_GAUSSIAN_C, bin.code, bin.block, bin.c);
+              }
+            }
+            cv.imshow('outputCanvas', mat);
+            mat.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
+          });
+
+          adaptM.onChange(function(val) {
+            bin.adaptiveM = val;
+            gray = true;
+            if (val) {
+              bin.adaptiveG = false;
+            }
+            if (isPixel) {
+              controller['Pixelate']();
+            }
+          });
+          adaptG.onChange(function(val) {
+            bin.adaptiveG = val;
+            gray = true;
+            if (val) {
+              bin.adaptiveM = false;
+            }
+            if (isPixel) {
+              controller['Pixelate']();
+            }
+          });
+          var vals = [];
+          for (i = 1; i <= 115; i +=2){
+            vals.push(i);
+          }
+          a_threshold.add(bin, 'block', vals).name('Block Size').onChange( function(val) {
+              bin.block = parseInt(val);
+              let mat = cv.imread(imgElement);
+              cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+
+              if((bin.adaptiveM || bin.adaptiveG) && (bin.type == 'Binary' || bin.type == 'Binary Inv')){
+                if(bin.adaptiveM){
+                  cv.adaptiveThreshold(mat, mat, bin.maxval, cv.ADAPTIVE_THRESH_MEAN_C, bin.code, parseInt(val), bin.c);
+                }
+                else {
+                  cv.adaptiveThreshold(mat, mat, bin.maxval, cv.ADAPTIVE_THRESH_GAUSSIAN_C, bin.code, parseInt(val), bin.c);
+                }
+              }
+              cv.imshow('outputCanvas', mat);
+              mat.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
+          });
+          a_threshold.add(bin, 'c', -40, 40, 1).name('C').onChange( function(val) {
+              let mat = cv.imread(imgElement);
+              cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+
+              if((bin.adaptiveM || bin.adaptiveG) && (bin.type == 'Binary' || bin.type == 'Binary Inv')){
+                if(bin.adaptiveM){
+                  cv.adaptiveThreshold(mat, mat, bin.maxval, cv.ADAPTIVE_THRESH_MEAN_C, bin.code, bin.block, val);
+                }
+                else {
+                  cv.adaptiveThreshold(mat, mat, bin.maxval, cv.ADAPTIVE_THRESH_GAUSSIAN_C, bin.code, bin.block, val);
+                }
+              }
+              cv.imshow('outputCanvas', mat);
+              mat.delete();
+              if (isPixel) {
+                controller['Pixelate']();
+              }
+          });
+
+          var kern = [];
+          for (i = 3; i <= 115; i +=2){
+            kern.push(i);
+          }
+          var filter = gui.addFolder("Filters");
+          var fil = new Blur();
+          var filtype = filter.add(fil, 'type', ['Gaussian Blur', 'Median Blur', 'Bilateral Filter']).name('Type').listen();
+          filtype.onChange(function(){
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            let ksize = new cv.Size(fil.ksize, fil.ksize);
+            if(fil.type == 'Gaussian Blur'){
+              cv.GaussianBlur(src, dst, ksize, fil.sigX, fil.sigY, cv.BORDER_DEFAULT);
+            }
+            else if (fil.type == 'Median Blur') {
+              cv.medianBlur(src, dst, fil.ksize);
+            }
+            else if (fil.type == 'Bilateral Filter') {
+              cv.cvtColor(src, src, cv.COLOR_RGBA2RGB, 0);
+              cv.bilateralFilter(src, dst, fil.d, fil.sigColor, fil.sigSpace, cv.BORDER_DEFAULT);
+            }
+            cv.imshow('outputCanvas', dst);
+            src.delete(); dst.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
+          });
+
+          var ks = filter.add(fil, 'ksize', kern).name('Kernel Size').listen();
+          ks.onChange(function(val){
+            fil.ksize = parseInt(val);
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            let ksize = new cv.Size(parseInt(val), parseInt(val));
+            if(fil.type == 'Gaussian Blur'){
+              cv.GaussianBlur(src, dst, ksize, fil.sigX, fil.sigY, cv.BORDER_DEFAULT);
+            }
+            else if (fil.type == 'Median Blur') {
+              cv.medianBlur(src, dst, fil.ksize);
+            }
+            cv.imshow('outputCanvas', dst);
+            src.delete(); dst.delete();
+          });
+          var sx = filter.add(fil, 'sigX', 0, 15, 1).name('Sigma X').listen();
+          sx.onChange(function(val){
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            let ksize = new cv.Size(fil.ksize, fil.ksize);
+            if(fil.type == 'Gaussian Blur'){
+              cv.GaussianBlur(src, dst, ksize, val, fil.sigY, cv.BORDER_DEFAULT);
+              cv.imshow('outputCanvas', dst);
+            }
+            src.delete(); dst.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
+          });
+          var sy = filter.add(fil, 'sigY', 0, 15, 1).name('Sigma Y').listen();
+          sy.onChange(function(val){
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            let ksize = new cv.Size(fil.ksize, fil.ksize);
+            if(fil.type == 'Gaussian Blur'){
+              cv.GaussianBlur(src, dst, ksize, fil.sigX, val, cv.BORDER_DEFAULT);
+              cv.imshow('outputCanvas', dst);
+            }
+            src.delete(); dst.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
+          });
+
+          var di = filter.add(fil, 'd', 1, 15, 1).name('Diameter').listen();
+          di.onChange(function(val){
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            cv.cvtColor(src, src, cv.COLOR_RGBA2RGB, 0);
+            if(fil.type == 'Bilateral Filter') {
+              cv.bilateralFilter(src, dst, val, fil.sigColor, fil.sigSpace, cv.BORDER_DEFAULT);
+              cv.imshow('outputCanvas', dst);
+            }
+            src.delete(); dst.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
+          });
+          var sc = filter.add(fil, 'sigColor', 0, 255, 1).name('Sigma Color').listen();
+          sc.onChange(function(val){
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            cv.cvtColor(src, src, cv.COLOR_RGBA2RGB, 0);
+            if(fil.type == 'Bilateral Filter') {
+              cv.bilateralFilter(src, dst, fil.d, val, fil.sigSpace, cv.BORDER_DEFAULT);
+              cv.imshow('outputCanvas', dst);
+            }
+            src.delete(); dst.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
+          });
+          var ss = filter.add(fil, 'sigSpace', 0, 255, 1).name('Sigma Space').listen();
+          ss.onChange(function(val){
+            let src = cv.imread(imgElement);
+            let dst = new cv.Mat();
+            cv.cvtColor(src, src, cv.COLOR_RGBA2RGB, 0);
+            if(fil.type == 'Bilateral Filter') {
+              cv.bilateralFilter(src, dst, fil.d, fil.sigColor, val, cv.BORDER_DEFAULT);
+              cv.imshow('outputCanvas', dst);
+            }
+            src.delete(); dst.delete();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
+          });
+
+          var morpho = gui.addFolder("Morphology");
+          var mor = new Morph();
+          var erosion = morpho.add(controller, 'Erosion');
+          var dilation = morpho.add(controller, 'Dilation');
+          morpho.add(mor, 'iter', 1, 10, 1).name('Iterations').listen();
+          var open = morpho.add(controller, 'Open');
+          var close = morpho.add(controller, 'Close');
+          var gradient  = morpho.add(controller, 'Gradient');
+          var top = morpho.add(controller, 'Top Hat');
+          var black = morpho.add(controller, 'Black Hat');
+          var getStruct = morpho.add(controller, 'Get Structuring Element');
+
+          var contours = gui.addFolder("Contours");
+          var con = new Contour();
+          var drawcon = contours.add(controller, 'Draw Contours');
+          var hier = contours.add(con, 'hierarchy',['RETR_LIST',
+          'RETR_TREE', 'RETR_CCOMP', 'RETR_EXTERNAL']).name('Hierarchy').listen();
+          hier.onChange(function(val){
+            console.log(val);
+            switch(val) {
+                case 'RETR_LIST': con.hierval = cv.RETR_LIST;break;
+                case 'RETR_TREE': con.hierval = cv.RETR_TREE;break;
+                case 'RETR_CCOMP': con.hierval = cv.RETR_CCOMP;break;
+                case 'RETR_EXTERNAL': con.hierval = cv.RETR_EXTERNAL;break;
+              }
+              if (isPixel) {
+                controller['Pixelate']();
+              }
+          });
+          var mina = contours.add(con, 'minArea', 0, 20).name('Min Area Small').listen()
+          var minaLarge = contours.add(con, 'minArea', 0, 100000, 100).name('Min Area Large').listen()
+          mina.onChange(function(val) {
+            controller['Draw Contours']();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
+          });
+          minaLarge.onChange(function(val) {
+            controller['Draw Contours']();
+            if (isPixel) {
+              controller['Pixelate']();
+            }
+          });
+
+          var down = gui.add(controller, 'Down Sample');
+          var pixelate = gui.add(controller, 'Pixelate');
+          var size = new Size();
+          var pixels = gui.add(size, 'numPixels', [8, 16, 32, 64]).name('Pixel Size').listen();
+          // 128, 256 too big for my gpu
+          pixels.onChange(function(val) {
+            size.numPixels = parseInt(val);
+            controller['Pixelate']();
+          });
+          var space = gui.add(size, 'spacing', 0, 10, 1).name('Spacing').listen();
+          space.onChange(function(val) {
+            size.spacing = parseInt(val);
+            controller['Pixelate']();
+          });
+          var rotate = gui.add(size, 'rotate', true).name('Rotate').listen();
+        };
+      }
+
+      /*    Button Handlers    */
+
+      function reset() {
+          let mat = cv.imread(imgElement);
+          cv.imshow('outputCanvas', mat);
+          mat.delete();
+          gray = false;
+          hsv = false;
+      }
+
+      function exportImg() {
+          var dl = document.getElementById('dl');
+          var canvas = document.getElementById('outputCanvas');
+          var dataURL = canvas.toDataURL('image/jpeg', 1.0).replace("image/png", "image/octet-stream");
+          dl.setAttribute('download', 'export.png');
+          dl.setAttribute('href', dataURL);
+      }
+  </script>
+</html>
