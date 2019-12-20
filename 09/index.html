@@ -44,6 +44,13 @@
 
 
         // TODO Part 3 (add 2 pointlights)
+        pointLight = new THREE.PointLight(0xff0000, 5.0);
+        pointLight.position.set( 50, 50, 50 );
+        scene.add( pointLight );
+
+        pointLight2 = new THREE.PointLight(0xff0000, 5.0);
+        pointLight2.position.set( 60, 60, 60 );
+        scene.add( pointLight2 );
 
 
 
@@ -63,6 +70,17 @@
         } );
 
         // TODO Part 1, load another mesh
+        var loader2 = new THREE.PLYLoader();
+        loader2.load('armadillo.ply', function (geometry) {
+          geometry.computeVertexNormals();
+          standardMaterial = new THREE.MeshStandardMaterial( {
+            color: 0x6437a4
+          } );
+          mesh2 = new THREE.Mesh( geometry, standardMaterial );
+          mesh2.position.x = 250;
+
+          scene.add(mesh2)
+        } );
         // TODO Part 2, use a different material for this mesh
 
 
@@ -91,7 +109,36 @@
 
         // TODO Part 4 (control the color and position of point lights)
 
+        var point1Folder = gui.addFolder('First Point Light');
+        point1Folder.addColor(controller, 'color').onChange( function(value) { pointLight.color.setHex(value); });
+        point1Folder.add(pointLight.position, 'x', -100, 100);
+        point1Folder.add(pointLight.position, 'y', -100, 100);
+        point1Folder.add(pointLight.position, 'z', -100, 100);
+        point1Folder.open();
+
+
+
+        var point2Folder = gui.addFolder('Second Point Light');
+        point2Folder.addColor(controller, 'color').onChange( function(value) { pointLight2.color.setHex(value); });
+        point2Folder.add(pointLight2.position, 'x', -100, 100);
+        point2Folder.add(pointLight2.position, 'y', -100, 100);
+        point2Folder.add(pointLight2.position, 'z', -100, 100);
+        point2Folder.open();
+
         // TODO Part 5 (control the color of both materials in the scene)
+
+
+        var materialcolor = gui.addFolder('Armadillo 1 Color')
+        materialcolor.addColor(controller, 'color').onChange( function() {
+            mesh.material.color.set( controller.color );
+        } );
+
+        var material2color = gui.addFolder('Armadillo 2 Color')
+        material2color.addColor(controller, 'color').onChange( function() {
+            mesh2.material.color.set( controller.color );
+        } );
+
+        
 
         gui.open();
 
