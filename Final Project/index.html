@@ -62,52 +62,9 @@
             img.src = reader.result;
             img.onload = function() {
 
-
-
-              // imgW = img.width;
-              // imgH = img.height;
-              // //check how many full tiles we can fit
-              // //right and bottom sides of the image will get cropped
-              // tileCountX = Math.floor(imgW / tileDim);
-              // tileCountY = Math.floor(imgH / tileDim);
-
-              // ctx.drawImage(img, 0, 0);
-              // imgData = ctx.getImageData(0, 0, imgW, imgH).data;
-
-
-              // console.log(imgData);
-              
-
-              // var offset = 0;
-              // for (var i =0; i<100; i+=4) {
-
-              //   var r = imgData[i];
-              //   var g = imgData[i+1];
-              //   var b = imgData[i+2];
-              //   var a = imgData[i+3];
-
-              //   var c = new X.cube()
-              //   c.color = [r/255., g/255., b/255.];
-
-              //   c.center = [offset, 0, 0];
-
-              //   offset += 30;
-
-              //   layer.add(c);
-
-
-              // }
-
-
-              // layer.render();
-
-              //start  
               init();
               var tiles = getTiles();
               drawTiles(tiles);
-
-
-
             }
           }
         } 
@@ -117,9 +74,6 @@
 
     var imgW, imgH, imgData,tileDim = 50; //tile dimensions px
     var tileCountX, tileCountY;         //how many tiles we can fit
-
-
-    
 
     function init() {
       imgW = img.width;
@@ -193,14 +147,14 @@
 
         offset2 = 15;
 
-        // var cube = new X.cube();
-        // cube.texture.rawData = d.rawData;
-        // cube.texture.rawDataWidth = d.tiledim;
-        // cube.texture.rawDataHeight = d.tiledim;
-        // cube.center = [d.u * offset2, d.v * offset2, 1];
-        // cube.lengthX = cube.lengthY = cube.lengthZ = 10;
+        var cube = new X.cube();
+        cube.texture.rawData = d.rawData;
+        cube.texture.rawDataWidth = d.tiledim;
+        cube.texture.rawDataHeight = d.tiledim;
+        cube.center = [d.u * offset2, d.v * offset2, 1];
+        cube.lengthX = cube.lengthY = cube.lengthZ = 10;
 
-        // layer.add(cube);
+        layer.add(cube);
 
 
       });
