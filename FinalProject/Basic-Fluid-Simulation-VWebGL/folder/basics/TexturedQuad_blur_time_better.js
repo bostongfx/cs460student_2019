@@ -150,7 +150,7 @@ function initTextures(gl, n) {
       // Register the event handler to be called on loading an image
       image.onload = function(){ loadTexture(gl, n, u_Sampler, u_resolution, image); };
       // Tell the browser to load an image
-      image.src = '/folder/resources/sky.JPG';
+      image.src = '../resources/sky.JPG';
   //colorTexture(gl, n, texture, u_Sampler);
   return true;
 }
