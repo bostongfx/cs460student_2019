@@ -1,0 +1,14 @@
+* {
+  box-sizing: border-box;
+}
+.container {
+    position: relative;
+}
+ 
+#text {
+	background-color: transparent;  /* needed because webgl-tutoraisl.css sets canvas bg color to white */
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 100;
+}
