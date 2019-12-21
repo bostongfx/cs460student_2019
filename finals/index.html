@@ -1,95 +1,128 @@
+<!-- Saurav Paudyal -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <title>CS460 Computer Graphics at the University of Massachusetts Boston</title>
-    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
-    <link rel="stylesheet" type="text/css" href="http://cs460.org/styles/fonts.css"/>
-    <style>
+    <!-- from homework5 -->
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+      <title>CS410.net</title>
+      <link rel="stylesheet" href="main.css">
+      <link rel="stylesheet" type="text/css" href="styles.css" />
+      <style>
       html, body {
-        background-color:#000;
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden !important;
-        font-family: din_condensed;
-        font-size: 18pt;
+          background-color: #000;
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          overflow: hidden !important;
       }
+      #r3{
+            width: 100%;
+            height: 2%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 15;
+            color : #fff;
+            /* 3D Text */
+            text-shadow: 0 1px 0 #ccc,
+               0 2px 0 #c9c9c9,
+               0 3px 0 #bbb,
+               0 4px 0 #b9b9b9,
+               0 5px 0 #aaa,
+               0 6px 1px rgba(0,0,0,.1),
+               0 0 5px rgba(0,0,0,.1),
+               0 1px 3px rgba(0,0,0,.3),
+               0 3px 5px rgba(0,0,0,.2),
+               0 5px 10px rgba(0,0,0,.25),
+               0 10px 10px rgba(0,0,0,.2),
+               0 20px 20px rgba(0,0,0,.15);
+        }
+      #r1{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #r2{
+            width: 50%;
+            height: 50%;
+            position: absolute;
+            top: 10px;
+            left: 60px;
+            z-index: 9;
+            color:#fff;
+            margin: 60px; /* for demo purpose  */
+        }
     </style>
 
-    <script type='text/javascript'>
+    <!-- blotter.js -->
+    <script src="blotter.min.js"></script>
+    <!-- Flies blotter material -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Blotter/0.1.0/materials/fliesMaterial.js"></script>
 
-    var context = new AudioContext();
-    var audioBuffer;
-    var sourceNode;
-    var splitter;
-    var analyser, analyser2;
-    var javascriptNode;
+    <!-- Three.js -->
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
 
-      window.onload = function() {
+    <!-- Voice Detection -->
+    <script type="text/javascript" src="jquery-1.8.0.min.js"></script>
 
-        // Added code
-        /**********************************************/
-        // create the audio context (chrome only for now)
-        if (! window.AudioContext) {
-            if (! window.webkitAudioContext) {
-                alert('no audiocontext found');
-            }
-            window.AudioContext = window.webkitAudioContext;
-        }
+  </head>
+<body>
+    <div class="container">
+        <div id="r3"></div>
+        <div id="r1"></div>
+        <div id="r2"></div>
 
-
-
-        // load the sound
-        setupAudioNodes();
-        loadSound("music.mp3");
-
-        /**********************************************/
-
-
-        // create a new test_renderer
-        r = new X.renderer3D();
-        r.init();
-
-        // UMASS BOSTON
-        //
-        // create a cube
-        umassboston = new X.cube();
-        // skin it..
-        umassboston.texture.file = 'umassboston.png';
-        // hide it for now!
-        umassboston.visible = false;
-
-        r.add(umassboston);
+    </div>
+</body>
+<script type="text/javascript">
+    //this is where profesor has his code.
+    window.onload = function(){
+      // create the audio context (chrome only for now)
+      if (! window.AudioContext) {
+          if (! window.webkitAudioContext) {
+              alert('no audiocontext found');
+          }
+          window.AudioContext = window.webkitAudioContext;
+      }
+      //global variables for sound detection.
+      var context = new AudioContext();
+      var audioBuffer;
+      var sourceNode;
+      var splitter;
+      var analyser, analyser2;
+      var javascriptNode = context.createScriptProcessor();
+      var n = 0;
+      var st = "";
 
 
-        // BOSTON GFX
-        //
-        // create a cube
-        bostongfx = new X.cube();
-        // skin it..
-        bostongfx.texture.file = 'bostongfx.png';
-        // hide it for now!
-        bostongfx.visible = false;
+      // start the music
+      var music = new Audio('Demon.ogg');
+      music.autoplay = true;
+      music.volume = 0.2;
+      music.load();
 
-        r.add(bostongfx);
 
-        // setup the camera
-        r.camera.position = [00, 00, 60];
+      //This did not work for some reason. Will figure it out in future.
+      // setTimeout(function(){
+      //   setupAudioNodes();
+      //   loadSound("lecture10.mp3");
+      // }, 3000);
 
-        // .. and render it
-        r.render();
+      //Used Web Audio API for setting up nodes.
+      setupAudioNodes();
+      loadSound("lecture10.mp3");
+      //document.getElementById('title').style.display = 'block';
 
-      };//End onLoad
-
-      //Setup Nodes for the music detection.
       function setupAudioNodes() {
 
           // setup a javascript node
           javascriptNode = context.createScriptProcessor(2048, 1, 1);
           // connect to destination, else it isn't called
           javascriptNode.connect(context.destination);
-
 
           // setup a analyzer
           analyser = context.createAnalyser();
@@ -142,213 +175,222 @@
           request.send();
       }
 
-      clicked = false;
-      window.onclick = function() {
 
-        if (clicked) return; // sometimes you click again by accident,
-                             // and restart the animation.. let's not!
+      function playSound(buffer) {
+          sourceNode.buffer = buffer;
+          sourceNode.start(0);
+      }
 
-        // we need user feedback, to allow the music to play..
-        // let's do it on click!
-        clicked = true;
-        animation();
+      // log if an error occurs
+      function onError(e) {
+          console.log(e);
+      }
 
-      }//end onclicl
+      // when the javascript node is called
+      // we use information from the analyzer node
+      // to detect the volume
+      javascriptNode.onaudioprocess = function() {
+          //var r = document.getElementById('r1');
 
-
-      function animation() {
-
-        // start the music
-        var music = document.getElementById('music');
-        music.autoplay = true;
-        music.load();
-
-        setTimeout(function() {
-          umassboston.visible = true;
-        }, 400);
-
-        setTimeout(function() {
-          umassboston.visible = false;
-          r.camera.position = [0, 0, -25];
-          bostongfx.visible = true;
-        }, 3200);
-
-        setTimeout(rotate_bostongfx, 6200);
-
-      };
+          //get input as web param.
+          var param = window.location.search.substring(1);
+          //console.log(param);
+          var res = param.split("%20");
 
 
+          // get the average for the first channel
+          var array =  new Uint8Array(analyser.frequencyBinCount);
+          analyser.getByteFrequencyData(array);
+          var average = getAverageVolume(array);
 
-      function rotate_bostongfx() {
+          //threshold value
+          if(average < 10){
+            if(n > res.length-1){return;}
+            //print out the average volume on console
+            console.log("First Channel : " + average);
+            //print out the time that volume went down.
+            console.log(context.currentTime);
+            st = st + res[n++] + " " ;
+            document.getElementById("r3").innerHTML="<h1>"+st+"</h1>";
+          }
+      }
 
-        var rotateCounter = 0;
+      function getAverageVolume(array) {
+          var values = 0;
+          var average;
 
-        var spinner1 = setInterval(function(){
-          rotateCounter += 1;
+          var length = array.length;
 
-          // console.log(rotateCounter*2);
-          if (rotateCounter*2 >= 90) {
-            clearInterval(spinner1); // this is not time-based now...
-
-            bostongfx.visible = false;
-
-            // now the real CS460 logo..
-            create_cs460_logo();
-            return;
-
+          // get all the frequency amplitudes
+          for (var i = 0; i < length; i++) {
+              values += array[i];
           }
 
-          bostongfx.transform.rotateY(rotateCounter*2);
-        },100);
+          average = values / length;
+          return average;
+      }
 
-      };
-
-
-
-      function create_cs460_logo() {
-
-        document.getElementById('caption').style.display = 'block';
-
-        // create a new X.object
-        cs460logo = new X.object();
-
-        // add the points, normals and colors
-        //
-        // this means 648000 / 3 == 216000 vertices
-        // on my work machine I could set 24000000 / 3 == 8 mio vertices
-        cs460logo.points = new X.triplets(648000);
-        cs460logo.normals = new X.triplets(648000);
-        cs460logo.colors = new X.triplets(648000);
-
-        // and set the type to POINTS
-        cs460logo.type = 'POINTS';
-
-        // create the points, normals and colors
-        for ( var x = 0; x < 60; x++) {
-          for ( var y = 0; y < 60; y++) {
-            for ( var z = 0; z < 60; z++) {
-
-              cs460logo.points.add(x, y, z);
-              cs460logo.normals.add(1, 1, 1);
-              cs460logo.colors.add(x/60, y/60, z/60);
-
-            }
-          }
-        }
-
-        // add the object
-        r.add(cs460logo);
-
-        // setup the camera
-        r.camera.position = [500, 500, 500];
-
-        setTimeout(zoom_into_cs460logo, 2000);
-
-      };
-
-
-
-      function zoom_into_cs460logo() {
-
-        var zoomer = setInterval(function() {
-
-          // we can stop once we are far away enough
-          if (r.camera.view[14] > 1000) {
-            clearInterval(zoomer);
-            // console.log('zooming done');
-
-            setTimeout(function() {
-              document.getElementById('caption').style.display = 'none';
-
-              start_content();
-            }, 2000);
-
-            return;
-
-          }
-
-          // zoom in
-          r.camera.zoomIn();
-
-        }, 10);
-
-      };
-
-
-      function start_content() {
-
-        // reduce music volume
-        var music = document.getElementById('music');
-        music.volume = .2;
-
-        // activate speech
-        var voice = document.getElementById('voice');
-        voice.autoplay = true;
-        voice.volume = 1;
-        voice.load();
-
-        frames = ['content1', 'content2', 'content3', 'content4', 'content5', 'content6', null];
-        times = [0, // Today...
-                 1500, // we will get our hands dirty with JavaScript
-                 6500, // And...
-                 7500, // we will learn
-                 9500, // how to use GitHub Pages.
-                 13500, // this is lecture 3
-                 19000];
-
-        //
-        // this is (like the whole animation concept), a little hacky!!
-        //
-        for (var f in frames) {
-
-          setTimeout(function(f) {
-
-            if (f > 0) {
-              document.getElementById(frames[f-1]).style.display = 'none';
-            }
-
-            if (frames[f] != null) {
-              document.getElementById(frames[f]).style.display = 'block';
-            } else {
-              music.volume = .2;
-
-              setTimeout(function(f) {
-                music.volume = 0;
-              }, 3000);
-
-            }
-
-          }.bind(this,f), times[f]);
-
-        }
-
-      };
-
+    };
 
     </script>
-  </head>
-  <body>
-     <div style="visibility:hidden">
-    <audio id='music'>
-      <source src="bensound-evolution.mp3">
-    </audio>
-    <audio id='voice'>
-      <source src="lecture3.mp3">
-    </audio>
-  </div>
-    <div id='caption' style='display:none;position: absolute;color:white;top:45%;left:50%;margin-left:50px;font-size:440%'>CS460</div>
+    <!-- End of sound detection script -->
+    <!-- Start of rain backgroud script using THREE.js -->
+<script>
 
-    <div id='content1' style='display:none;position: absolute;color:white;top:25%;left:30%;margin-left:50px;font-size:440%'>Today...</div>
+    let scene,camera, renderer, cloudParticles = [], flash, rain, rainGeo, rainCount = 15000;
+    function init() {
 
-    <div id='content2' style='display:none;position: absolute;color:white;top:30%;left:20%;margin-left:50px;font-size:440%'>We will get our hands dirty with JavaScript!</div>
+      // get the div container!!!
+      var r1 = document.getElementById('r1');
 
-    <div id='content3' style='display:none;position: absolute;color:white;top:20%;left:10%;margin-left:50px;font-size:440%'>And...</div>
+      //Three.js code.
+      scene = new THREE.Scene();
 
-    <div id='content4' style='display:none;position: absolute;color:white;top:25%;left:30%;margin-left:50px;font-size:440%'>we will learn</div>
+      //now we create a perspective camera
+      camera = new THREE.PerspectiveCamera(60,window.innerWidth / window.innerHeight, 1, 1000);
+      camera.position.z = 1;
+      camera.rotation.x = 1.16;
+      camera.rotation.y = -0.12;
+      camera.rotation.z = 0.27;
 
-    <div id='content5' style='display:none;position: absolute;color:white;top:35%;left:20%;margin-left:50px;font-size:440%'>how to use GitHub pages.</div>
+      //setUp the ambient Light
+      ambient = new THREE.AmbientLight(0x555555);
+      scene.add(ambient);
 
-    <div id='content6' style='display:none;position: absolute;color:white;top:45%;left:40%;margin-left:50px;font-size:440%'>This is lecture 3.</div>
+      //setting up the directionalLight
+      directionalLight = new THREE.DirectionalLight(0xffeedd);
+      directionalLight.position.set(0,0,1);
+      scene.add(directionalLight);
 
-  </body>
+      //Setting up the point light
+      flash = new THREE.PointLight(0x062d89, 30, 500 ,1.7);
+      flash.position.set(200,300,100);
+      scene.add(flash);
+
+      //setting up the renderer.
+      renderer = new THREE.WebGLRenderer();
+      scene.fog = new THREE.FogExp2(0x11111f, 0.002);
+      renderer.setClearColor(scene.fog.color);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      //append the domElement to the container
+      r1.appendChild(renderer.domElement);
+
+      rainGeo = new THREE.Geometry();
+      for(let i=0;i<rainCount;i++) {
+        rainDrop = new THREE.Vector3(
+          Math.random() * 400 -200,
+          Math.random() * 500 - 250,
+          Math.random() * 400 - 200
+        );
+        rainDrop.velocity = {};
+        rainDrop.velocity = 0;
+        rainGeo.vertices.push(rainDrop);
+      }
+      //loading the rainMaterial
+      rainMaterial = new THREE.PointsMaterial({
+        color: 0xaaaaaa,
+        size: 0.1,
+        transparent: true
+      });
+      rain = new THREE.Points(rainGeo,rainMaterial);
+      scene.add(rain);
+      let loader = new THREE.TextureLoader();
+      loader.load("smoke.png", function(texture){
+
+        cloudGeo = new THREE.PlaneBufferGeometry(500,500);
+        cloudMaterial = new THREE.MeshLambertMaterial({
+          map: texture,
+          transparent: true
+        });
+
+        for(let p=0; p<25; p++) {
+          let cloud = new THREE.Mesh(cloudGeo,cloudMaterial);
+          cloud.position.set(
+            Math.random()*800 -400,
+            500,
+            Math.random()*500 - 450
+          );
+          cloud.rotation.x = 1.16;
+          cloud.rotation.y = -0.12;
+          cloud.rotation.z = Math.random()*360;
+          cloud.material.opacity = 0.6;
+          cloudParticles.push(cloud);
+          scene.add(cloud);
+        }
+        animate();
+      });
+    }
+
+    function animate() {
+      cloudParticles.forEach(p => {
+        p.rotation.z -=0.002;
+      });
+      rainGeo.vertices.forEach(p => {
+        p.velocity -= 0.1 + Math.random() * 0.1;
+        p.y += p.velocity;
+        if (p.y < -200) {
+          p.y = 200;
+          p.velocity = 0;
+        }
+      });
+      rainGeo.verticesNeedUpdate = true;
+      rain.rotation.y +=0.002;
+      if(Math.random() > 0.93 || flash.power > 100) {
+        if(flash.power < 100)
+          flash.position.set(
+            Math.random()*400,
+            300 + Math.random() *200,
+            100
+          );
+        flash.power = 50 + Math.random() * 500;
+      }
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    init();
+    </script>
+    <!-- end of rain script
+    Start of Blotter Code. -->
+<script type="text/javascript">
+
+    //text property
+    var text = new Blotter.Text("CS410", {
+    family: 'Montserrat',
+    size: 375, //sizeForText
+    fill: "#fff", //color for text
+    paddingLeft: 80,
+    paddingRight: 80,
+    paddingTop: 80,
+    paddingBottom: 80,
+    })
+
+    //create the materail
+    var material = new Blotter.FliesMaterial();
+    //A floating point value between 0.0 (0%) and 1.0 (100%)
+    material.uniforms.uPointCellWidth.value = 0.01;
+    //A floating point value between 0.0 (0%) and 1.0 (100%),
+    //relative to half the value of the uPointCellWidth uniform.
+    material.uniforms.uPointRadius.value = .6;
+    //Any floating point value is acceptable. This value
+    //acts as a multiplier against the default uniform passed
+    //to all effects, uTime, which represents the time in seconds
+    //since the effect started.
+    material.uniforms.uSpeed.value = 10;
+
+    //passing the material with object text
+    var blotter = new Blotter(material, {
+    texts: text
+    })
+
+    //defining scope.
+    var scope = blotter.forText(text);
+    console.log(scope);
+
+    //var r2 = document.getElementById('r2');
+    //console.log(r2);
+
+    //then we append it to the html body.
+    scope.appendTo(document.getElementById('r2'));
+
+</script>
 </html>

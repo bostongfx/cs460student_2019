@@ -1,209 +1,112 @@
-<!-- Saurav Paudyal -->
-
+<!DOCTYPE html>
 <html>
   <head>
-    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-    <meta content="utf-8" http-equiv="encoding">
-    <title>CS460 Assignment 2</title>
-    <style>
-      body {
-        background-color: black;
-        color: white; /* font color */
-        font-family: sans-serif;
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden !important;
-      }
-
-      #logo {
-        position: absolute;
-        right: 10px;
-        top: 10px;
-      }
-    </style>
-
-    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
-
-    <script type="text/javascript">
-
-    window.onload = function() {
-      var i ;
-
-      // this gets called when the site is ready
-
-      // create a new scene and renderer
-      r = new X.renderer3D();
-      r.init();
-
-      // create a cube and add it!
-      c = new X.cube();
-      r.add(c);
-
-
-      cXRCor = 25;
-      cXLCor = -25;
-      cYDCor = -25;
-      //first pass for creating the cubes.
-      for (i = 0; i < 3; i++) {
-        cRight = new X.cube();
-        if(Number(cXRCor) === 25 || Number(cXRCor) === 50 ){
-          cRight.color = [1,0,0];
-        }
-
-        cRight.center = [cXRCor, 0, 0];
-        cXRCor = cXRCor + 25;
-        r.add(cRight);
-
-        cLeft = new X.cube();
-        if(Number(cXLCor) === -25 || Number(cXLCor) === -50 ){
-          cLeft.color = [1,0,0];
-        }
-        cLeft.center = [cXLCor, 0, 0];
-        cXLCor = cXLCor - 25;
-        r.add(cLeft);
-
-        cDown = new X.cube();
-        if(Number(cYDCor) === -75){
-          cDown.color = [1,0,0];
-        }
-
-        cDown.center = [0, cYDCor, 0];
-        cYDCor = cYDCor - 25;
-
-        r.add(cDown);
-
-      }
-
-      cXRCor = 25;
-      cXLCor = -25;
-      cYDCor = -25;
-
-      for (i = 0; i < 3; i++) {
-        cTemp = new X.cube();
-        cTemp2 = new X.cube();
-        cTemp3 = new X.cube();
-        cTemp4 = new X.cube();
-
-
-        cTemp.center = [cXRCor,cYDCor,0];
-        cTemp3.center = [cXLCor, cYDCor, 0];
-
-        cYDCor = cYDCor - 25;
-
-        cTemp2.center = [cXRCor,cYDCor, 0];
-        cTemp4.center = [cXLCor, cYDCor, 0];
-
-        cXRCor = cXRCor + 25;
-        cXLCor = cXLCor - 25;
-        cYDCor = cYDCor + 25;
-        r.add(cTemp);
-        r.add(cTemp2);
-        r.add(cTemp3);
-        r.add(cTemp4);
-      }
-
-
-
-      //cube on top from center
-      cTop = new X.cube();
-      cTop.center = [0, 25, 0];
-      r.add(cTop);
-
-      cXRCor = 25;
-      cXLCor = -25;
-      cYDCor = 25;
-
-      for (i = 0; i < 3; i++) {
-        cTempR = new X.cube();
-        cTempL = new X.cube();
-
-        cTempR.center = [cXRCor,cYDCor,0];
-        cTempL.center = [cXLCor, cYDCor, 0];
-
-        cXRCor = cXRCor + 25;
-        cXLCor = cXLCor - 25;
-
-        r.add(cTempR);
-        r.add(cTempL);
-
-      }
-
-      //mouth cube
-      cXRCor = 25;
-      cXLCor = -25;
-      cYDCor = -75;
-
-      for (i = 0; i < 2; i++) {
-        cTempR = new X.cube();
-        cTempL = new X.cube();
-
-        cTempR.center = [cXRCor, cYDCor, 0];
-        cTempL.center = [cXLCor, cYDCor, 0];
-
-        r.add(cTempR);
-        r.add(cTempL);
-
-        cXRCor = cXRCor + 25;
-        cXLCor = cXLCor - 25;
-
-      }
-
-      cXLCor = -25;
-      cYDCor = -100;
-      for (i = 0; i < 3; i++) {
-        cTemp = new X.cube();
-
-        cTemp.center = [cXLCor, cYDCor, 0];
-
-        r.add(cTemp);
-        cXLCor = cXLCor + 25;
-
-      }
-
-      //creating the Left ear
-      //Cubes
-      cTop = new X.cube();
-      cBottom = new X.cube();
-      cRight = new X.cube();
-
-      cTop.center = [-75, 75, 0];
-      cBottom.center = [-75, 50, 0 ];
-      cRight.center = [-50, 50, 0];
-
-      r.add(cTop);
-      r.add(cBottom);
-      r.add(cRight);
-
-      //creating the right ear;
-      cTop = new X.cube();
-      cBottom = new X.cube();
-      cRight = new X.cube();
-
-      cTop.center = [75, 75, 0];
-      cBottom.center = [75, 50, 0 ];
-      cRight.center = [50, 50, 0];
-
-      r.add(cTop);
-      r.add(cBottom);
-      r.add(cRight);
-
-      // set camera further away!
-      r.camera.position = [0, 0, 1000];
-
-      // render everything!
-      r.render();
-
-    };
-
-    function myFunction(a, b) {
-      return a * b;             // Function returns the product of a and b
-    }
-
-    </script>
+    <meta charset=UTF-8 />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <title>Three.js Realistic Rain Tutorial by Red Stapler</title>
   </head>
   <body>
-    <h1>CS460 Assignment 2</h1>
-    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script>
+    let scene,camera, renderer, cloudParticles = [], flash, rain, rainGeo, rainCount = 15000;
+    function init() {
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(60,window.innerWidth / window.innerHeight, 1, 1000);
+      camera.position.z = 1;
+      camera.rotation.x = 1.16;
+      camera.rotation.y = -0.12;
+      camera.rotation.z = 0.27;
+
+      ambient = new THREE.AmbientLight(0x555555);
+      scene.add(ambient);
+
+      directionalLight = new THREE.DirectionalLight(0xffeedd);
+      directionalLight.position.set(0,0,1);
+      scene.add(directionalLight);
+
+      flash = new THREE.PointLight(0x062d89, 30, 500 ,1.7);
+      flash.position.set(200,300,100);
+      scene.add(flash);
+
+      renderer = new THREE.WebGLRenderer();
+      scene.fog = new THREE.FogExp2(0x11111f, 0.002);
+      renderer.setClearColor(scene.fog.color);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      rainGeo = new THREE.Geometry();
+      for(let i=0;i<rainCount;i++) {
+        rainDrop = new THREE.Vector3(
+          Math.random() * 400 -200,
+          Math.random() * 500 - 250,
+          Math.random() * 400 - 200
+        );
+        rainDrop.velocity = {};
+        rainDrop.velocity = 0;
+        rainGeo.vertices.push(rainDrop);
+      }
+      rainMaterial = new THREE.PointsMaterial({
+        color: 0xaaaaaa,
+        size: 0.1,
+        transparent: true
+      });
+      rain = new THREE.Points(rainGeo,rainMaterial);
+      scene.add(rain);
+      let loader = new THREE.TextureLoader();
+      loader.load("smoke.png", function(texture){
+
+        cloudGeo = new THREE.PlaneBufferGeometry(500,500);
+        cloudMaterial = new THREE.MeshLambertMaterial({
+          map: texture,
+          transparent: true
+        });
+
+        for(let p=0; p<25; p++) {
+          let cloud = new THREE.Mesh(cloudGeo,cloudMaterial);
+          cloud.position.set(
+            Math.random()*800 -400,
+            500,
+            Math.random()*500 - 450
+          );
+          cloud.rotation.x = 1.16;
+          cloud.rotation.y = -0.12;
+          cloud.rotation.z = Math.random()*360;
+          cloud.material.opacity = 0.6;
+          cloudParticles.push(cloud);
+          scene.add(cloud);
+        }
+        animate();
+      });
+    }
+    function animate() {
+      cloudParticles.forEach(p => {
+        p.rotation.z -=0.002;
+      });
+      rainGeo.vertices.forEach(p => {
+        p.velocity -= 0.1 + Math.random() * 0.1;
+        p.y += p.velocity;
+        if (p.y < -200) {
+          p.y = 200;
+          p.velocity = 0;
+        }
+      });
+      rainGeo.verticesNeedUpdate = true;
+      rain.rotation.y +=0.002;
+      if(Math.random() > 0.93 || flash.power > 100) {
+        if(flash.power < 100)
+          flash.position.set(
+            Math.random()*400,
+            300 + Math.random() *200,
+            100
+          );
+        flash.power = 50 + Math.random() * 500;
+      }
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    init();
+    </script>
   </body>
 </html>
