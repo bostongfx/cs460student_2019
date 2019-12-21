@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)https://jsfiddle.net/miranjum/f2t6bhw0/show/ -->
+<html><script type="text/javascript">
+    var spector;
+    var captureOnLoad = false;
+    var captureOffScreen = false;
+    window.__SPECTOR_Canvases = [];
+
+    (function() {
+        var __SPECTOR_Origin_EXTENSION_GetContext = HTMLCanvasElement.prototype.getContext;
+        HTMLCanvasElement.prototype.__SPECTOR_Origin_EXTENSION_GetContext = __SPECTOR_Origin_EXTENSION_GetContext;
+
+        HTMLCanvasElement.prototype.getContext = function () {
+            var context = null;
+            if (!arguments.length) {
+                return context;
+            }
+
+            if (arguments.length === 1) {
+                context = this.__SPECTOR_Origin_EXTENSION_GetContext(arguments[0]);
+                if (context === null) {
+                    return context;
+                }
+            }
+            else if (arguments.length === 2) {
+                context = this.__SPECTOR_Origin_EXTENSION_GetContext(arguments[0], arguments[1]);
+                if (context === null) {
+                    return context;
+                }
+            }
+
+            var contextNames = ["webgl", "experimental-webgl", "webgl2", "experimental-webgl2"];
+            if (contextNames.indexOf(arguments[0]) !== -1) {
+                context.canvas.setAttribute("__spector_context_type", arguments[0]);
+                // Notify the page a canvas is available.
+                var myEvent = new CustomEvent("SpectorWebGLCanvasAvailableEvent");
+                document.dispatchEvent(myEvent);
+
+                if (captureOffScreen) {
+                    var found = false;
+                    for (var i = 0; i < window.__SPECTOR_Canvases.length; i++) {
+                        if (window.__SPECTOR_Canvases[i] === this) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        window.__SPECTOR_Canvases.push(this);
+                    }
+                }
+
+                if (captureOnLoad) {
+                    // Ensures canvas is in the dom to capture the one we are currently tracking.
+                    if (this.parentElement || false) {
+                        spector.captureContext(context, 500, false);
+                        captureOnLoad = false;
+                    }
+                }
+            }
+
+            return context;
+        }
+    })()</script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    
+    <meta http-equiv="edit-Type" edit="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Three.js - Background Cubemap - JSFiddle</title>
+
+      <meta name="robots" content="index, follow">
+      <meta name="googlebot" content="index, follow">
+
+      <script src="./index_files/highlight.pack.js.download"></script>
+      <script src="./index_files/embed.js.download"></script>
+      <link rel="stylesheet" media="screen" href="./index_files/embed-light.css">
+
+      <script type="text/javascript">
+        var height;
+        var force_height = null;
+        var slug = "f2t6bhw0";
+        var show_src = "//fiddle.jshell.net/miranjum/f2t6bhw0/show/light/";
+        var resize_element_counter = 0;
+        var shell_edit_url = "/miranjum/f2t6bhw0/light/";
+
+      </script>
+
+    <link rel="stylesheet" media="screen" href="./index_files/css">
+
+    <style type="text/css" media="screen">
+    </style>
+
+  </head>
+  <body>
+    <div id="wrapper">
+        <header>
+          <h1><a href="https://jsfiddle.net/miranjum/f2t6bhw0/?utm_source=website&amp;utm_medium=embed&amp;utm_campaign=f2t6bhw0" target="_blank">Edit in JSFiddle</a></h1>
+          <div id="actions">
+            <ul class="normalRes">
+                <li class="&quot;active&quot;">
+                  <a data-trigger-type="result" href="https://jsfiddle.net/miranjum/f2t6bhw0/show/#Result">Result</a>
+                </li>
+            </ul>
+            <div class="hl" style="left: 0px; width: 57.2969px;"></div>
+          </div>
+        </header>
+
+        <div id="tabs">
+              <div class="tCont result active" id="result"><iframe src="./index_files/saved_resource.html" frameborder="0" sandbox="allow-forms allow-scripts allow-same-origin allow-modals allow-popups" allow="midi; geolocation; microphone; camera; encrypted-media;"></iframe></div>
+                <script type="text/javascript">
+                  window.addEventListener('load', function(){
+                    if (typeof(EmbedManager) === undefined){
+                        EmbedManager.loadResult();
+                    }
+                  }, false);
+                </script>
+        </div>
+    </div>
+  
+
+</body></html>
