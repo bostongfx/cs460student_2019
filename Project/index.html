@@ -114,7 +114,7 @@
 
 //Adding helicopter
 
-var heliTexture = textureLoader.load('/UH60/1.jpg');
+var heliTexture = textureLoader.load('UH60/1.jpg');
 
 loader.load('/UH60/uh60.obj', function (objectheli) {
 
@@ -451,25 +451,9 @@ for (var i = 0; i < 6; i++)
         scene.add( water );
 
 
-//park
-
-        // var loader = new THREE.FBXLoader();
-        // loader.load( 'park/children area.fbx', function ( park ) {
-        //   mixer = new THREE.AnimationMixer( park );
-        //   var action = mixer.clipAction( park.animations[ 0 ] );
-        //   action.play();
-        //   park.traverse( function ( child ) {
-        //     if ( child.isMesh ) {
-        //       child.castShadow = true;
-        //       child.receiveShadow = true;
-        //     }
-        //   } );
-        //   scene.add( park );
-        // } );
-
 // stadium
 
-        loader.load('/Stadium/sports stadium.obj', function (stadium) {
+        loader.load('Stadium/sports stadium.obj', function (stadium) {
           stadium.position.x = 3900;
           stadium.position.y = -80;
           stadium.position.z = -3800;
@@ -493,7 +477,7 @@ for (var i = 0; i < 6; i++)
 
 // mountains
 
-        loader.load('/everest/everest.obj', function (object2) {
+        loader.load('everest/everest.obj', function (object2) {
           object2.position.x = -4300;
           object2.position.y = 50;
           object2.position.z = -3800;
@@ -513,7 +497,7 @@ for (var i = 0; i < 6; i++)
           } );
 
 
-           loader.load('/everest/everest.obj', function (objectmount) {
+           loader.load('everest/everest.obj', function (objectmount) {
           objectmount.position.x = -4300;
           objectmount.position.y = 50;
           objectmount.position.z = -2800;
@@ -538,7 +522,7 @@ for (var i = 0; i < 6; i++)
 
 // var leafTexture = new THREE.TextureLoader().load( '/Models/rover-red.jpg' );
 
-loader.load('/Models/1.obj', function (objectcar) {
+loader.load('Models/1.obj', function (objectcar) {
           objectcar.position.x = -4000;
           objectcar.position.y = -100;
           objectcar.position.z = 500;
@@ -554,7 +538,7 @@ loader.load('/Models/1.obj', function (objectcar) {
         scene.add(objectcar);
     });
 
-loader.load('/Models/1.obj', function (objectcar1) {
+loader.load('Models/1.obj', function (objectcar1) {
           objectcar1.position.x = 2000;
           objectcar1.position.y = -100;
           objectcar1.position.z = -500;
@@ -588,8 +572,8 @@ loader.load('/Models/1.obj', function (objectcar1) {
     normalz[i].side = THREE.BackSide;
 
         var loader = new THREE.OBJLoader( );
-        loader.setResourcePath( '/Models/' );
-        loader.load( '/Models/1.obj', function ( object ) {
+        loader.setResourcePath( 'Models/' );
+        loader.load( 'Models/1.obj', function ( object ) {
           object.traverse( function ( child ) {
             object.scale.set(0.002, 0.002, 0.002);
             object.position.y = -100;
