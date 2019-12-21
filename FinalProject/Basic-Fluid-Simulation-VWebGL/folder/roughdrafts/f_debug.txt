@@ -1,0 +1,33 @@
+#ifdef GL_ES
+precision mediump float;
+#endif
+#define PI 3.1415926538 
+uniform sampler2D u_data; 
+uniform sampler2D u_velocity;
+uniform float u_deltaTime;
+// 'uniform vec2 u_resolution;
+varying vec2 v_TexCoord;
+
+vec3 hsb2rgb( in vec3 c ){
+    vec3 rgb = clamp(abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),
+                             6.0)-3.0)-1.0,
+                     0.0,
+                     1.0 );
+    rgb = rgb*rgb*(3.0-2.0*rgb);
+    return c.z * mix( vec3(1.0), rgb, c.y);
+}
+
+void main() {
+
+    float angle = texture2D(u_velocity, v_TexCoord).r;
+    float magnitude = texture2D(u_velocity, v_TexCoord).a;
+    // float velocity_x = magnitude * cos(angle);
+    // float velocity_y = magnitude * sin(angle);
+
+    // gl_FragColor = vec4(1, texture2D(u_data, v_TexCoord).r, texture2D(u_data, v_TexCoord).a, 1);
+
+    color = hsb2rgb(vec3((angle)+0.5,magnitude,1.0));
+    // gl_FragColor = texture2D(u_data, v_TexCoord - vec2(velocity_x, velocity_y) * u_deltaTime);
+
+    gl_FragColor = vec4(color,1.0);
+    }

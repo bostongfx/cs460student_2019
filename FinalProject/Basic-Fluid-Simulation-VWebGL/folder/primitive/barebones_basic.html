@@ -1,0 +1,281 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>Vanilla WebGL!</title>
+    <style>
+      html, body { 
+        background-color:#000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+        /* background-image: url(https://cs460.org/gfx/bg.gif); */
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      };
+    </style>
+  </head>
+  <script type="text/javascript" src="https://cs460.org/js/glmatrix.js"></script>
+  
+  <script id="vertexshader_quad" type="glsl">
+    attribute vec3 a_position;
+
+    uniform vec3 u_offset;
+
+    void main(void) {
+
+      vec3 final_position = a_position;
+      final_position.x += u_offset.x;
+      final_position.y += u_offset.y;
+      final_position.z += u_offset.z;
+    
+      gl_Position = vec4( final_position, 1.);
+      gl_PointSize = 10.;
+    
+    }
+  </script>
+  
+  <script id="fragmentshader_quad" type="glsl">
+    precision mediump float;
+    #define PI 3.14159265359
+
+  
+
+    uniform vec4 u_color;
+    uniform vec2 u_resolution;
+    uniform vec3 u_randoms;
+
+
+    void main(void) {
+
+      vec2 coord = gl_FragCoord.xy/u_resolution.xy;
+
+        vec4 w = vec4(sin(coord.x*PI), coord.y, sin(coord.y*PI), 1);
+        gl_FragColor = w;
+
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script>
+
+    var c, gl;
+    var v_shader_quad, f_shader_quad, shaderprogram_quad;
+    var shaderprogram_smallquad
+    var vertices, indices, v_buffer, i_buffer;
+
+    var step_x = 0.02;
+    var step_y = 0.02;
+    var obstacle_factor = 1; // Hint for the bonus!
+    var direction_y = 0;
+    var direction_x = 0;
+
+
+    window.onload = function() {
+
+      //************************************************************//
+      //
+      // INITIALIZE WEBGL
+      //
+      c = document.getElementById( 'c' ); // setup canvas
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+
+      gl = c.getContext( 'webgl' ); // setup GL context
+      gl.viewport(0, 0, c.width, c.height );
+
+
+      //************************************************************//
+      //
+      // SHADERS
+      //
+
+
+
+
+
+
+      //QUAD
+
+      v_shader_quad = gl.createShader( gl.VERTEX_SHADER );
+      f_shader_quad = gl.createShader( gl.FRAGMENT_SHADER );
+      
+      // compile vertex shader
+      gl.shaderSource( v_shader_quad, document.getElementById( 'vertexshader_quad' ).innerText );
+      gl.compileShader( v_shader_quad );
+
+      if (!gl.getShaderParameter( v_shader_quad, gl.COMPILE_STATUS)) {
+        console.log(gl.getShaderInfoLog( v_shader_quad ));
+      }
+
+      // compile fragment shader
+      gl.shaderSource( f_shader_quad, document.getElementById( 'fragmentshader_quad' ).innerText );
+      gl.compileShader( f_shader_quad );
+
+      if (!gl.getShaderParameter( f_shader_quad, gl.COMPILE_STATUS)) {
+        console.log(gl.getShaderInfoLog( f_shader_quad ));
+      }
+
+      // attach and link the shaders
+      shaderprogram_quad = gl.createProgram();
+      gl.attachShader( shaderprogram_quad, v_shader_quad );
+      gl.attachShader( shaderprogram_quad, f_shader_quad );
+
+      gl.linkProgram( shaderprogram_quad );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      // create multiple objects
+      objects = [];
+
+      objects.push( createScreenQuad());
+      // objects.push(createSmallScreenQuad());
+
+
+      animate();
+
+    };
+
+
+    function createScreenQuad(){
+      var vertices = new Float32Array([
+        -1.0, -1.0, 0.0,
+        1.0, -1.0, 0.0,
+        1.0, 1.0, 0.0,
+        -1.0, 1.0, 0.0,
+        -1.0, -1.0, 0.0
+      ])
+
+      var v_buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, v_buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+      gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+      var offset = [0.,0.,0.];
+      var color = [1 ,0.,0.,1.];
+
+
+
+      return ['quad', v_buffer, vertices, offset, color, gl.TRIANGLE_STRIP];
+    }
+
+
+
+    var framecounter = 0;
+
+    function animate() {
+
+     
+
+      gl.clearColor( 0., 0., 0., 0.)
+      gl.clear( gl.COLOR_BUFFER_BIT );
+
+
+
+      for( var o = 0; o < objects.length; o++ ) {
+
+        var current_objecttype = objects[o][0];
+        var current_v_buffer = objects[o][1];
+        var current_vertices = objects[o][2];
+        var current_offset = objects[o][3];
+        var current_color = objects[o][4];
+        var current_drawtype = objects[o][5];
+
+        var current_v_count = current_vertices.length;
+        
+        
+
+
+        //************************************************************//
+        //
+        // CONNECT SHADER WITH GEOMETRY
+        //
+        
+          gl.useProgram( shaderprogram_quad );
+
+
+          gl.bindBuffer( gl.ARRAY_BUFFER, current_v_buffer );
+
+
+          var a_position = gl.getAttribLocation( shaderprogram_quad, 'a_position' );
+
+          gl.vertexAttribPointer( a_position, 3, gl.FLOAT, false, 0, 0 );
+
+          gl.enableVertexAttribArray ( a_position );
+
+          // find the uniform in the shader source
+          var u_offset = gl.getUniformLocation( shaderprogram_quad, 'u_offset' );
+
+          gl.uniform3fv( u_offset, current_offset)
+
+          var canvas = document.getElementById("canvas");
+
+          var u_color = gl.getUniformLocation( shaderprogram_quad, 'u_color' );
+          //var u_randoms = gl.getUniformLocation( shaderprogram, 'u_randoms' );
+          var u_resolution = gl.getUniformLocation(shaderprogram_quad, 'u_resolution');
+
+          gl.uniform4fv( u_color, new Float32Array(current_color) );
+          //gl.uniform3fv(u_randoms, [Math.random(), Math.random(), Math.random()]);
+          gl.uniform2fv(u_resolution, [window.innerWidth ,window.innerHeight]);
+          
+        
+        }
+
+
+
+        gl.drawArrays( current_drawtype, 0, current_v_count/3, 0 );
+       
+
+      
+
+
+      requestAnimationFrame(animate);
+
+    };
+
+  </script>
+  <body>
+    <canvas id="c"></canvas>
+    <div id="scoreboard">0</div>
+  </body>
+</html>
