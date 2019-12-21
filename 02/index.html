@@ -1,0 +1,124 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
+
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+    
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+      // this gets called when the site is ready
+
+      // create a new scene and renderer
+      r = new X.renderer3D();
+      r.init();
+
+      // create a cube and add it!
+      c = new X.cube(); c2 = new X.cube(); c3 = new X.cube(); c4 = new X.cube(); c5 = new X.cube(); c6 = new X.cube(); c7 = new X.cube();
+	  c8 = new X.cube(); c9 = new X.cube(); c10 = new X.cube(); c11 = new X.cube(); c12 = new X.cube(); c13 = new X.cube(); c14 = new X.cube();
+	  c15 = new X.cube(); c16 = new X.cube(); c17 = new X.cube(); c18 = new X.cube(); c19 = new X.cube(); c20 = new X.cube(); c21 = new X.cube(); 
+	  c22 = new X.cube(); c23 = new X.cube(); c24 = new X.cube(); c25 = new X.cube(); c26 = new X.cube(); c27 = new X.cube(); c28 = new X.cube();
+	  c29 = new X.cube(); c30 = new X.cube(); c31 = new X.cube(); c32 = new X.cube(); c33 = new X.cube(); c34 = new X.cube(); c35 = new X.cube(); c36 = new X.cube();
+	  c35 = new X.cube(); c36 = new X.cube(); c37 = new X.cube(); c38 = new X.cube(); c39 = new X.cube(); c40 = new X.cube(); c41 = new X.cube(); c42 = new X.cube();
+
+      // set camera further away!
+      r.camera.position = [0, 0, 400];
+
+      // render everything!
+      r.render();
+	  
+	   c.center[0,0,0]; c.color = [0.8,0.4,0];
+	   c2.center = [25,0,0]; c2.color = [1,1,1];
+	   c3.center = [50,0,0]; c3.color = [1,1,1];
+	   c4.center = [75,0,0]; c4.color = [0.8,0.4,0];
+	   c5.center = [100,0,0]; c5.color = [1,1,1];
+	   c6.center = [125,0,0]; c6.color = [1,1,1];
+	   c7.center = [150,0,0]; c7.color = [0.8,0.4,0];
+	   
+	   c8.center = [0,25,0]; c8.color = [0.8,0.4,0];
+	   c9.center = [25,25,0]; c9.color = [0.8,0.4,0];
+	   c10.center = [50,25,0]; c10.color = [0.8,0.4,0];
+	   c11.center = [75,25,0]; c11.color = [0.8,0.4,0];
+	   c12.center = [100,25,0]; c12.color = [0.8,0.4,0];
+	   c13.center = [125,25,0]; c13.color = [0.8,0.4,0];
+	   c14.center = [150,25,0]; c14.color = [0.8,0.4,0];
+	   
+	   c15.center = [0,-25,0]; c15.color = [0.8,0.4,0];
+	   c16.center = [25,-25,0]; c16.color = [0.8,0.4,0];
+	   c17.center = [50,-25,0]; c17.color = [0.8,0.4,0];
+	   c18.center = [75,-25,0]; c18.color = [0.8,0.4,0];
+	   c19.center = [100,-25,0]; c19.color = [0.8,0.4,0];
+	   c20.center = [125,-25,0]; c20.color = [0.8,0.4,0];
+	   c21.center = [150,-25,0]; c21.color = [0.8,0.4,0];
+	   
+	   c22.center = [0,-50,0]; c22.color = [0.8,0.4,0];
+	   c23.center = [25,-50,0]; c23.color = [0.8,0.4,0];
+	   c24.center = [50,-50,0]; c24.color = [0.8,0.4,0];
+	   c25.center = [75,-50,0]; c25.color = [0.8,0.4,0];
+	   c26.center = [100,-50,0]; c26.color = [0.8,0.4,0];
+	   c27.center = [125,-50,0]; c27.color = [0.8,0.4,0];
+	   c28.center = [150,-50,0]; c28.color = [0.8,0.4,0];
+	   
+	   c29.center = [25,-75,0]; c29.color = [0.8,0.4,0];
+	   c30.center = [50,-75,0]; c30.color = [0.8,0.4,0];
+	   c31.center = [75,-75,0]; c31.color = [1,1,1];
+	   c32.center = [100,-75,0]; c32.color = [0.8,0.4,0];
+	   c33.center = [125,-75,0]; c33.color = [0.8,0.4,0];
+	   
+	   c34.center = [50,-100,0]; c34.color = [0.8,0.4,0];
+	   c35.center = [75,-100,0]; c35.color = [0.8,0.4,0];
+	   c36.center = [100,-100,0]; c36.color = [0.8,0.4,0];
+	   
+	   c37.center = [0,50,0]; c37.color = [0.8,0.4,0];
+	   c38.center = [25,50,0]; c38.color = [0.8,0.4,0];
+	   
+	   c39.center = [125,50,0]; c39.color = [0.8,0.4,0];
+	   c40.center = [150,50,0]; c40.color = [0.8,0.4,0];
+	   
+	   c41.center = [0,75,0]; c41.color = [0.8,0.4,0];
+	   
+	   c42.center = [150,75,0]; c42.color = [0.8,0.4,0];
+	   
+	   
+	   
+	   
+	   r.add(c); r.add(c2); r.add(c3); r.add(c4); r.add(c5); r.add(c6); r.add(c7);
+	   r.add(c8); r.add(c9); r.add(c10); r.add(c11); r.add(c12); r.add(c13); r.add(c14);
+	   r.add(c15); r.add(c16); r.add(c17); r.add(c18); r.add(c19); r.add(c20); r.add(c21);
+	   r.add(c22); r.add(c23); r.add(c24); r.add(c25); r.add(c26); r.add(c27); r.add(c28);
+	   r.add(c29); r.add(c30); r.add(c31); r.add(c32); r.add(c33);
+	   r.add(c34); r.add(c35); r.add(c36);
+	   r.add(c37); r.add(c38);
+	   r.add(c39); r.add(c40);
+	   r.add(c41); 
+	   r.add(c42);
+	   
+    };
+
+    </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
+</html>

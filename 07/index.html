@@ -1,0 +1,157 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body { 
+        background-color:#000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+        background-image: url(snow_bg.jpg);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+    </style>
+
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/effects/AnaglyphEffect.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
+	<script src="https://threejs.org/examples/js/loaders/PLYLoader.js" 
+	type="text/javascript"></script>
+	
+	
+	<script src="robot.js"></script>
+    <script src="helper.js"></script>
+
+    
+
+    <script>
+      var scene, camera, ambientLight, light, controls, renderer, floor, effect; 
+      
+       
+
+		window.onload = function() {
+        scene = new THREE.Scene();
+        var fov = 60;
+        var ratio = window.innerWidth / window.innerHeight;
+        var zNear = 1;
+        var zFar = 10000;
+        camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camera.position.set( 20, 50, 500);
+        renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+        
+		effect = new THREE.AnaglyphEffect( renderer );
+        effect.setSize( window.innerWidth, window.innerHeight );
+		
+        ambientLight = new THREE.AmbientLight();
+        scene.add( ambientLight );
+        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        light.position.set( 10, 100, 10 );
+        scene.add( light );
+		
+        var floorTexture = new THREE.TextureLoader().load( 'snow.jpg' );
+        var floorGeometry = new THREE.PlaneBufferGeometry( 800, 800 );
+        var floorMaterial = new THREE.MeshBasicMaterial( {
+          map: floorTexture,
+          side: THREE.DoubleSide
+        } );
+        floor = new THREE.Mesh( floorGeometry, floorMaterial );
+        floor.position.y = -100;
+        floor.rotateX(-30);
+        scene.add( floor );
+		
+        allRobots = [];
+
+		r = new Robot(0, -30, 0);
+        r.show(scene);
+        allRobots.push(r);  
+		
+		
+        controller = {
+          anaglyph: false,
+		  			dance: function() {
+		  
+				var music = document.getElementById("music");
+				music.autoplay = true;
+				music.load();
+				for (var r in allRobots) {
+					allRobots[r].dance();
+				}
+			}
+        }
+
+		
+        //dat.gui
+       
+        var gui = new dat.GUI();
+        var moving = gui.addFolder( "Movement" );
+        moving.add( controller, "dance" );
+        moving.open();
+		
+
+		// Fix slider bug in dat.GUI
+        controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+		animate();
+        
+      };
+	  
+	    window.onclick = function( e ) {
+      	if( !e.shiftKey ) {
+      		e.preventDefault();
+      		return false;
+      	}
+      	pixel_coords = new THREE.Vector2(e.clientX, e.clientY);
+       	vp_coords = new THREE.Vector2((pixel_coords.x / window.innerWidth) * 2 - 1,
+                                      -(pixel_coords.y / window.innerHeight) * 2 + 1
+                                     );
+        vp_coords_near = new THREE.Vector3(vp_coords.x, vp_coords.y, 0);
+       	raycaster = new THREE.Raycaster();
+       	raycaster.setFromCamera(vp_coords_near, camera);
+       	intersects = raycaster.intersectObject(floor);
+         
+		 
+        if (intersects.length > 0) {
+                newRobot = new Robot(intersects[0].point.x,
+                                 intersects[0].point.y + 80,
+                                 intersects[0].point.z);
+          newRobot.show(scene);
+          allRobots.push(newRobot);
+       	  
+        }
+      };
+	  
+	  
+	  
+      function animate() {
+        requestAnimationFrame( animate );
+        
+		for (var r in allRobots) {
+          allRobots[r].onAnimate();
+        }
+        controls.update();
+        
+		
+        if (controller.anaglyph) {
+        	renderer.setClearAlpha(1);
+        	effect.render(scene, camera);
+        }
+        else {
+        	renderer.setClearAlpha( 0 );
+        	renderer.render(scene, camera);
+        }
+		
+      };
+    </script>
+  </head>
+  <body>
+  	<div style="visibility:hidden">
+  	<audio id = "music"> 
+	<source src="ron-gelinas-chillout-lounge-get-your-groove-on.mp3"> 
+	</audio>
+  </body>
+</html>
