@@ -22,6 +22,7 @@
 
       var scene, camera, renderer, effect, ambientLight, light, controls;
       var floor;
+      var mesh; 
 
       window.onload = function() {
 
@@ -44,6 +45,22 @@
 
 
         // TODO Part 3 (add 2 pointlights)
+        
+
+
+        
+        var pointLight = new THREE.PointLight( 0xffffff, 1);
+        pointLight.position.set(0, 10, 0);
+        scene.add(pointLight);  
+
+        var pointLight_2 = new THREE.PointLight(0xffffff, 1);
+        pointLight_2.position.set(100, 10, 0); 
+        scene.add(pointLight_2);
+
+
+        
+
+
 
 
 
@@ -62,7 +79,20 @@
 
         } );
 
-        // TODO Part 1, load another mesh
+        var loader = new THREE.PLYLoader();
+        loader.load('armadillo.ply', function (geometry) {
+          geometry.computeVertexNormals(); 
+
+          phongMaterial = new THREE.MeshPhongMaterial( {
+            color: 0xa74f4f
+          } ); 
+
+          mesh2 = new THREE.Mesh( geometry, phongMaterial );
+          mesh2.position.set(180, 0, 0);
+          scene.add(mesh2);
+
+        } ); 
+
         // TODO Part 2, use a different material for this mesh
 
 
@@ -76,6 +106,8 @@
           // TODO Bonus Part 2
         }
 
+        
+        
 
         var gui = new dat.GUI();
         var ambientFolder = gui.addFolder('Ambient Light');
@@ -91,9 +123,27 @@
 
         // TODO Part 4 (control the color and position of point lights)
 
-        // TODO Part 5 (control the color of both materials in the scene)
+        var pointFolder = gui.addFolder('Point Light');
+        pointFolder.addColor(controller, 'color').onChange( function(value) {
+        pointLight.color.setHex(value); });
+        pointFolder.add(pointLight, 'distance', 0, 40 ).onChange( function(value) {pointLight.position.set(value); }); 
 
-        gui.open();
+        
+        pointFolder.addColor(controller, 'color').onChange( function(value) {
+        pointLight.color.setHex(value); });
+        pointFolder.add(pointLight, 'distance', 0, 40 ).onChange( function(value) {pointLight.position.set(value); }); 
+
+        pointFolder.open(); 
+
+        // TODO P 5 (control the color of both materials in the scene)
+        var meshColor = gui.addColor(controller, 'color').onChange(function(value) {
+        mesh.material.color.setHex(value); 
+        } ); 
+        gui.open(); 
+        
+        var meshColor = gui.addColor(controller, 'color').onChange(function(value) {
+        mesh2.material.color.setHex(value); 
+        } ); 
 
 
 
