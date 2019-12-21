@@ -1,0 +1,209 @@
+
+<!-- Saurav Paudyal -->
+<!-- HW5 -->
+
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+
+    <style>
+      html, body {
+        background-color: #000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
+      #r1 {
+        width:50%;
+        height:100%;
+        float: left;
+        }
+      #r2 {
+        width:50%;
+        height:100%;
+        float:left;
+      }
+    </style>
+
+    <!-- Question 3  -->
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+
+    <!-- Question 2  -->
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_xdat.gui.js"></script>
+
+
+
+
+    <script type="text/javascript">
+
+      //XTK variables
+      var r, c, c2;
+
+      //THREE.js variables
+      var fov, ratio, zNear, zFar, count, camera,
+          renderer, ambientLight, light, geometry , material, invisible_plane,
+          controls,cube,cube2;
+
+    window.onload = function() {
+
+        //XTK code
+        r = new X.renderer3D();
+        r.container='r1';
+        r.init();
+
+
+        c = new X.cube();
+        c.center = [0,0,0]
+        r.add(c);
+
+        r.render();
+
+        //dat.GUI for XTK
+        var gui = new dat.GUI();
+        var cube1 = gui.addFolder('cube');
+        cube1.add( c, 'visible' );
+        cube1.add( c, 'opacity', 0, 1 );
+        cube1.addColor( c, 'color' );
+        cube1.add(c, 'magicmode');
+        cube1.open();
+
+
+
+        //Three.js code.
+        scene = new THREE.Scene();
+
+        var r2 = document.getElementById('r2'); // get the div container!!!
+
+       //first setup the fov, ratio and
+       fov = 75;
+       ratio = r2.clientWidth / r2.clientHeight; // use the container's clientWidth and clientHeight
+       zNear = 1;
+       zFar = 10000;
+       count = 0;
+        //console.log(ratio)
+       //now we create a perspective camera
+       camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+       camera.position.set( 0,0, 200);
+
+       //after camera we setup the renderer
+       renderer = new THREE.WebGLRenderer({antialias:true});
+       renderer.setSize( r2.clientWidth, r2.clientHeight);
+       r2.appendChild( renderer.domElement ); // and append the domElement to the container
+       //now we add light
+       ambientLight = new THREE.AmbientLight();
+       scene.add(ambientLight);
+       //one ambienlight and multiple spot light/ directional AmbientLight
+       light = new THREE.DirectionalLight( 0xffffff,5.0);
+       //here the light sits at 0,0,0
+       light.position.set(10, 100, 10);
+       scene.add(light);
+       //geometry of the plane thats going to struck ray
+       //and adding it to the scene
+       geometry = new THREE.BoxBufferGeometry( 20, 20, 20 );
+       material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+       cube = new THREE.Mesh( geometry, material );
+
+       scene.add(cube);
+
+
+       //now we need the controls.
+       controls = new THREE.TrackballControls( camera, r2 );
+
+       animate();
+
+       var controller = {
+           'threejs_color': 0xffffff,
+
+           'rotateX': function() {
+             c.transform.rotateX(20);
+             cube.rotateX(20);
+           },
+           'rotateY': function() {
+             c.transform.rotateY(20);
+             cube.rotateY(20);
+           },
+           'rotateZ': function() {
+             c.transform.rotateZ(20);
+             cube.rotateZ(20);
+           },
+           'add new': function() {
+             //new cube XTK
+             c2 = new X.cube();
+             c2.center = [50,50,50];
+             r.add(c2);
+
+             r.render();
+
+             //new cube THREE.js
+             //geometry of the plane thats going to struck ray
+             //and adding it to the scene
+             geometry = new THREE.BoxBufferGeometry( 20, 20, 20 );
+             material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+             cube2 = new THREE.Mesh( geometry, material );
+             cube2.position.set(50,50,50);
+             scene.add(cube2);
+
+            //now we need the controls.
+            controls = new THREE.TrackballControls( camera, r2 );
+
+
+
+           }
+       };
+
+       //dat.GUI for THREE.js
+       var threejsUI = gui.addFolder('Three.js Cube');
+       threejsUI.add(cube, 'visible');
+       threejsUI.add(cube.material, 'opacity', 0, 1).onChange( function()
+       {
+         cube.material.transparent = true;
+       });
+       threejsUI.addColor(controller, 'threejs_color').onChange( function() {
+                 cube.material.color.set( controller.threejs_color );
+               } );
+
+      threejsUI.open();
+
+
+
+      //FOlder for rotation
+      var both = gui.addFolder('Both Cubes');
+      both.add(controller, 'rotateX');
+      both.add(controller, 'rotateY');
+      both.add(controller, 'rotateZ');
+      both.add(controller, 'add new');
+      both.open();
+
+    };
+
+
+    function animate() {
+
+      requestAnimationFrame( animate );
+
+      controls.update();
+      renderer.render( scene, camera );
+
+    };
+
+    </script>
+
+
+  </head>
+  <body>
+    <!-- Question 1 -->
+    <div id="r1">
+
+    </div>
+
+    <div id="r2">
+
+    </div>
+
+  </body>
+
+</html>

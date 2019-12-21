@@ -45,7 +45,7 @@ gltf = {
             "max": [MAX],
             "min": [MIN]
         }
-    ], 
+    ],
 
     "bufferViews": [
         {
@@ -61,7 +61,7 @@ gltf = {
             "target": 34963
         }
     ],
-    
+
     "buffers": [
         {
             "uri": "data:application/octet-stream;base64,"+str(B64_VERTICES, 'utf-8'),
@@ -72,7 +72,7 @@ gltf = {
             "byteLength": HOWMANYBYTES_I
         }
     ],
-  
+
     "meshes": [
         {
             "primitives": [{
@@ -103,4 +103,3 @@ gltf = {
 }
 
 print ( str(gltf).replace("'", '"') ) # we need double quotes instead of single quotes
-
