@@ -1,0 +1,82 @@
+<html>
+  <head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  
+  <style>
+  body {
+  background-color: black;
+  color: white; /* font color */
+  font-family: sans-serif;
+  padding: 0;
+  height: 100%;
+  overflow: hidden !important;
+  }
+  #logo {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  }
+  </style>
+  <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+  
+  <script type = "text/javascript">
+  
+  window.onload = function(){
+  
+    //create the layer1 of 3D cubes
+    layer = new X.renderer3D();
+    layer.init();
+
+  // create a 15 x 10 pixels
+  // layer1
+  for(var i = 0; i < 30; i++){
+    for(var j = 0; j < 20; j++){
+      var cube1 = new X.cube();
+      cube1.center = [i * 2, j * 2, 0];
+      cube1.lengthX = cube1.lengthY = cube1.lengthZ = 1;
+      cube1.color = [0, 1, 0];
+
+      layer.add(cube1);
+    }
+  }
+//   layer.render();
+
+//   // layer2
+//   for(var i = 0; i < 30; i++){
+//     for(var j = 0; j < 20; j++){
+//       var cube2 = new X.cube();
+//       cube2.center = [i * 2 - 10, j * 2 - 10, 2];
+//       cube2.lengthX = cube2.lengthY = cube2.lengthZ = 1;
+//       cube2.color = [180 % i, 180 % j, 2];
+
+//       layer.add(cube2)
+//     }
+//   }
+//   layer.render();
+
+  // layer 3D
+    // for(var i = 0; i < 20; i++){
+    //     for(var j = 0; j < 20; j++){
+    //         for(var z = 0; z < 10; z++){
+    //             var cube = new X.cube();
+    //             cube.center = [i * 2, j * 2, z * 2];
+    //             cube.lengthX = cube.lengthY = cube.lengthZ = 1;
+    //             // cube.color = [150 % i, 150 % j, 150 % z];
+    //             // cube.texture.file = "picture/mountain1.png";
+    //             cube.color = [0, 1, 0];
+
+    //             layer.add(cube);
+    //         }
+    //     }
+    // }
+    layer.render();
+
+  }
+
+  </script>
+  </head>
+  <body>
+
+  </body>
+</html>

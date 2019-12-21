@@ -1,9 +1,14 @@
 <html>
-	<head>
-	<script src='base64.js' type='text/javascript'></script>
-  <script>
+  <head>
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/loaders/PLYLoader.js" type="text/javascript"></script>
+    <script src='base64.js' type='text/javascript'></script>
+    <script>
 
-    window.onload = function() {
+
+window.onload = function() {
 
       VERTICES = new Float32Array([0.,0.,0., 0.,1.,0., 1.,0.,0.])
       INDICES = new Uint16Array([0,1,2])
@@ -182,7 +187,17 @@
         
       }
 
-    window.document.body.innerHTML = JSON.stringify(gltf)
+    // window.document.body.innerHTML = JSON.stringify(gltf);
+
+    var xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", function(){
+        lines = this.responseText;
+        // var myArr = JSON.parse(lines);
+        // document.body.innerHTML = myArr[0];
+
+    });
+    xhr.open("GET", "apple.ply", true);
+    xhr.send();
 
     };
 

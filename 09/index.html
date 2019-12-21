@@ -22,6 +22,9 @@
 
       var scene, camera, renderer, effect, ambientLight, light, controls;
       var floor;
+      var mesh1, mesh2;
+      var pointLight, light1, light2, light3, light4;
+      var clock = new THREE.Clock();
 
       window.onload = function() {
 
@@ -44,6 +47,35 @@
 
 
         // TODO Part 3 (add 2 pointlights)
+        var sphere = new THREE.SphereBufferGeometry( 0.5, 16, 8 );
+				//lights
+				light1 = new THREE.PointLight( 0xff0040, 200, 50 );
+				light1.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xff0040 } ) ) );
+        light1.scale.x = 8;
+        light1.scale.y = 8;
+        light1.scale.z = 8;
+				scene.add( light1 );
+
+				light2 = new THREE.PointLight( 0x0040ff, 200, 50 );
+				light2.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0x0040ff } ) ) );
+				scene.add( light2 );
+        light2.scale.x = 8;
+        light2.scale.y = 8;
+        light2.scale.z = 8;
+
+				light3 = new THREE.PointLight( 0x80ff80, 200, 50 );
+				light3.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0x80ff80 } ) ) );
+				scene.add( light3 );
+        light3.scale.x = 8;
+        light3.scale.y = 8;
+        light3.scale.z = 8;
+
+				light4 = new THREE.PointLight( 0xffaa00, 200, 50 );
+				light4.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffaa00 } ) ) );
+				scene.add( light4 );
+        light4.scale.x = 8;
+        light4.scale.y = 8;
+        light4.scale.z = 8;
 
 
 
@@ -56,23 +88,45 @@
              color: 0x21ce70
           } );
 
-          mesh = new THREE.Mesh( geometry, toonMaterial );
+          mesh1 = new THREE.Mesh( geometry, toonMaterial );
+          mesh1.position.x = -150;
           
-          scene.add( mesh );
+          scene.add( mesh1 );
 
         } );
 
         // TODO Part 1, load another mesh
-        // TODO Part 2, use a different material for this mesh
+        loader.load('dolphins.ply', function(geometry){
+
+          geometry.computeVertexNormals();
+          // TODO Part 2, use a different material for this mesh
+          physicalMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x21ce70
+          });
+
+          mesh2 = new THREE.Mesh( geometry, physicalMaterial);
+          mesh2.position.x = 150;
+
+          // resize the mesh2
+          mesh2.scale.x = 0.2;
+          mesh2.scale.y = 0.2;
+          mesh2.scale.z = 0.2;
+
+          scene.add( mesh2 );
+        });
 
 
 
         controller = {
-          'color': 0xffffff // we can use this single color
+          'color': 0xffffff, // we can use this single color
                             // container for all colors in the scene 
                             // if we modify the onChange callback (see below)
+          'pointColor': 0xffffff,
+          'armadillo_color' : 0xffffff,
+          'dophins_color' : 0xffffff,
 
           // TODO Bonus Part 1
+          'material': ['toon', 'standard', 'phong'],
           // TODO Bonus Part 2
         }
 
@@ -90,12 +144,83 @@
         directionalFolder.open();
 
         // TODO Part 4 (control the color and position of point lights)
+        var pointFolder1 = gui.addFolder('Point Light 1');
+        pointFolder1.addColor(controller, 'pointColor').onChange(function(value){light1.color.setHex(value);});
+        pointFolder1.add(light1.position, 'x', -300, 300);
+        pointFolder1.add(light1.position, 'y', -300, 300);
+        pointFolder1.add(light1.position, 'z', -300, 300);
 
-        // TODO Part 5 (control the color of both materials in the scene)
+        var pointFolder2 = gui.addFolder('Point Light 2');
+        pointFolder2.addColor(controller, 'pointColor').onChange(function(value){light2.color.setHex(value);});
+        pointFolder2.add(light2.position, 'x', -300, 300);
+        pointFolder2.add(light2.position, 'y', -300, 300);
+        pointFolder2.add(light2.position, 'z', -300, 300);
+
+         // TODO Part 5 (control the color of both materials in the scene)
+        
+        var armadilloFolder = gui.addFolder('armadillo');
+        armadilloFolder.addColor(controller, 'armadillo_color').onChange(function(){
+          mesh1.material.color.set(controller.armadillo_color);
+        });
+
+        var dophinsFolder = gui.addFolder('dophins');
+        dophinsFolder.addColor(controller, 'dophins_color').onChange(function(){
+          mesh2.material.color.set(controller.dophins_color);
+        });
+
+        // choose from accepted values
+        armadilloFolder.add(controller, 'material', ['toon', 'standard', 'phong']).onChange(function(value){
+          if(value == 'phong'){            
+
+              phongMaterial = new THREE.MeshPhongMaterial( {
+                color: 0x21ce70
+              } );
+
+              mesh1.material = phongMaterial; 
+
+          }else if(value == 'standard'){           
+
+            standardMaterial = new THREE.MeshStandardMaterial( {
+              color: 0x21ce70
+            } );
+
+            mesh1.material = standardMaterial
+
+          }else if(value == 'toon'){
+              toonMaterial = new THREE.MeshToonMaterial( {
+                color: 0x21ce70
+              } );
+
+              mesh1.material = toonMaterial;    
+          }
+        });
+        dophinsFolder.add(controller, 'material', ['toon', 'standard', 'phong']).onChange(function(value){
+          if(value == 'phong'){            
+
+              phongMaterial = new THREE.MeshPhongMaterial( {
+                color: 0x21ce70
+              } );
+
+              mesh2.material = phongMaterial; 
+                       
+          }else if(value == 'standard'){           
+
+            standardMaterial = new THREE.MeshStandardMaterial( {
+              color: 0x21ce70
+            } );
+
+            mesh2.material = standardMaterial
+
+          }else if(value == 'toon'){
+              toonMaterial = new THREE.MeshToonMaterial( {
+                color: 0x21ce70
+              } );
+
+              mesh2.material = toonMaterial;    
+          }
+        });
 
         gui.open();
-
-
 
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );
@@ -109,12 +234,34 @@
 
         requestAnimationFrame( animate );
 
+        render();
+
         controls.update();
 
         renderer.render( scene, camera );
         
 
       };
+
+      function render() {
+				var time = Date.now() * 0.0005;
+				var delta = clock.getDelta();
+				// // if ( object ) object.rotation.y -= 0.5 * delta;
+				// light1.position.x = Math.sin( time * 0.7 ) * 150 - 200;
+				// // light1.position.y = Math.cos( time * 0.5 ) * 200;
+				// light1.position.z = Math.cos( time * 0.3 ) * 150 ;
+				// light2.position.x = Math.cos( time * 0.3 ) * 150 - 200;
+				// // light2.position.y = Math.sin( time * 0.5 ) * 200;
+				// light2.position.z = Math.sin( time * 0.7 ) * 150 ;
+				light3.position.x = Math.sin( time * 0.7 ) * 150 - 150;
+				// light3.position.y = Math.cos( time * 0.3 ) * 200;
+				light3.position.z = Math.sin( time * 0.5 ) * 150 - 150;
+				light4.position.x = Math.sin( time * 0.3 ) * 150 + 150;
+				// light4.position.y = Math.cos( time * 0.7 ) * 200;
+				light4.position.z = Math.sin( time * 0.5 ) * 150 + 150;
+				renderer.render( scene, camera );
+			}
+
 
     </script>
   </head>

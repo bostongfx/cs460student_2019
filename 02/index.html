@@ -1,0 +1,102 @@
+<!-- <!DOCTYPE html> -->
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
+
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+    <!-- everything comes from goXTK.com -->
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+    
+  <script type = "text/javascript">
+
+    window.onload = function(){
+
+      //create and initialize a 3D render
+      r = new X.renderer3D();
+      r.init();
+
+      //create a 9X9 pixels
+      for (var i = 0; i < 9; i++){
+        for (var j = 0; j < 9; j++){
+
+          //create a new cube
+          var cube = new X.cube();
+          cube.center = [i * 3, j * 3, 1];
+          cube.lengthX = cube.lengthY = cube.lengthZ = 2;
+
+          //set colors;
+          cube.color = [0, 1, 0];
+          if((i == 0 && j == 0) ||
+          (i == 0 && j == 1) || 
+          (i == 0 && j == 2) ||
+          (i == 0 && j == 3) ||
+          (i == 0 && j == 5) ||
+          (i == 0 && j == 6) ||
+          (i == 0 && j == 7) ||
+          (i == 0 && j == 8) ||
+          (i == 1 && j == 0) ||
+          (i == 1 && j == 1) ||
+          (i == 1 && j == 2) ||
+          (i == 1 && j == 6) ||
+          (i == 1 && j == 7) ||
+          (i == 1 && j == 8) ||
+          (i == 2 && j == 0) ||
+          (i == 2 && j == 1) ||
+          (i == 2 && j == 2) ||
+          (i == 2 && j == 6) ||
+          (i == 2 && j == 7) ||
+          (i == 2 && j == 8) ||
+          (i == 3 && j == 0) ||
+          (i == 3 && j == 8) ||
+          (i == 4 && j == 0) ||
+          (i == 4 && j == 8) ||
+          (i == 7 && j == 0) ||
+          (i == 7 && j == 1) ||
+          (i == 7 && j == 2) ||
+          (i == 7 && j == 6) ||
+          (i == 7 && j == 7) ||
+          (i == 7 && j == 8) ||
+          (i == 8 && j == 0) ||
+          (i == 8 && j == 1) ||
+          (i == 8 && j == 2) ||
+          (i == 8 && j == 6) ||
+          (i == 8 && j == 7) ||
+          (i == 8 && j == 8) ){
+            cube.color = [0, 0, 0];
+          }
+
+          //add it 
+          r.add(cube);
+
+          // r.onRender = function(){
+          //   r.camera.rotate([1, 1]);
+          // }
+        }
+      }
+      r.render(); 
+
+    }
+
+  </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
+</html>

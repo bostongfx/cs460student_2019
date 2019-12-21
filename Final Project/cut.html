@@ -1,0 +1,85 @@
+<!-- This is a failed during my final project -->
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <style>
+        body {
+        background-color: rgb(255, 255, 255);
+        color: white; /* font color */
+        font-family: sans-serif;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+        }
+        #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        }
+    </style>
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+
+  </head>
+  <body>
+      <img id="img" style="width:100px; height:100px" src="picture/mountain1.png" />
+      <input type="button" value="cut" onclick="clickCropImage()" />
+      <canvas id="imageC" width="200" height="200"></canvas>
+  </body>
+
+  <script type="text/javascript">
+
+    
+    // var canvas = document.getElementById("imageC");
+    // var ctx = canvas.getContext("2d");
+    // var img = document.getElementById("img");
+    // ctx.drawImage(img, 0, 0, 200, 200);
+    
+    var numberX = numberY = 6;
+    var splaceX = splaceY = 0.1;
+    var locationArr = [];
+    var canvasComingCreated, divComingCreated;
+
+    function clickCropImage(){
+        var canvas = document.getElementById("imageC");
+        var canvasH = canvas.clientHeight;
+        var canvasW = canvas.clientWidth;
+        //cut the img
+        for(var x = 0; x < numberX; x++){
+            for(var y = 0; y < numberY; y++){
+                var location = {
+                    'x' : x * canvasW / numberX - splaceX, 
+                    'y' : y * canvasH / numberY - splaceY, 
+                    'Dx' : x * canvasW / numberX + canvasW / numberX,
+                    'Dy' : y * canvasH / numberY + canvasH / numberY, 
+                    'locationOption': (x + 1).toString + (y + 1).toString,
+                };
+                locationArr.push(location);
+                cropImage(canvas, (x * canvasW / numberX) - splaceX, (y * canvasW / numberY) - splaceY, canvasW /  numberX, canvasW / numberY);
+            }
+        }
+        canvasComingCreated = false;
+        divComingCreated = false;
+    }
+
+    function cropImage(targetCanvas, x, y, width, height){
+        var targetctx = targetCanvas.getContext("2d");
+        var targetctxImageData = targetctx.getImageData(x, y, width, height);
+        // sx, sy, sWidth, sHeight
+        var c = document.createElement("canvas");
+        var ctx = c.getContext("2d");
+        c.width = width;
+        c.height = height;
+        ctx.rect(0, 0, width, height);
+        ctx.fillStyle = "000000";
+        ctx.fill();
+        ctx.putImageData(targetctxImageData, 0, 0);
+        // imageData, dx, dy
+        // create img 
+        var img = document.createElement("img");
+        img.src = c.toDataURL("image/png",0.92);
+        document.body.appendChild(img);
+    }
+
+  </script>
+</html>
