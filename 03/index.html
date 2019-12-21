@@ -1,0 +1,155 @@
+<html>
+  <head>
+    <style>
+      html, body { 
+        background-color:#000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+      }
+    </style>
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script>
+      window.onload = function() {
+
+
+		    // Three.js code goes here
+        scene = new THREE.Scene();
+
+        fov = 75;
+        ratio = window.innerWidth / window.innerHeight;
+        zNear = 1;
+        zFar = 10000;
+        camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camera.position.set( 0, 0, 100);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // keep track of number of shapes in the scene
+        var count = 0;
+        renderer.domElement.onmousemove = function( e ){
+
+          if (!e.shiftKey) {
+            e.preventDefault();
+            return false;
+          }
+
+          console.log('Yay! We clicked!');
+
+          console.log(e);
+
+          pixel_coords = new THREE.Vector2(e.clientX, e.clientY);
+
+          console.log('Pixel coords', pixel_coords);
+
+          vp_coords = new THREE.Vector2( 
+            (pixel_coords.x / window.innerWidth) * 2 - 1,
+            -(pixel_coords.y / window.innerHeight) * 2 + 1);
+
+          console.log('Viewport coords', vp_coords);
+
+          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0 ); //if you want near, 0; far, 1
+
+          console.log(vp_coords_near);
+
+          raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(vp_coords_near, camera);
+
+          intersects = raycaster.intersectObject(invisible_plane);
+
+          first_intersection = intersects[0];
+
+          console.log('3D point', first_intersection.point);
+
+          // move cube to the new 3d position (in-class activity)
+          //cube.position.set(
+            //first_intersection.point.x,
+            //first_intersection.point.y,
+            //first_intersection.point.z
+            //);
+
+          // add a new geometry, material with random color, and then the mesh (for assignment 03)
+          
+          c1 = Math.random();
+          c2 = Math.random();
+          c3 = Math.random();
+
+          material = new THREE.MeshStandardMaterial();
+          material.color.setRGB(c1, c2, c3);
+          var geometry;
+
+          var rand = Math.floor(Math.random() * 6);
+          if (rand == 0)
+            geometry = new THREE.BoxBufferGeometry(20, 20, 20);
+          if (rand == 1)
+            geometry = new THREE.TorusKnotBufferGeometry(10, 3);
+          if (rand == 2)
+            geometry = new THREE.SphereBufferGeometry(15);
+          if (rand == 3)
+            geometry = new THREE.OctahedronBufferGeometry(20);
+          if (rand == 4)
+            geometry = new THREE.ConeBufferGeometry(15, 30);
+          if (rand == 5)
+            geometry = new THREE.RingBufferGeometry(5, 20, 10);
+
+          randShape = new THREE.Mesh( geometry, material);
+          randShape.position.set(
+            first_intersection.point.x,
+            first_intersection.point.y,
+            first_intersection.point.z
+            );
+
+          scene.add(randShape);
+
+          count++;
+          console.log( '# of shapes: ', count);
+
+        }
+
+        ambientLight = new THREE.AmbientLight();
+        scene.add( ambientLight );
+
+        light = new THREE.DirectionalLight( 0xffffff, 5,0);
+        light.position.set( 10, 100, 10 );
+        scene.add(light);
+
+        //now add the cube
+        //geometry = new THREE.BoxBufferGeometry (20, 20, 20);
+        //material = new THREE.MeshStandardMaterial({color : 0xffffff});
+        //cube = new THREE.Mesh(geometry, material);
+        //scene.add(cube);
+
+        // add the inivisible plane
+        geometry = new THREE.PlaneBufferGeometry( 10000, 10000 );
+        material = new THREE.MeshStandardMaterial({
+          visible : false
+          });
+
+        invisible_plane = new THREE.Mesh( geometry, material );
+
+        scene.add(invisible_plane);
+
+        controls = new THREE.TrackballControls (camera);
+
+        animate();
+        
+      };
+
+      function animate() {
+
+        requestAnimationFrame( animate );
+
+        controls.update();
+
+		// and here...
+        renderer.render( scene, camera );
+
+      };
+    </script>
+  </head>
+  <body></body>
+</html>

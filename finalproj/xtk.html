@@ -1,0 +1,132 @@
+<html>
+
+<head>
+
+<style>
+      html, body { 
+        background-color: #000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+      }
+
+
+</style>
+
+<script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+<script type="text/javascript" src="https://get.goXTK.com/xtk_xdat.gui.js"></script>
+
+<script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+<script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+
+<script>
+
+window.onload = function() {
+  
+  r = new X.renderer3D();
+  r.init();
+
+  v = new X.volume();
+  v.file = 'A1_grayT1.nrrd';
+
+  // c = new X.camera(1000, 1000);
+  // c.position = [0, 0, 500];
+
+  r.add(v);
+
+  r.render();
+
+  var controller = {
+    // one option to render everything, another option to render a specific part of the brain
+    // different color sets to view the model
+    'lut': 'green',
+    addslices: function() {
+      s = new X.volume();
+      s.file = 'A1_grayT1.nrrd';
+      s.volumeRendering = false;
+      r.add(s);
+    },
+    delslices: function() {
+      r.remove(s);
+    }
+  };
+
+  var gui = new dat.GUI();
+  var fold1 = gui.addFolder('Volume Render Options');
+  fold1.add( v, 'visible' ).listen();
+  fold1.add( v, 'opacity', 0, 1 ).listen();
+  fold1.add( controller, 'addslices', 'Toggle on slices');
+  fold1.add( controller, 'delslices', 'Toggle off slices');
+  fold1.add(controller, 'lut', [ 'standard', 'amber', 'greyscale', 'cyan', 'x-ray' ] ).onChange( function(value) {
+              if (value == 'amber') {
+                v.minColor = [1, 0.06666666666666667, 1];
+                v.maxColor = [1.5843137254901961, 1, 0];
+              } else if (value == 'x-ray') {
+                v.minColor = [0, 0.3333333333333, 0.0666666666667];
+                v.maxColor = [0.67, 0.84, 0.924221875];
+              } else if (value == 'greyscale'){
+                v.minColor = [0.824221875, 0.824221875, 0.824221875];
+                v.maxColor = [0.5, 0.5, 0.5];
+              } else if (value == 'standard'){
+                v.minColor = [0, 0.06666666666666667, 1];
+                v.maxColor = [0.5843137254901961, 1, 0];
+              } else if (value == 'cyan') {
+                v.minColor = [0.52, 0.66, 0.80];
+                v.maxColor = [0.44, 0.77, 0.85];
+              }
+            }).listen();
+
+  fold1.open();
+
+  scene = new THREE.Scene();
+
+  var fov = 60;
+  var ratio = window.innerWidth / window.innerHeight;
+  var zNear = 1;
+  var zFar = 10000;
+
+  camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+  camera.position.set( 0, 0, 10000);
+  renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  document.body.appendChild( renderer.domElement );
+
+  controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+  animate();
+
+  r.onShowtime = function() {
+
+    // activate volume rendering
+    v.volumeRendering = true;
+    v.lowerThreshold = 80;
+    v.windowLower = 115;
+    v.windowHigh = 360;
+    v.minColor = [0, 0.06666666666666667, 1];
+    v.maxColor = [0.5843137254901961, 1, 0];
+    v.opacity = 0.02;
+    
+  };
+
+};
+
+function animate() {
+
+    requestAnimationFrame( animate );
+
+    controls.update();
+
+    renderer.render( scene, camera );
+};
+
+</script>
+
+</head>
+
+<body>
+
+
+</body>
+
+</html>

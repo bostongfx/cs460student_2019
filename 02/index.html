@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+
+      }
+
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+
+    <script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+      // this gets called when the site is ready
+      // we create a new XTK renderer
+      // by not including a "var", r is global
+      r = new X.renderer3D(); // initialize the renderer
+      r.init();
+
+      var grid = [[],[]];
+      // go through each row and add a different
+      // number of cubes specific to each row
+      // r1, c5; r2 r3 r8 r9, c4-6; r4 r5, c2-c8;
+      // r6 r7, c1-c9 [this will decide what is green]
+      for (var i = 0; i < 9; i++) {
+        for (var j = 0; j < 9; j++) {
+          temp = new X.cube();
+          temp.center = [-110 + (25 * j), 110 - (i * 25), 0];
+          if (i == 0 && j == 4)
+            temp.color = [0, 1, 0];
+          else if ((i == 1 || i == 2 || i == 7 || i == 8) && (j >= 3 && j <= 5))
+            temp.color = [0, 1, 0];
+          else if ((i == 3 || i == 4) && (j >= 1 && j <= 7))
+            temp.color = [0, 1, 0];
+          else if (i == 5 || i == 6)
+            temp.color = [0, 1, 0];
+          else
+            temp.color = [0.1, 0.1, 0.1];
+          r.add(temp);
+        }
+      }
+
+      setInterval(function() {
+
+      }, 1000);
+
+      r.camera.position = [0, 0, 400];
+
+      r.render(); // start rendering
+
+    };
+
+    </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
+</html>
