@@ -1,0 +1,170 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+
+    <style>
+      html, body { 
+        background-color: #000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+        }
+    #r1 {
+        width:50%;
+        height:100%;
+        float: left;
+        }
+
+    #r2 {
+        width:50%;
+        height:100%;
+        float: left;
+        }
+    </style>
+
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_xdat.gui.js"></script>
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+    <script src="https://mrdoob.github.io/stats.js/build/stats.min.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+      var r1;
+
+      window.onload = function() {
+
+
+    // Part 2 XTK //
+        r1 = new X.renderer3D();
+        r1.container = document.getElementById("r1");
+        r1.init();
+        r1.camera.position = [ 0, 0, -100];
+        var c = new X.cube();
+        c.center = [0, 0, 0];
+        r1.add(c);
+        r1.render();
+
+    // Part 3 THREE.JS //
+        var r2 = document.getElementById('r2'); // get the div container!!!
+        scene = new THREE.Scene();
+        fov = 75;
+        zNear = 1;
+        zFar = 10000;
+        var ratio = r2.clientWidth / r2.clientHeight; // use the container's clientWidth and clientHeight rather than window.innerWidth and window.innerHeight
+        var camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camera.position.set( 0, 0, 100);
+
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize( r2.clientWidth, r2.clientHeight ); // again use the container
+        r2.appendChild( renderer.domElement ); // and append the domElement to the container
+        
+        ambientLight = new THREE.AmbientLight();
+        scene.add( ambientLight );
+
+        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        light.position.set( 10, 100, 10 );
+        scene.add( light );
+
+
+        //  Create cube
+        geometry = new THREE.BoxBufferGeometry(25 , 25, 25);
+        material = new THREE.MeshStandardMaterial( {color: 0xffffff });
+        cube = new THREE.Mesh( geometry, material );
+        scene.add( cube );
+
+        var controls = new THREE.TrackballControls( camera, r2 ); // pass the container to the camera
+
+        // Part 4 to Part 7: DAT GUI 
+
+        
+        var transformer = {
+
+          'rotateX': function() {
+            c.transform.rotateX( 20 );
+          },
+          'rotateY': function() {
+            c.transform.rotateY( 20 );
+          },
+          'rotateZ': function() {
+            c.transform.rotateZ( 20 );
+          }
+        };
+
+        var controller = {
+            'threejs_color': 0xffffff,
+            
+            'rotateX': function() {
+                c.transform.rotateX(20);
+                cube.rotateX(20);
+            },
+            'rotateY': function() {
+                c.transform.rotateY(20);
+                cube.rotateY(20);
+            },
+            'rotateZ': function() {
+                c.transform.rotateZ(20);
+                cube.rotateZ(20);
+            },
+            'add new': function() {
+                // 2nd XTK cube
+                var c2 = new X.cube();
+                c2.center = [50, 50, 50];
+                r1.add(c2);
+                // 2nd THREE.js cube
+                cube2 = new THREE.Mesh( geometry, material );
+                cube2.position.set(50, 50, 50);
+                scene.add( cube2 );            
+            }
+        };
+
+        var gui = new dat.GUI();
+        var cube1 = gui.addFolder('XTK Cube');
+        cube1.add( c, 'visible' );
+        cube1.add( c, 'opacity', 0, 1 );
+        cube1.addColor( c, 'color' );
+        cube1.add(c, 'magicmode');
+        cube1.add(transformer, 'rotateX');
+        cube1.add(transformer, 'rotateY');
+        cube1.add(transformer, 'rotateZ');
+        cube1.open();
+
+        var threejsUI = gui.addFolder('Three.js Cube');
+        threejsUI.add(cube, 'visible');
+        threejsUI.add(cube.material, 'opacity', 0, 1).onChange( function() {
+        cube.material.transparent = true;
+        });
+        threejsUI.addColor(controller, 'threejs_color').onChange( function() {
+                 cube.material.color.set( controller.threejs_color ); 
+               } );
+        threejsUI.open();
+        
+        var both = gui.addFolder('Both Cubes');
+        both.add(controller, 'rotateX');
+        both.add(controller, 'rotateY');
+        both.add(controller, 'rotateZ');
+        both.add(controller, 'add new');
+        both.open();
+
+        animate();
+
+        function animate() {
+        requestAnimationFrame( animate );
+        controls.update();
+        renderer.render( scene, camera );
+        };
+
+      };
+    </script>
+  </head>
+  <body>
+    <div id = "r1"></div>
+    
+    <div id = "r2"></div>
+
+  </body>
+
+</html>

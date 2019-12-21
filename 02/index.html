@@ -1,0 +1,114 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
+ 
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+    
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+ 
+    <script type="text/javascript">
+
+    var GREEN = [0, 1, 0];
+    var RED = [1, 0, 0];
+    var YELLOW = [1, 1, 0];
+
+
+    var C1, C2, C3, C4;
+    var r;
+    var LIGHTS_ON = false;
+ 
+    window.onload = function() {
+ 
+      // this gets called when the site is ready
+ 
+      // create a new scene and renderer
+      r = new X.renderer3D();
+      r.init();
+ 
+      // build tree
+      addRow(r, 4, 1);
+      addRow(r, 3, 3);
+      addRow(r, 2, 3);
+      addRow(r, 1, 7);
+      addRow(r, 0, 7);
+      addRow(r, -1, 9);
+      addRow(r, -2, 9);
+      addRow(r, -3, 3);
+      addRow(r, -4, 3);
+ 
+      // set camera further away!
+      r.camera.position = [0, 0, 1000];
+ 
+      // render everything!
+      r.render();
+
+      // blink animation
+      setInterval(blink, 1000);
+    };
+
+    addRow = function(r, y, n) {
+      r.add(newCube(0, y * 25, 0, GREEN)); 
+
+      for (var x = 1; x <= (n - 1) / 2; x++) {
+        r.add(newCube(x * 25, y * 25, 0, GREEN));
+      }
+
+      for (var x = -1; x >= -(n - 1) / 2; x--) {
+        r.add(newCube(x * 25, y * 25, 0, GREEN));
+      }
+    };
+
+    newCube = function(x, y, z, color) {
+      c = new X.cube();
+      c.color = color;
+      c.center = [x, y, z];
+      if(x / 25 == -2 && y / 25 == 1) {
+        C1 = c;
+      }
+      else if(x / 25 == 2 && y / 25 == -1) {
+        C2 = c;
+      }
+      else if(x / 25 == -1 && y / 25 == -2) {
+        C3 = c;
+      }
+      else if(x / 25 == 0 && y / 25 == 4) {
+        C4 = c;
+      }
+      return c;
+    };
+
+    blink = function() {
+      if(LIGHTS_ON) {
+        C1.color = C2.color = C3.color = C4.color = GREEN;
+      }
+      else {
+        C1.color = C2.color = C3.color = RED;
+        C4.color = YELLOW;
+      }
+      LIGHTS_ON = !LIGHTS_ON;
+    };
+ 
+    </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
+</html>
