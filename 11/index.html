@@ -1,0 +1,378 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body { 
+        background-color:#f60707
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+    </style>
+	<div id="container"></div>
+    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/controls/OrbitControls.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
+	<script src="https://threejs.org/examples/js/effects/AnaglyphEffect.js" type="text/javascript"></script>
+	<src="helper.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.module.js" type="text/javascript"></script>
+	
+	<div id="info">
+		<a href="https://threejs.org/examples/webaudio_timing.html" target="_blank" rel="noopener noreferrer">three.js</a> Based on webaudio - timing<br/>
+		Based Code on <a href="https://threejs.org/examples/webaudio_timing.html" target="_blank" rel="noopener noreferrer">Timing</a>
+		
+		
+		<a href="https://freesound.org/people/michorvath/sounds/269718/" target="_blank" rel="noopener noreferrer">michorvath</a>
+	</div>
+	
+
+	
+	<script>
+	//Base Code from: https://threejs.org/examples/webaudio_timing.html
+    var scene, camera, renderer, ambientLight, light, controls;
+    var floor, clock;
+	var toon, phong, standard, toonCheck = false, phongCheck = false, standardCheck = false;
+	const labelContainerElem = document.querySelector('#labels');
+	var objects = []; // ball object place holder
+	var speed = 2, height = 60, offset = .2;
+    window.onload = function() {
+	
+		clock = new THREE.Clock();
+		var container = document.getElementById( 'container' );
+		scene = new THREE.Scene();
+		scene.background = new THREE.Color("grey");
+		camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+        camera.position.set( 100, 70, 0);
+		//light
+		{
+			var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.3 );
+			scene.add( ambientLight );
+			
+			var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.9 ); //0xffffff, 5.0
+			directionalLight.position.set( 50, 65, 0 ); //10, 100, 10 
+			scene.add( directionalLight );
+
+			DLhelper = new THREE.DirectionalLightHelper(directionalLight, 2, 0xcccccc );
+			scene.add(DLhelper);
+			//
+			var d = 100;
+			directionalLight.castShadow = true;
+			directionalLight.shadow.camera.left = - d;
+			directionalLight.shadow.camera.right = d;
+			directionalLight.shadow.camera.top = d;
+			directionalLight.shadow.camera.bottom = - d;
+			directionalLight.shadow.camera.near = 0;
+			directionalLight.shadow.camera.far = 150;
+			directionalLight.shadow.mapSize.x = 1024;
+			directionalLight.shadow.mapSize.y = 1024;
+			
+			
+			function updateLight() {
+				directionalLight.target.updateMatrixWorld();
+				DLhelper.update();
+		}
+		updateLight();
+		
+		}
+		
+		// floor 
+		{
+			var floorGeometry = new THREE.PlaneBufferGeometry( 100, 100 );
+			var floorMaterial = new THREE.MeshLambertMaterial( { color: 0x4676b6 } );
+			var floor = new THREE.Mesh( floorGeometry, floorMaterial );
+			floor.rotation.x = Math.PI * - 0.5;
+			//floor.rotation.z = 2.1;
+			floor.receiveShadow = true;
+			scene.add( floor );
+		}
+		
+		// audio
+		{
+			var audioLoader = new THREE.AudioLoader();
+			var listener = new THREE.AudioListener();
+			camera.add( listener );
+		}
+		
+		//mesh object
+		{
+			// Edges
+			{ 
+				var cubeSize = 1;
+				var cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
+				var cubeMat = new THREE.MeshLambertMaterial( { color: "brown" } );
+				cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize+100);
+				wall1 = new THREE.Mesh(cubeGeo, cubeMat);
+				wall1.position.set(50, 0, 0);
+				//wall1.rotation. = 2.1;
+				scene.add(wall1);
+				cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize+100);
+				wall2 = new THREE.Mesh(cubeGeo, cubeMat);
+				wall2.position.set(-50, 0, 0);
+				scene.add(wall2);
+				cubeGeo = new THREE.BoxBufferGeometry(cubeSize+100, cubeSize, cubeSize);
+				wall3 = new THREE.Mesh(cubeGeo, cubeMat);
+				wall3.position.set(0, 0, 50);
+				scene.add(wall3);
+				cubeGeo = new THREE.BoxBufferGeometry(cubeSize+100, cubeSize, cubeSize);
+				wall4 = new THREE.Mesh(cubeGeo, cubeMat);
+				wall4.position.set(0, 0, -50);
+				scene.add(wall4);
+			}
+			
+			var count = 5;
+			var radius = 20;
+			var bTexture = new THREE.TextureLoader().load( 'sky.jpg' );
+		
+			var ballGeometry = new THREE.SphereBufferGeometry( 3, 32, 16 );
+			ballGeometry.translate( 0, 3, 0 );
+			var ballMaterial = new THREE.MeshBasicMaterial( {
+				map: bTexture,
+			} );
+			audioLoader.load( 'water.mp3', function ( buffer ) {
+				for ( var i = 0; i < count; i ++ ) {
+					var s = i / count * Math.PI * 2;
+					var ball = new THREE.Mesh( ballGeometry, ballMaterial );
+					ball.castShadow = true;
+					ball.userData.down = false;
+					ball.position.x = radius * Math.cos( s );
+					ball.position.z = radius * Math.sin( s );
+					var audio = new THREE.PositionalAudio( listener );
+					audio.setBuffer( buffer );
+					ball.add( audio );
+					scene.add( ball );
+					objects.push( ball );
+				}
+			} );
+			
+		}			
+		
+		renderer = new THREE.WebGLRenderer( { antialias: true } );
+		renderer.shadowMap.enabled = true;
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.setClearColor( 0x000000 );
+		renderer.setPixelRatio( window.devicePixelRatio );
+		container.appendChild( renderer.domElement );
+		
+		var controls = new THREE.OrbitControls( camera, renderer.domElement );
+		//controls.target.set(0, 5, 0);
+		//controls.update();
+		//controls = new THREE.TrackballControls( camera, renderer.domElement );
+		
+		controller = {
+			"New Ball": function(){
+			
+				var ball= new THREE.Mesh(ballGeometry, ballMaterial);
+				ball.position.set(0, 5, 0);
+				scene.add(ball);
+			
+			},
+			'color': 0xffffff, // we can use this single color
+                            // container for all colors in the scene 
+                            // if we modify the onChange callback (see below)
+			'material': null, 
+		  
+			'Higher': function() {
+				if(height + 5 > 200) {
+					alert("Too High!!");
+					return;
+				}
+				console.log(height);
+				height = height + 5;
+				render();
+			
+			},
+			'Lower': function() {
+				if(height - 5 < 0) {
+					alert("Too Low!");
+					return;
+				}
+				height = height - 5;
+			},
+			'Further': function() {
+				if(offset + .1 == 1) {
+					alert("Far enough");
+					return;
+				}
+				offset = offset + .1;
+			},
+			'Closer': function() {
+				if(offset - .1 == 0) {
+					alert("Too close");
+					return;
+				}
+				offset = offset - .1;
+			},
+		}
+		
+		toonMaterial = new THREE.MeshToonMaterial( {
+			color: "red"
+		} );
+		standardMaterial = new THREE.MeshStandardMaterial( {
+			color: "yellow"
+		} );	
+		phongMaterial = new THREE.MeshPhongMaterial( {
+			color: "blue"
+		} );
+		
+		var gui = new dat.GUI();
+
+		//ball material modifier
+		gui.add(controller, 'material', [ 'toon', 'standard', 'phong' ] ).onChange( function(value) {
+			folder.open();
+			if(value == 'toon') {
+				for ( var i = 0; i < objects.length; i++ ) {
+					var ball = objects[i];
+					ball.material = toonMaterial;
+				}
+				checker();
+				toon = folder.addColor(controller, 'color').name("toon Material").onChange(
+				function(value) { 
+					toonMaterial.color.setHex(value); 
+				});
+				toonCheck = true;
+			}
+			else if(value == 'standard') {
+				for ( var i = 0; i < objects.length; i++ ) {
+					var ball = objects[i];
+					ball.material = standardMaterial;
+				}
+				checker();
+				standard = folder.addColor(controller, 'color').name("standard Material").onChange(
+				function(value) { 
+					standardMaterial.color.setHex(value); 
+				});
+				standardCheck = true;
+			}
+			else if (value == 'phong') {
+				for ( var i = 0; i < objects.length; i++ ) {
+					var ball = objects[i];
+					ball.material = phongMaterial;
+				}
+				checker();
+				phong = folder.addColor(controller, 'color').name("phong Material").onChange(
+				function(value) { 
+					toonMaterial.color.setHex(value); 
+				});
+				phongCheck = true;
+			}
+		});
+		//material color
+		folder = gui.addFolder("Color");	
+		//ball modifier
+		var ballFolder = gui.addFolder("Ball");
+		//	speed = 2; height = 50; offset = 0.5;
+		ballFolder.add(controller, "Higher");
+		ballFolder.add(controller, "Lower");
+		ballFolder.add(controller, "Further");
+		ballFolder.add(controller, "Closer");
+		ballFolder.add(controller, "New Ball");
+		ballFolder.open();
+		
+		window.onclick = function(e) {
+			if (!e.shiftKey) {
+				e.preventDefault();
+				return false;
+			}
+			pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+			vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
+                                        -( pixel_coords.y / window.innerHeight ) * 2 + 1);
+			vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+			raycaster = new THREE.Raycaster();
+			raycaster.setFromCamera(vp_coords_near, camera);
+			intersects = raycaster.intersectObject(floor);
+			if (intersects.length > 0) {
+				// position.set(intersects[0].point.x, intersects[0].point.y + 70, intersects[0].point.z)
+
+				var ball= new THREE.Mesh(ballGeometry, ballMaterial);
+				ball.position.set(intersects[0].point.x, 
+                                  intersects[0].point.y,
+                                  intersects[0].point.z);		  
+				audioLoader.load( 'water.mp3', function ( buffer ) {
+					ball.castShadow = true;
+					ball.userData.down = false;
+					var audio = new THREE.PositionalAudio( listener );
+					audio.setBuffer( buffer );
+					ball.add( audio );
+					scene.add( ball );
+					objects.push( ball );
+				} );
+          }
+      };
+		
+
+		
+		//directional light position
+        makeXYZGUI(gui, directionalLight, 'Directional Light', updateLight,true);
+		makeXYZGUI(gui, directionalLight.target, 'Directional Light Target', updateLight);
+		window.addEventListener( 'resize', onWindowResize, false );
+		
+		animate();
+    };
+	  
+	function animate() {
+		requestAnimationFrame( animate );
+		render();
+    };
+	
+	//remove all material color folder
+	function checker(){
+		if(phongCheck == true) {
+			folder.remove(phong);
+			phongCheck = false;
+		}
+		else if(toonCheck == true) {
+			folder.remove(toon);
+			toonCheck = false;
+		}
+		else if(standardCheck == true) {
+			folder.remove(standard);
+			standardCheck = false;
+		}
+	}
+	function render() {
+			var time = clock.getElapsedTime();
+			for ( var i = 0; i < objects.length; i ++ ) {
+				var ball = objects[ i ];
+				var previousHeight = ball.position.y;
+				ball.position.y = Math.abs( Math.sin( i * offset + ( time * speed ) ) * height );
+				if ( ball.position.y < previousHeight ) {
+					ball.userData.down = true;
+				} else {
+					if ( ball.userData.down === true ) {
+						// ball changed direction from down to up
+						var audio = ball.children[0];
+						audio.play(); // play audio with perfect timing when ball hits the surface
+						ball.userData.down = false;
+					}
+				}
+			}
+		renderer.render( scene, camera );
+	}
+
+	function makeXYZGUI(gui, object, name, onChangeFn, Color = false) {
+		const folder = gui.addFolder(name);
+		if(Color)
+			folder.addColor(controller, 'color').onChange( function(value) { 
+				object.color.setHex(value); 
+			});
+		folder.add(object.position, 'x', -50, 50).onChange(onChangeFn);
+		folder.add(object.position, 'y', 0, 120).onChange(onChangeFn);
+		folder.add(object.position, 'z', -50, 50).onChange(onChangeFn);
+		
+		folder.open();
+	}
+	 
+	function onWindowResize() {
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+	};
+	
+    </script>
+  </head>
+</html>
