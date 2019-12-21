@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/default.css">
+    <link rel="stylesheet" type="text/css" href="css/radial.css">
+    <script type="text/javascript" src="js/vtk.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="js/radial.js"></script>
+    <script type="text/javascript">
+
+clusters = ['cluster_00150','cluster_00151','cluster_00152','cluster_00153','cluster_00154','cluster_00155','cluster_00156','cluster_00157','cluster_00158','cluster_00159',
+              'cluster_00160','cluster_00161','cluster_00162','cluster_00163','cluster_00164','cluster_00165','cluster_00166','cluster_00167','cluster_00168','cluster_00169',
+              'cluster_00170','cluster_00171','cluster_00172','cluster_00173','cluster_00174','cluster_00175','cluster_00176','cluster_00177','cluster_00178','cluster_00179',
+              'cluster_00180','cluster_00181','cluster_00182','cluster_00183','cluster_00184','cluster_00185','cluster_00186','cluster_00187','cluster_00188','cluster_00189',
+              'cluster_00190','cluster_00191','cluster_00192','cluster_00193','cluster_00194','cluster_00195','cluster_00196','cluster_00197','cluster_00198','cluster_00199',
+              'cluster_00200','cluster_00201','cluster_00202','cluster_00203','cluster_00204','cluster_00205','cluster_00206','cluster_00207','cluster_00208','cluster_00209',
+              'cluster_00210','cluster_00211','cluster_00212','cluster_00213','cluster_00214','cluster_00215','cluster_00216','cluster_00217','cluster_00218','cluster_00219',
+              'cluster_00220','cluster_00221','cluster_00222','cluster_00223','cluster_00224','cluster_00225','cluster_00226','cluster_00227','cluster_00228','cluster_00229',
+              'cluster_00230','cluster_00231','cluster_00232','cluster_00233','cluster_00234','cluster_00235','cluster_00236','cluster_00237','cluster_00238','cluster_00239',
+              'cluster_00240','cluster_00241','cluster_00242','cluster_00243','cluster_00244','cluster_00245','cluster_00246','cluster_00247','cluster_00248','cluster_00249',
+              'cluster_00250','cluster_00251','cluster_00252','cluster_00253','cluster_00254','cluster_00255','cluster_00256','cluster_00257','cluster_00258','cluster_00259',
+              'cluster_00260','cluster_00261','cluster_00262','cluster_00263','cluster_00264','cluster_00265','cluster_00266','cluster_00267','cluster_00268','cluster_00269',
+              'cluster_00270','cluster_00271','cluster_00272','cluster_00274',
+              'cluster_00302','cluster_00307','cluster_00317','cluster_00341','cluster_00343','cluster_00347','cluster_00351','cluster_00357','cluster_00363','cluster_00364','cluster_00365','cluster_00371','cluster_00374','cluster_00375','cluster_00378'
+  ];
+
+
+      function get_data_path(subj, cluster, format) {
+        return 'data/'+subj+'/tracts_left_hemisphere/'+cluster+'.'+format;
+      }
+
+      function render(where, what) {
+
+        var renderWindow = vtk.Rendering.Core.vtkRenderWindow.newInstance();
+        var renderer = vtk.Rendering.Core.vtkRenderer.newInstance();
+        renderer.setActiveCamera(camera);
+        renderWindow.addRenderer(renderer);
+
+        var container = document.getElementById(where);
+        var rect = container.getBoundingClientRect();
+
+        var openGLRenderWindow = vtk.Rendering.OpenGL.vtkRenderWindow.newInstance();
+        openGLRenderWindow.setContainer(container);
+        openGLRenderWindow.setSize(rect.width, rect.height);
+
+        renderWindow.addView(openGLRenderWindow);
+
+        var interactor = vtk.Rendering.Core.vtkRenderWindowInteractor.newInstance();
+        interactor.setInteractorStyle(vtk.Interaction.Style.vtkInteractorStyleTrackballCamera.newInstance());
+        interactor.setView(openGLRenderWindow);
+        interactor.initialize();
+        interactor.bindEvents(container);
+
+
+        reader = vtk.IO.XML.vtkXMLPolyDataReader.newInstance();
+        actor = vtk.Rendering.Core.vtkActor.newInstance();
+
+
+        load_file(reader, renderer, renderWindow, actor, what);
+
+        return [reader, renderer, renderWindow, actor];
+
+      } 
+
+      function load_file(reader, renderer, renderWindow, actor, what) {
+
+        reader.setUrl(what).then(function() {
+          
+            polydata = reader.getOutputData();
+            arrayName = polydata.getPointData().getArrayName(0);
+            activeArray = polydata.getPointData().getArrays()[0];
+            dataRange = activeArray.getRange()
+
+            lookupTable = vtk.Rendering.Core.vtkColorTransferFunction.newInstance();
+            presetNames = vtk.Rendering.Core.vtkColorTransferFunction.vtkColorMaps.rgbPresetNames
+            preset = vtk.Rendering.Core.vtkColorTransferFunction.vtkColorMaps.getPresetByName(presetNames[0]);            
+            lookupTable.setVectorModeToMagnitude();
+            lookupTable.applyColorMap(preset);
+            lookupTable.setMappingRange(dataRange[0],dataRange[1]);
+            lookupTable.updateRange();
+
+            mapper = vtk.Rendering.Core.vtkMapper.newInstance();
+            mapper.setInputData(polydata);
+            mapper.setLookupTable(lookupTable);
+            mapper.setUseLookupTableScalarRange(true);
+            mapper.setColorByArrayName(arrayName);
+            mapper.setColorModeToMapScalars();
+            mapper.setInterpolateScalarsBeforeMapping();
+            mapper.setScalarModeToUsePointFieldData();
+            mapper.setScalarVisibility(true);
+
+            actor.setMapper(mapper);
+            
+            renderer.addActor(actor);
+
+            renderer.resetCamera();
+            renderWindow.render();
+
+          }.bind(reader));
+
+      }
+
+      function update(e) {
+
+        var cluster = clusters[e.selectedIndex];
+
+        load_file(r1[0], r1[1], r1[2], r1[3], get_data_path('101', cluster, 'vtp'));
+        load_file(r2[0], r2[1], r2[2], r2[3], get_data_path('201', cluster, 'vtp'));
+
+        // render radial
+        r_render(cluster);
+
+      }
+
+      function render_in_both(cluster) {
+
+        camera = vtk.Rendering.Core.vtkCamera.newInstance();
+
+        r1 = render('r1', get_data_path('101', cluster, 'vtp'));
+        r2 = render('r2', get_data_path('201', cluster, 'vtp'));
+
+        camera.onModified(function() {
+          r1[2].render();
+          r2[2].render();
+        });
+
+      }
+
+      window.onload = function() {
+
+
+        var s = document.getElementById("clusterSelect");
+        for(c in clusters) {
+            s.options[s.options.length] = new Option(clusters[c]);
+        }
+
+        render_in_both(clusters[0]);
+
+        r_render(clusters[0]);
+
+      }
+
+    </script>
+  </head>
+
+  <body>
+    <div id='controls'><select id="clusterSelect" onChange="javascript:update(this);"></select></div>
+    <div id='r1'></div>
+    <div id='r2'></div>
+    <div id='label_left' class='label_box'>Subject 101</div>
+    <div id='label_right' class='label_box'>Subject 201</div>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+svg.one {
+    position: absolute;
+    left: 30px;
+    bottom: 30px;
+}
+
+svg.two {
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+}
+
+text.legend {
+    fill: white;
+}

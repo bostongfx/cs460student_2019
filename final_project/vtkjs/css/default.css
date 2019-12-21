@@ -1,0 +1,45 @@
+html, body { 
+  background-color:#000;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden !important;  
+}
+
+#r1 {
+  width: 50%;
+  height: 100%;
+  float: left;
+}
+
+#r2 {
+  width: 50%;
+  height: 100%;
+  float: left;
+}
+
+.label_box {
+  color:white;
+  z-index: 10;
+  font: sans-serif;
+  position: absolute;
+  background: rgba(0.,0.,0.,0.6);
+}
+
+#label_left {
+  bottom: 10px;
+  left: 10px;
+}
+
+#label_right {
+  bottom: 10px;
+  right: 10px;
+}
+
+#controls {
+  color:white;
+  z-index: 10;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
