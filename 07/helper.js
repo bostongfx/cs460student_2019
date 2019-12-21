@@ -1,4 +1,4 @@
-HELPER = {};
+HELPER = {}; //create a new instance
 
 /**
  * This method returns [geometry, material, bones] to create a skeleton mesh
@@ -8,6 +8,7 @@ HELPER = {};
  * @param howwide: Radius of the cylinder.
  * @param color: Color of the cylinder.
  */
+ //if not prototype it is static method 
 HELPER.cylinderSkeletonMesh = function(howmany, howwide, color) {
   
   var segmentheight = 10; // just a temporary value but it needs to match for geometry and bones

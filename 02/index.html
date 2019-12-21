@@ -1,0 +1,117 @@
+<html>
+	<head> 
+		<style>
+			body {
+				background-color: black;
+				color: white; //font color
+				font-family: sans-serif;
+				padding = 0;
+				height: 100%;
+				overflow: hidden !important;
+			}
+		#logo {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+		}	
+			
+		</style>
+		<script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+		<script type= "text/javascript"> 
+		window.onload = function() { 	//This will get executed,
+											// when the page completely
+											// loads
+			var pos = 25;
+			// new XTK renderer								
+			r = new X.renderer3D();								
+			r.init(); //initialize the renderer	
+				
+				c = new X.cube();	// create a new cube
+				//c.opacity = 1; // transparency
+				r.add(c); // add the cube to the renderer
+				r.camera.position = [0,0,500];
+				
+				//Left Eye
+				c1 = new X.cube();	// create a new cube
+				c1.center = [-pos, -pos, 0];
+				lightB(c1);
+				r.add(c1);
+				c2 = new X.cube();	// create a new cube
+				c2.center = [-pos*2, -pos, 0];
+				lightB(c2);
+				r.add(c2);
+				//RightEye
+				c3 = new X.cube();	// create a new cube
+				c3.center = [pos, -pos, 0];
+				lightB(c3);
+				r.add(c3);
+				c4 = new X.cube();	// create a new cube
+				c4.center = [pos*2, -pos, 0];
+				lightB(c4);
+				r.add(c4);
+				
+				//Face
+				Up(2,1); Up(3,2); Up(-2,1); Up(-3,2);
+				Down(0,5); Down(3,1); Down(-3,1);
+				Left(3,0); Left(3,-2); Left(3,-3); Left(2,-4); Left(1,-5);
+				Right(3,-3); Right(3,-2); Right(3,0); Right(2,-4); Right(1,-5);
+
+				r.render(); // start rendering
+
+				var i = 1;
+				setInterval(function() 
+				{
+					
+					if (i==0) {
+						lightB(c1); lightB(c2); lightB(c3); lightB(c4);
+						i = 1;
+					}
+					else {
+						White(c1); White(c2); White(c3); White(c4);
+						i = 0;
+					}
+				}, 1000);
+				
+				function Up(x,y){
+					for(var i = 1; i <= y; i++) {
+						var temp = new X.cube();
+						temp.center = [pos*x,pos*i,0]; // [x, y, z]
+						r.add(temp);
+					}
+				}
+				function Down(x,y){ // only used once
+					for(var i = 1; i <= y; i++) {
+						var temp = new X.cube();
+						temp.center = [pos*x,-pos*i,0]; // [x, y, z]
+						if(x==0 && i==4) temp.color = [1,0,0];  //Special case for the mouth
+						r.add(temp);
+					}
+				}
+				function Left(x,y){
+					for(var i = 1; i <= x; i++) {
+						var temp = new X.cube();
+						temp.center = [-pos*i,pos*y,0]; // [x, y, z]
+						r.add(temp);
+					}
+				}
+				function Right(x,y){
+					for(var i = 1; i <= x; i++) {
+						var temp = new X.cube();
+						temp.center = [pos*i,pos*y,0]; // [x, y, z]
+						r.add(temp);
+					}
+				}
+				function lightB(x) { x.color = [0, 5, 5]; }
+				function White(x) { x.color = [252, 252, 252]; }
+				
+			
+			};
+		</script>
+	</head>
+	<body> 
+		<h1> CS460 Assignment 2  </h1>
+		<div id ="logo">
+			<img style = "height:60px" src = "gfx/cs460.png">
+		</div>
+	</body>
+</html>
