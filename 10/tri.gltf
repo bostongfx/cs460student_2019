@@ -1,14 +1,14 @@
 import numpy as np
 import base64
 
-with open("Dragon 2.5_ply.ply", 'r') as f:
+
+with open('xyzrgb_dragon.ply', 'r') as f:
     lines = f.readlines()
 
 counter = 0
 vertices_coming = False
 faces_coming = False
 
-## get the infomation of vertices and faces
 for i,l in enumerate(lines):
 
     if l.startswith('element vertex'):
@@ -21,7 +21,6 @@ for i,l in enumerate(lines):
 vertex_data = lines[i+1:i+vertexcounter+1]
 face_data = lines[i+vertexcounter+1:]
 
-## create the VERTICES array
 VERTICES = []
 MAX_X = -np.inf
 MAX_Y = -np.inf
@@ -30,7 +29,6 @@ MIN_X = np.inf
 MIN_Y = np.inf
 MIN_Z = np.inf
 
-## parse all vertices and find the required fields
 for v in vertex_data:
     v = [float(v.strip()) for v in v.strip().split(' ')]
 
@@ -43,7 +41,6 @@ for v in vertex_data:
 
     VERTICES += v
 
-## parse all indices and find the required fields
 INDICES = []
 MAX = -np.inf
 MIN = np.inf
@@ -68,11 +65,9 @@ HOWMANY_I = len(INDICES)
 HOWMANYBYTES_V = VERTICES.nbytes
 HOWMANYBYTES_I = INDICES.nbytes
 
-## base 64 code
 B64_VERTICES = base64.b64encode(VERTICES)
 B64_INDICES = base64.b64encode(INDICES)
 
-## generate the glTF JSON code
 gltf = {
     "asset": {
         "version": "2.0",
@@ -117,11 +112,11 @@ gltf = {
     
     "buffers": [
         {
-            "uri": "data:application/octet-stream;base64,"+str(B64_VERTICES),
+            "uri": "data:application/octet-stream;base64,"+str(B64_VERTICES, 'utf-8'),
             "byteLength": HOWMANYBYTES_V
         },
         {
-            "uri": "data:application/octet-stream;base64,"+str(B64_INDICES),
+            "uri": "data:application/octet-stream;base64,"+str(B64_INDICES, 'utf-8'),
             "byteLength": HOWMANYBYTES_I
         }
     ],
@@ -155,9 +150,4 @@ gltf = {
     "scene": 0
 }
 
-
 print ( str(gltf).replace("'", '"') ) # we need double quotes instead of single quotes
-
-text_file = open("dragon.gltf", "w")
-n = text_file.write(str(gltf).replace("'", '"'))
-text_file.close()
