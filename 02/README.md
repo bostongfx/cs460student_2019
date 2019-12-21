@@ -1,3 +1,1 @@
-# CS460 Assignment 2
-
-Coming soon.
+Live demo [here](https://zenitopires.github.io/cs460student/02/).
