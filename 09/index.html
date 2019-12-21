@@ -42,7 +42,12 @@
         directionalLight.position.set( 10, 100, 10 );
         scene.add( directionalLight );
 
-
+        var pointLight = new THREE.PointLight( 0xff0000, 1, 100 );
+        pointLight.position.set( 0, 10, 0 );
+        scene.add( pointLight );
+        var pointLight1 = new THREE.PointLight( 0xff0000, 1, 100 );
+        pointLight1.position.set( 100, 10, 10 );
+        scene.add( pointLight1 );
         // TODO Part 3 (add 2 pointlights)
 
 
@@ -62,6 +67,21 @@
 
         } );
 
+        var loader1 = new THREE.PLYLoader();
+        loader1.load('armadillo.ply', function  (geometry){
+            
+            geometry.computeVertexNormals();
+
+            standardMaterial = new THREE.MeshStandardMaterial( {
+             color: 0x21ce70
+          } );
+            
+            mesh1 = new THREE.Mesh(geometry, standardMaterial);
+            
+            mesh1.position.set(150,0,0);
+            
+            scene.add(mesh1);
+          })
         // TODO Part 1, load another mesh
         // TODO Part 2, use a different material for this mesh
 
@@ -90,9 +110,26 @@
         directionalFolder.open();
 
         // TODO Part 4 (control the color and position of point lights)
-
+        var pointlightFolder = gui.addFolder('Point Light');
+        pointlightFolder.addColor(controller, 'color').onChange( function(value) 
+          {pointLight.color.setHex(value);});
+        pointlightFolder.addColor(controller, 'color').onChange( function(value) 
+          {pointLight1.color.setHex(value);});
+        
+        pointlightFolder.add(pointLight.position, 'x', -100, 100);
+        pointlightFolder.add(pointLight.position, 'y', -100, 100);
+        pointlightFolder.add(pointLight.position, 'z', -100, 100);
+        pointlightFolder.add(pointLight1.position, 'x', -100, 100);
+        pointlightFolder.add(pointLight1.position, 'y', -100, 100);
+        pointlightFolder.add(pointLight1.position, 'z', -100, 100);
+        pointlightFolder.open();
         // TODO Part 5 (control the color of both materials in the scene)
-
+        var bothMaterial = gui.addFolder( 'both material' );
+        bothMaterial.addColor( controller, 'color' ).onChange( function(value) {
+          toonMaterial.color.setHex( value );
+          standardMaterial.color.setHex( value );
+        } );
+        bothMaterial.open();
         gui.open();
 
 
