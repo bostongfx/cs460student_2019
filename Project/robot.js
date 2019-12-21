@@ -16,7 +16,7 @@ Robot = function(x, y, z) {
 
   this.head = bones[ 1 ];
   this.neck = bones[ 2 ];
-  this.neck.position.y = -10;
+  this.neck.position.y = -5;
   this.torso = bones[ 3 ];
   this.torso.position.y = -30;
   this.body_mesh = mesh;
@@ -54,12 +54,20 @@ Robot = function(x, y, z) {
   var material = fromhelper[1];
   var bones = fromhelper[2];
 
+  head_g = new THREE.CircleBufferGeometry( 10, 50);
+  var head_texture =  new THREE.TextureLoader().load( 'tc.jpg' );
+  head_m = new THREE.MeshStandardMaterial({
+  map: head_texture });
+  this.circle = new THREE.Mesh( head_g, head_m);
+  scene.add(this.circle);
+
   var mesh = new THREE.SkinnedMesh( geometry, material );
   var skeleton = new THREE.Skeleton( bones );
   mesh.add( bones[ 0 ] );
   mesh.bind( skeleton );
 
   this.neck.add(bones[ 0 ]);
+  this.neck.add(this.circle);
 
   this.right_upperarm = bones[ 1 ];
   this.right_upperarm.position.y = -5;
@@ -183,7 +191,7 @@ for(var a in all_robots)
 if(this.root.position.z > 490 || this.root.position.z < -490) {
   this.root.rotateY(Math.PI/2);
 }
-else if(this.root.position.x > 490 || this.root.position.x < -490) {
+else if(this.root.position.x > 5990 || this.root.position.x < -5990) {
   this.root.rotateY(Math.PI/2);
 }
  this.root.translateZ(10);
