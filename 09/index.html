@@ -48,6 +48,8 @@
 
 
         var loader = new THREE.PLYLoader();
+        armad1 = new THREE.Mesh();
+        armad2 = new THREE.Mesh();
         loader.load('armadillo.ply', function (geometry) {
 
           geometry.computeVertexNormals();
@@ -56,9 +58,19 @@
              color: 0x21ce70
           } );
 
-          mesh = new THREE.Mesh( geometry, toonMaterial );
+          depthMat = new THREE.MeshNormalMaterial( {
+            // color: 0x21f360
+          })
+
+
+          mesh1 = new THREE.Mesh( geometry, toonMaterial );
+          mesh2 = new THREE.Mesh( geometry,  depthMat);
+          scene.add( mesh1 );
+          scene.add( mesh2 );
+          armad1 = mesh1;
+          armad2 = mesh2;
           
-          scene.add( mesh );
+          mesh2.position.set(150, 0, 10);
 
         } );
 
@@ -71,10 +83,21 @@
           'color': 0xffffff // we can use this single color
                             // container for all colors in the scene 
                             // if we modify the onChange callback (see below)
-
+          ,'color_p1':0xffffff
+          , 'color_p2':0xffffff
+          , 'color_m1':0xffffff
+          , 'color_m2':0xffffff
           // TODO Bonus Part 1
           // TODO Bonus Part 2
         }
+
+        light1 = new THREE.PointLight( 0xff0000, 1, 100 );
+          light1.position.set( 50, 50, 50 );
+          scene.add( light1 );
+
+          light2 = new THREE.PointLight( 0xff0000, 1, 100 );
+          light2.position.set( 100, 50, 50 );
+          scene.add( light2 );
 
 
         var gui = new dat.GUI();
@@ -90,6 +113,23 @@
         directionalFolder.open();
 
         // TODO Part 4 (control the color and position of point lights)
+        var point1Folder = gui.addFolder('Point Light 1');
+        point1Folder.addColor(controller, 'color_p1').onChange( function(value) { light1.color.setHex(value); });
+        point1Folder.add(light1.position, 'x', -100, 100);
+        point1Folder.add(light1.position, 'y', -100, 100);
+        point1Folder.add(light1.position, 'z', -100, 100);
+        var point2Folder = gui.addFolder('Point Light 2');
+        point2Folder.addColor(controller, 'color_p2').onChange( function(value) { light1.color.setHex(value); });
+        point2Folder.add(light2.position, 'x', -100, 100);
+        point2Folder.add(light2.position, 'y', -100, 100);
+        point2Folder.add(light2.position, 'z', -100, 100);
+        point1Folder.open();
+        point2Folder.open();
+
+        var materialFolder = gui.addFolder('material colors');
+        materialFolder.addColor(controller, 'color_m1').onChange( function(value) {armad1.material.color.setHex(value);});
+        // materialFolder.addColor(controller, 'color_m2').onChange( function(value) {armad2.material.color.setHex(value);});
+        console.log(armad1);
 
         // TODO Part 5 (control the color of both materials in the scene)
 

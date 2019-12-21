@@ -1,0 +1,131 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+      body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+      }
+
+      #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+    </style>
+    
+    <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+      toCube = new Array(8);
+
+      for (var i = 0; i < 8; i++){
+        toCube[i] = new Array(7);
+        for (var j = 0; j < 7; j++){
+          toCube[i][j] = true;
+        }
+      }
+
+      // ears
+      for (var j = 1; j < 6; j++){
+        toCube[0][j] = false;
+      }
+      for (var j = 2; j < 5; j++){
+        toCube[1][j] = false;
+      }
+
+      // cheeks
+      toCube[6][0] = false;
+      toCube[6][6] = false;
+
+      // chin
+      for(var j = 0; j < 7; j++){
+        toCube[7][j] = false;
+      }
+      for(var j = 2; j < 5; j++){
+        toCube[7][j] = true;
+      }
+
+      // this gets called when the site is ready
+
+      // create a new scene and renderer
+      r = new X.renderer3D();
+      r.init();
+
+      // add all relevant cubes 
+      for (var i = 0; i < toCube.length; i++){
+        for (var j = 0; j < toCube[0].length; j++){
+          if (toCube[i][j] == true){
+            toCube[i][j] =  new X.cube();
+            toCube[i][j].center = [25 * (j - 3.5), -25 * (i - 4), 0];
+            toCube[i][j].color = [1, 1, 1];
+
+            r.add(toCube[i][j]);
+          }
+        }
+      }
+
+      // color eyes
+        //his righty
+      toCube[3][1].color = [0, 1, 1];
+      toCube[3][2].color = [0, 1, 1];
+        //his lefty
+      toCube[3][4].color = [0, 1, 1];
+      toCube[3][5].color = [0, 1, 1];
+
+      // color nose
+      toCube[6][3].color = [1, 0, 0];
+
+
+      // set camera further away!
+      r.camera.position = [0, 0, 1000];
+
+      // render everything!
+      r.render();
+      on = true;
+    };
+
+    window.setInterval(function() {
+      on = !on;
+
+      if (on){
+        var c = [0, 1, 1];
+      // color eyes
+        //his righty
+        toCube[3][1].color = c;
+      toCube[3][2].color = c;
+        //his lefty
+      toCube[3][4].color = c;
+      toCube[3][5].color = c;
+      }
+      else{
+        var c = [0, 0, 1];
+      // color eyes
+        //his righty
+        toCube[3][1].color = c;
+      toCube[3][2].color = c;
+        //his lefty
+      toCube[3][4].color = c;
+      toCube[3][5].color = c;
+      }
+
+    }, 1000);
+
+
+    </script>
+  </head>
+  <body>
+    <h1>CS460 Assignment 2</h1>
+    <div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+  </body>
+</html>

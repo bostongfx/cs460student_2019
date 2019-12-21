@@ -1,0 +1,272 @@
+\documentclass[10pt]{article}
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb, graphicx, enumitem}
+\usepackage{amsmath,mleftright}
+\usepackage{xparse}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+ 
+
+ 
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+
+\begin{document}
+ 
+\title{Math 447/647 HW3 Solutions}
+\author{Prepared by Sho and Yahiya}
+\date{}
+\maketitle
+ 
+\noindent {\bf Suggested reading:} Sections 3.2-3.4
+
+
+
+
+
+
+\begin{problem}
+Let $X_1$ and $X_2$ be independent geometric random variables having the same
+parameter $p$. Compute
+\[
+P\left(X_1 = i | X_1 + X_2 = n\right).
+\]
+Can you guess the answer before you compute it?
+\end{problem}
+
+
+
+
+
+
+% Problem 1 Solution Starts here -Yahiya Hussain
+\begin{proof}[Solution]
+Let: $X_{1}, X_{2} \sim G(p)$\\
+Hence $X_i$ is a discrete Random Variable Such that: 
+\begin{equation*}
+    P(X_i = x_i) = \begin{cases}
+    p^{x_{i}-1}q \quad & x_i \geq 1\\
+    0 & otherwise
+    \end{cases}
+\end{equation*}
+Compute: $P(X_{1} = i | X_{1} + X_{2} = n)$ \\\\
+\begin{align*}
+P(X_{1} = i | X_{1} + X_{2} = n) &= 
+                \frac{P(X_1 = i, X_1 + X_2 = n)}
+                        {P(X_1 + X_2 = n)}\\
+            &=
+                \frac{P(X_1 = i, X_2 = n - i)}
+                        {P(X_1 + X_2 = n)}\\
+\end{align*}
+Since $X_1$ and $X_2$ are i.i.d:
+\begin{align*}
+P(X_{1} = i | X_{1} + X_{2} = n) &= 
+                \frac{P(X_1 = i)P(X_2 = n - i)}
+                        {P(X_1 + X_2 = n)}
+\end{align*}
+Hence we must compute $P(X_1 + X_2 = n)$\\
+Since $P(X_i \leq 0) = 0$:
+\begin{align*}
+P(X_1 + X_2 = n) &= \sum^{n-1}_{i=1}P(X_1+X_2=n|X_1=i)P(X_1=i)\\
+                &= \sum^{n-1}_{i=1}P(X_2=n-i)P(X_1=i)\\
+                &= \sum^{n-1}_{i=1}(p^{n-i-1}q)(p^{i-1}q)\\
+                &= \sum^{n-1}_{i=1}p^{n-2}q^2\\
+                &= (n-1)p^{n-2}q^2
+\end{align*}
+Hence:
+\begin{align*}
+ P(X_{1} = i | X_{1} + X_{2} = n) 
+        &= \frac{P(X_1 = i)P(X_2 = n - i)} {(n-1)p^{n-2}q^2}\\
+        &= \frac{(p^{n - i - 1}q)(p^{i - 1}q)} {(n-1)p^{n-2}q^2}\\
+        &= \frac{1}{n-1}
+\end{align*}
+
+Yes, it is possible to guess the answer before the calculation.
+There must be 1 success in $n-1$ trials and one other success at the last trial.
+
+Since $X_1$ and $X_2$ share the same probability of success, the number of failures until the first success does not change the probability.
+\begin{equation*}
+\mbox{All has the equal probability}
+\begin{cases}
+ SFF\cdots FS\\
+ FSF\cdots FS\\
+ FFS\cdots FS\\
+ \vdots \\
+ FFF\cdots SS\\
+\end{cases}
+\end{equation*}
+This implies the conditional probability of interest would be a uniform distribution.
+\end{proof}
+% Problem 1 Solution Ends here -Yahiya Hussain
+
+
+
+
+
+
+
+
+\begin{problem}
+The joint density of $X$ and $Y$ is given by
+\[
+f (x,y) = \frac{e^{-x/y}e^{-y}}{y}, \quad 0 < x < \infty,\, 0 < y < \infty.
+\]
+Show $E[X|Y = y] = y$.
+\end{problem}
+
+
+
+
+
+
+
+
+
+% Problem 2 Solution Starts here -Yahiya Hussain
+\begin{proof}[Solution]
+Given: $f_{X,Y}(x,y) = \frac{e^{-x/y}e^{-y}}{y}$\\
+By Definition:
+\begin{align*}
+    E[X|Y=y] &= \int_0^\infty xf_{X|Y}(x,y)dx
+\end{align*}
+Importantly:
+\begin{align*}
+    f_{X|Y}(x,y) &= 
+        \frac{f_{X,Y}(x,y)}{f_{Y}(y)}
+\end{align*}
+Also Importantly:
+\begin{align*}
+    f_{Y}(y) &=  \int_0^\infty f_{X,Y}(x,y)dx\\
+    &=  \int_0^\infty \frac{e^{\frac{-x}{y}} e^{-y}}{y}dx\\
+    &= \frac{e^{-y}}{y}\int_0 ^\infty e^{\frac{-x}{y}}dx\\
+    &= \frac{e^{-y}}{y} [-y e^{\frac{-x}{y}}{} \bigg|_0 ^\infty]\\
+    &= e^{-y}
+\end{align*}
+Hence:
+\begin{align*}
+    f_{X|Y}(x,y) &= \frac{\frac{e^{-x/y}e^{-y}}{y}}{e^{-y}}\\
+    &= \frac{e^{-x/y}}{y}
+\end{align*}
+Moreover:
+\begin{align*}
+     E[X|Y=y] &= \frac{1}{y}\int_0^\infty x e^{-x/y}dx\\
+     &= \frac{1}{y}[(x)(-ye^{\frac{-x}{y}})\bigg | _0 ^\infty + \int_0 ^\infty ye^{\frac{-x}{y}}dx]\\
+     &= \frac{1}{y}[-y^2 e^{\frac{-x}{y}}\bigg|_0 ^\infty]\\
+     &= y
+\end{align*}
+\end{proof}
+% Problem 2 Solution Ends here -Yahiya Hussain
+
+
+
+
+
+
+
+
+\begin{problem}
+$A$ and $B$ roll a pair of dice in turn, with $A$ rolling first. $A$'s objective is to obtain
+a sum of 6, and $B$'s is to obtain a sum of 7. The game ends when either player
+reaches his or her objective, and that player is declared the winner.
+\begin{enumerate}[label=(\alph*)]
+\item Find the probability that $A$ is the winner.
+\item Find the expected number of rolls of the dice.
+\item Find the variance of the number of rolls of the dice.
+\end{enumerate}
+\end{problem}
+
+\begin{proof}[Solution]
+%Write solution here.
+\begin{enumerate}[label=(\alph*)]
+	\item Let $p_6$, $p_7$ be probabilities of getting a sum of $6$ and $7$.
+	
+	Since $6:\{(1,5),(2,4),(3,3),(4,2),(5,1)\}$ and $7:\{(1,6),(2,5),(3,4),(4,3),(5,2),(6,1)\}$,
+	
+	$p_6 = \frac{5}{36}$ and $p_7=\frac{6}{36}=\frac{1}{6}$.
+	
+	Let $p_A$ be a probability for A to win. Then,
+	\begin{align*}
+	p_A &= p_6 + (1-p_6)(1-p_7)p_6 + (1-p_6)^2(1-p_7)^2p_6 + \cdots\\
+	&= \frac{p_6}{1-(1-p_6)(1-p_7)}\\
+	&= \frac{30}{61} \sim 0.4918
+	\end{align*}
+	
+	\item Let $X$ be a number of rolls, and
+	\begin{equation*}
+	Y=\begin{cases}
+	1 \mbox{ , if A wins at the first roll} \\
+	2 \mbox{ , if B wins at the second roll}\\
+	3 \mbox{ , otherwise}
+	\end{cases}
+	\end{equation*}
+	Then,
+	\begin{align*}
+	E[X] &= E[X|Y=1]P_Y(1) + E[X|Y=2]P_Y(2) + E[X|Y=3]P_Y(3)\\
+	&= 1\cdot p_6 + 2(1-p_6)p_7 + E[X+2](1-p_6)(1-p_7)\\
+	&= p_6 + 2p_7 - 2p_6p_7 + (1-p_6)(1-p_7)E[X] + 2(1-p_6)(1-p_7)\\
+	&= 2-p_6 + (1-p_6)(1-p_7)E[X]
+	\end{align*}
+	Thus,
+	\begin{equation*}
+	E[X] = \frac{2-p_6}{p_6+p_7-p_6p_7}=\frac{402}{61} \sim 6.59
+	\end{equation*}
+
+	\item Similar to (b)
+	\begin{align*}
+		E[X^2] &= E[X^2|Y=1]P_Y(1) + E[X^2|Y=2]P_Y(2) + E[X^2|Y=3]P_Y(3)\\
+		&= 1\cdot p_6 + 2^2(1-p_6)p_7 + E[(X+2)^2](1-p_6)(1-p_7)\\
+		&= p_6 + 4p_7 - 4p_6p_7 + (1-p_6)(1-p_7)E[X^2] + 4(1-p_6)(1-p_7)E[X]+ 4(1-p_6)(1-p_7)\\
+		&= 4-3p_6+4(1-p_6)(1-p_7)E[X] + (1-p_6)(1-p_7)E[X^2]
+	\end{align*}
+	Thus,
+	\begin{equation*}
+		E[X^2] = \frac{4-3p_6+4(1-p_6)(1-p_7)E[X]}{p_6+p_7-p_6p_7}=\frac{296454}{3721}
+	\end{equation*}
+	and, therefore
+	\begin{equation*}
+	Var[X]=E[X^2]-E[X]^2=\frac{134850}{3721}\sim 36.24
+	\end{equation*}
+\end{enumerate}
+
+
+\end{proof}
+
+\begin{problem}
+Let $X_1, \dots ,X_n$ be independent random variables having a common distribution
+function that is specified up to an unknown parameter $\theta$. Let $T = T (X)$ be a function
+of the data $X = (X_1, \dots , X_n)$. If the conditional distribution of $X_1, \dots, X_n$
+given $T (X)$ does not depend on $\theta$ then $T (X)$ is said to be a {\it sufficient statistic} for $\theta$.
+
+Let $X_i$s be Poisson random variables with mean $\theta$. 
+Show that $T(X)=X_1+X_2+\cdots+X_n$ is a sufficient
+statistic for $\theta$.
+\end{problem}
+
+\begin{proof}[Solution]
+%Write solution here.
+Since $X_i \sim \mathcal{P}(\theta)$, $T(X) \sim \mathcal{P}(n\theta)$. Here,
+
+\begin{align*}
+P(X_1=x_1,X_2=x_2,\cdots,X_n=x_n|T(X)=t) &= \frac{P(X_1=x_1,X_2=x_2,\cdots,X_n=x_n)}{P(T(X)=t)} &\mbox{,with $\sum_{i=1}^{n}X_i=t$}\\
+&=\frac{\prod_{i=1}^{n}P(X_i=x_i)}{P(T(X)=t)} &\mbox{($X_i$s are i.i.d)}\\
+&=\frac{\prod_{i=1}^{n}\frac{e^{-\theta}\theta^{x_i}}{x_i!}}{\frac{e^{-n\theta}(n\theta)^t}{t!}}\\
+&= \frac{e^{-n\theta}}{e^{-n\theta}}\frac{\theta^{\sum_{i=1}^{n}x_i}}{\theta^t}\frac{t!}{n^t \prod_{i=1}^{n}x_i}\\
+&=\frac{t!}{n^t \prod_{i=1}^{n}x_i}
+\end{align*}
+Therefore, $T(X)$ is a sufficient statistic for $\theta$.
+\end{proof}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+

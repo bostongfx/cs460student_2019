@@ -1,0 +1,94 @@
+<html>
+
+<head>
+
+<meta charset="UTF-8" />
+<style>
+  html, body { 
+    background-color:#fff;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden !important;  
+  }
+</style>
+
+<script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+<script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+
+<script> 
+var scene, camera, renderer, ambientLight, light;
+var controls;
+window.onload = function() {
+  var startButton = document.getElementById( 'startButton' );
+  started = false;
+  startButton.onclick = function( ) {
+    if (!started){
+        setupscene();
+        started = true;
+    }
+
+  };
+}
+function setupscene() {
+  scene = new THREE.Scene();
+  var fov = 60;
+  var ratio = window.innerWidth / window.innerHeight;
+  var zNear = 1;
+  var zFar = 10000;
+
+  camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+  camera.position.set( 0, 0, 100);
+  renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  document.body.appendChild( renderer.domElement );
+  
+  ambientLight = new THREE.AmbientLight();
+  scene.add( ambientLight );
+  ambientLight1 = new THREE.AmbientLight();
+  scene.add( ambientLight1 );
+  light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+  light.position.set( 10, 100, 10 );
+  //scene.add( light );
+  video = document.getElementById( 'video' );
+        video.play();
+
+  texture = new THREE.VideoTexture( video );
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  // now we add the cube
+  var geometry = new THREE.BoxBufferGeometry( 40, 20, 20);
+  var material = new THREE.MeshStandardMaterial({ color: 0xffffff, map:texture });
+  cube = new THREE.Mesh( geometry, material);
+  scene.add(cube);
+  controls = new THREE.TrackballControls( camera, renderer.domElement );
+  animate();
+};
+function animate() {
+  requestAnimationFrame( animate );
+  controls.update();
+  cube.rotation.y += 0.02;
+  cube.rotation.x += 0.01;
+  renderer.render( scene, camera );
+};
+
+
+</script>
+
+</head>
+
+<body>
+
+
+<video id="video" loop crossOrigin="anonymous" webkit-playsinline style="display:none">
+  <source src="video.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+</video>
+
+<div>
+  <button id="startButton">Click to Play</button>
+  <p>Video playback with audio requires user interaction.</p>
+</div>
+
+</body>
+
+</html>
