@@ -81,7 +81,7 @@
         ///////////////
         //moeny storm//
         //////////////
-        
+        document.getElementById('back_img');
         scene = new THREE.Scene();
         var fov = 60;
         var ratio = window.innerWidth / window.innerHeight;
@@ -191,27 +191,8 @@
           pc.visible = true;
           mesh.visible = true;
         }, 7000);
-        setTimeout(last_scene, 5000);
         
       };
-
-      function last_scene(){
-
-        //renderer.domElement.style.position = '';
-        //renderer.domElement.style.top = '';
-        //renderer.domElement.style.left = '';
-        //renderer.domElement.style.backgroundImage = "";
-
-        var lTexture = new THREE.TextureLoader().load( 'umass.png' );
-        var lGeometry = new THREE.PlaneBufferGeometry( 1200, 700 );
-        var lMaterial = new THREE.MeshBasicMaterial( {
-          map: lTexture,
-          side: THREE.DoubleSide
-        } );
-
-        last_scene = new THREE.Mesh( lGeometry, lMaterial );
-        scene.add( last );
-      }
 
       
       function rotate_cs410() {
@@ -274,10 +255,12 @@
 
       };
 
+      
 
        function start_content() {
         pc.visible = false;
         mesh.visible = false;
+        skybox.visible = false;
 
 
         //Background video//
@@ -354,6 +337,8 @@
 
       };
 
+      
+
 
     </script>
   </head>
@@ -373,6 +358,8 @@
   </div>
   
   <div class="overlay" id='caption' style='display:none;position: absolute;color:white;top:45%;left:50%;margin-left:50px;font-size:440%'>CS410</div>
+
+  <div class="overlay" id='content0' style='display:none;position: absolute;color:white;top:25%;left:30%;margin-left:50px;font-size:440%'>From classroom to the magic world...</div>
 
   <div class="overlay" id='content1' style='display:none;position: absolute;color:white;top:25%;left:30%;margin-left:50px;font-size:440%'>You will learn...</div>
 

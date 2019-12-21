@@ -81,7 +81,7 @@
         ///////////////
         //moeny storm//
         //////////////
-        document.getElementById('back_img');
+        
         scene = new THREE.Scene();
         var fov = 60;
         var ratio = window.innerWidth / window.innerHeight;
@@ -191,8 +191,27 @@
           pc.visible = true;
           mesh.visible = true;
         }, 7000);
+        setTimeout(last_scene, 5000);
         
       };
+
+      function last_scene(){
+
+        //renderer.domElement.style.position = '';
+        //renderer.domElement.style.top = '';
+        //renderer.domElement.style.left = '';
+        //renderer.domElement.style.backgroundImage = "";
+
+        var lTexture = new THREE.TextureLoader().load( 'umass.png' );
+        var lGeometry = new THREE.PlaneBufferGeometry( 1200, 700 );
+        var lMaterial = new THREE.MeshBasicMaterial( {
+          map: lTexture,
+          side: THREE.DoubleSide
+        } );
+
+        last_scene = new THREE.Mesh( lGeometry, lMaterial );
+        scene.add( last );
+      }
 
       
       function rotate_cs410() {
@@ -255,68 +274,10 @@
 
       };
 
-      // Try to add a scene with the skybox showing the transition from the classroom to the real world, did not make it works
-
-      // function skybox() {
-      //   pc.visible = false;
-      //   mesh.visible = false;
-
-      //   // create skybox
-      //   let materialArray = [];
-      //   let tl = new THREE.TextureLoader();
-        
-      //   let tx_ft = tl.load("px.jpg");
-      //   let tx_bk = tl.load("nx.jpg");
-      //   let tx_up = tl.load("py.jpg");
-      //   let tx_dn = tl.load("ny.jpg");
-      //   let tx_rt = tl.load("pz.jpg");
-      //   let tx_lf = tl.load("nz.jpg");
-
-      //   materialArray.push(new THREE.MeshBasicMaterial({ map: tx_ft }));
-      //   materialArray.push(new THREE.MeshBasicMaterial({ map: tx_bk }));
-      //   materialArray.push(new THREE.MeshBasicMaterial({ map: tx_up }));
-      //   materialArray.push(new THREE.MeshBasicMaterial({ map: tx_dn }));
-      //   materialArray.push(new THREE.MeshBasicMaterial({ map: tx_rt }));
-      //   materialArray.push(new THREE.MeshBasicMaterial({ map: tx_lf }));
-
-      //   for (var i = 0; i < 6; i++)
-      //     materialArray[i].side = THREE.BackSide;
-      //   let skyboxGeo = new THREE.BoxGeometry( 1000, 1000, 1000 );
-      //   skybox = new THREE.Mesh(skyboxGeo, materialArray);
-      //   scene.add(skybox);
-      //   robot = new Robot(0, -30, 0);
-      //   robot.show(scene);
-
-      //   var walkout = setInterval(function() {
-
-      //     // we can stop once we are far away enough
-      //     if (r.camera.view[14] > 1000) {
-      //       clearInterval(walkout); 
-      //       // console.log('zooming done'); 
-
-      //       setTimeout(function() {
-      //         document.getElementById('content0').style.display = 'block';
-
-      //         start_content();
-      //       }, 2000);
-            
-      //       return;
-
-      //     }
-
-      //     // zoom in
-      //     r.camera.zoomOut();
-
-
-      //   }, 100);
-
-      // };
-
 
        function start_content() {
         pc.visible = false;
         mesh.visible = false;
-        skybox.visible = false;
 
 
         //Background video//
@@ -393,6 +354,64 @@
 
       };
 
+      // Try to add a scene with the skybox showing the transition from the classroom to the real world, did not make it works
+
+      // function skybox() {
+      //   pc.visible = false;
+      //   mesh.visible = false;
+
+      //   // create skybox
+      //   let materialArray = [];
+      //   let tl = new THREE.TextureLoader();
+        
+      //   let tx_ft = tl.load("px.jpg");
+      //   let tx_bk = tl.load("nx.jpg");
+      //   let tx_up = tl.load("py.jpg");
+      //   let tx_dn = tl.load("ny.jpg");
+      //   let tx_rt = tl.load("pz.jpg");
+      //   let tx_lf = tl.load("nz.jpg");
+
+      //   materialArray.push(new THREE.MeshBasicMaterial({ map: tx_ft }));
+      //   materialArray.push(new THREE.MeshBasicMaterial({ map: tx_bk }));
+      //   materialArray.push(new THREE.MeshBasicMaterial({ map: tx_up }));
+      //   materialArray.push(new THREE.MeshBasicMaterial({ map: tx_dn }));
+      //   materialArray.push(new THREE.MeshBasicMaterial({ map: tx_rt }));
+      //   materialArray.push(new THREE.MeshBasicMaterial({ map: tx_lf }));
+
+      //   for (var i = 0; i < 6; i++)
+      //     materialArray[i].side = THREE.BackSide;
+      //   let skyboxGeo = new THREE.BoxGeometry( 1000, 1000, 1000 );
+      //   skybox = new THREE.Mesh(skyboxGeo, materialArray);
+      //   scene.add(skybox);
+      //   robot = new Robot(0, -30, 0);
+      //   robot.show(scene);
+
+      //   var walkout = setInterval(function() {
+
+      //     // we can stop once we are far away enough
+      //     if (r.camera.view[14] > 1000) {
+      //       clearInterval(walkout); 
+      //       // console.log('zooming done'); 
+
+      //       setTimeout(function() {
+      //         document.getElementById('content0').style.display = 'block';
+
+      //         start_content();
+      //       }, 2000);
+            
+      //       return;
+
+      //     }
+
+      //     // zoom in
+      //     r.camera.zoomOut();
+
+
+      //   }, 100);
+
+      // };
+
+
 
     </script>
   </head>
@@ -412,8 +431,6 @@
   </div>
   
   <div class="overlay" id='caption' style='display:none;position: absolute;color:white;top:45%;left:50%;margin-left:50px;font-size:440%'>CS410</div>
-
-  <div class="overlay" id='content0' style='display:none;position: absolute;color:white;top:25%;left:30%;margin-left:50px;font-size:440%'>From classroom to the magic world...</div>
 
   <div class="overlay" id='content1' style='display:none;position: absolute;color:white;top:25%;left:30%;margin-left:50px;font-size:440%'>You will learn...</div>
 
