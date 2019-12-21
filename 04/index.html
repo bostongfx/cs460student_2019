@@ -1,0 +1,446 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>Vanilla WebGL!</title>
+    <style>
+      html, body { 
+        background-color:#000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+        background-image: url(https://cs460.org/gfx/bg.gif);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+
+      #c {
+        width: 100%;
+        height: 100%;
+      }
+
+      #scoreboard {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      };
+    </style>
+  </head>
+  <script type="text/javascript" src="https://cs460.org/js/glmatrix.js"></script>
+  
+  <script id="vertexshader" type="glsl">
+    attribute vec3 a_position;
+
+    uniform vec3 u_offset;
+
+    void main(void) {
+
+      vec3 final_position = a_position;
+      final_position.x += u_offset.x;
+      final_position.y += u_offset.y;
+      final_position.z += u_offset.z;
+    
+      gl_Position = vec4( final_position, 1.);
+    
+    }
+  </script>
+  
+  <script id="fragmentshader" type="glsl">
+    precision mediump float;
+
+    uniform vec4 u_color;
+
+    void main(void) {
+
+      gl_FragColor = u_color;
+
+    }
+  </script>
+  
+  <script>
+
+    var c, gl;
+    var v_shader, f_shader, shaderprogram;
+    var vertices, indices, v_buffer, i_buffer;
+
+    var step_x = 0.0;
+    var step_y = 0.0;
+    var obstacle_factor = 3; // Hint for the bonus!
+    var direction_y = 0;
+    var direction_x = 0;
+
+
+    window.onload = function() {
+
+      //************************************************************//
+      //
+      // INITIALIZE WEBGL
+      //
+      c = document.getElementById( 'c' ); // setup canvas
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+
+      gl = c.getContext( 'webgl' ); // setup GL context
+      gl.viewport(0, 0, c.width, c.height );
+
+
+      //************************************************************//
+      //
+      // SHADERS
+      //
+      v_shader = gl.createShader( gl.VERTEX_SHADER );
+      f_shader = gl.createShader( gl.FRAGMENT_SHADER );
+      
+      // compile vertex shader
+      gl.shaderSource( v_shader, document.getElementById( 'vertexshader' ).innerText );
+      gl.compileShader( v_shader );
+
+      if (!gl.getShaderParameter( v_shader, gl.COMPILE_STATUS)) {
+        console.log(gl.getShaderInfoLog( v_shader ));
+      }
+
+      // compile fragment shader
+      gl.shaderSource( f_shader, document.getElementById( 'fragmentshader' ).innerText );
+      gl.compileShader( f_shader );
+
+      if (!gl.getShaderParameter( f_shader, gl.COMPILE_STATUS)) {
+        console.log(gl.getShaderInfoLog( f_shader ));
+      }
+
+      // attach and link the shaders
+      shaderprogram = gl.createProgram();
+      gl.attachShader( shaderprogram, v_shader );
+      gl.attachShader( shaderprogram, f_shader );
+
+      gl.linkProgram( shaderprogram );
+
+      gl.useProgram( shaderprogram );
+
+
+      // create multiple objects
+      objects = [];
+      objects.push( createAirplane());
+      objects.push( createObstacle());
+      objects.push( createObstacle());
+      objects.push( createObstacle());
+      objects.push( createObstacle());
+      objects.push( createObstacle());
+      objects.push( createObstacle());
+      objects.push( createObstacle());
+      objects.push( createObstacle());
+      objects.push( createObstacle());
+
+      animate();
+
+    };
+
+
+
+    function createAirplane() {
+
+      //
+      // Part 1 Starts
+      //
+      var vertices;
+      vertices = new Float32Array([-0.06,   0.025,  0,  //v1
+                                   -0.06,   -0.025, 0,  //v2
+                                   0.02,    0,     0,   //v3
+                                   0.02,    0,     0,   //v3
+                                   0.06,    0,     0,   //v4
+                                   0.02,    0.015,  0,  //v5
+                                   0.02,    0.015,  0,  //v5
+                                   -0.03, 0.015,   0,   //v6
+                                   0.02,    0,     0    //v3
+                                   ]);
+
+
+
+      var v_buffer;
+      v_buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, v_buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+      gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+
+      //
+      // Part 1 Ends
+      //
+
+      var offset = [0.,0.,0.];
+      var color = [0.,0.,0.,1.];
+
+      //
+      // Bonus Part 3!
+      //
+      return ['airplane', v_buffer, vertices, offset, color, gl.TRIANGLES];
+
+    }
+
+
+
+    function createObstacle() {
+
+      var vertices = new Float32Array( [ 0.0, 0.0, 0.0 ]);
+
+      var v_buffer = gl.createBuffer(); // create
+      gl.bindBuffer( gl.ARRAY_BUFFER, v_buffer ); // bind
+      gl.bufferData( gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW ); // put data in
+      gl.bindBuffer( gl.ARRAY_BUFFER, null ); // unbind
+
+      //
+      // Part 2 Starts
+      //
+      var offset = [Math.random() * 2 - 1,
+                    Math.random() * 2 - 1, 0.];
+
+      
+
+
+
+      //
+      // Part 2 Ends
+      //
+
+      var color = [Math.random(),Math.random(),Math.random(),1.];
+
+      return ['obstacle', v_buffer, vertices, offset, color, gl.POINTS];
+
+    }
+
+
+
+    //
+    // Part 3 Starts (no coding required, just explanations in PDF)
+    //
+    function calculateBoundingBox(vertices, offset) {
+
+      var minx = 1000;
+      var maxx = -1000;
+      var miny = 1000;
+      var maxy = -1000;
+      var minz = 1000;
+      var maxz = -1000;
+
+      for (var v=0; v<vertices.length; v+=3) {
+
+        var currentx = vertices[v] + offset[0];
+        var currenty = vertices[v+1] + offset[1];
+        var currentz = vertices[v+2] + offset[2];
+
+        minx = Math.min( minx, currentx );
+        miny = Math.min( miny, currenty );
+        minz = Math.min( minz, currentz );
+
+        maxx = Math.max( maxx, currentx );
+        maxy = Math.max( maxy, currenty );
+        maxz = Math.max( maxz, currentz );
+
+      }
+
+      return [minx, maxx, miny, maxy, minz, maxz];
+
+    }
+
+    function detectCollision(bbox, point) {
+
+      var collision = false;
+
+      if (point[0] >= bbox[0] && point[0] <= bbox[1]) {
+        if (point[1] >= bbox[2] && point[1] <= bbox[3]) {
+          if (point[2] >= bbox[4] && point[2] <= bbox[5]) {
+
+            collision = true;
+
+          }
+        }
+      }
+
+      return collision;
+
+    }
+    //
+    // Part 3 Ends
+    //
+
+
+
+    //
+    // Part 4 Starts
+    //
+    window.onkeyup = function(e) {
+
+      if ( e.keyCode == 38 ) {
+        // player pressed up
+        direction_y = 1;
+        step_y += 0.005;
+        direction_x = 0;
+
+      } else if (e.keyCode == 40 ) {
+        // player pressed down
+        direction_y = -1;
+        step_y += 0.005;
+        direction_x = 0;
+
+
+      } else if (e.keyCode == 37 ) {
+        // player pressed left
+        direction_x = -1;
+        step_x += 0.005;
+        direction_y = 0;
+
+
+      } else if (e.keyCode == 39 ) {
+        // player pressed right
+        direction_x = 1;
+        step_x += 0.005;
+        direction_y = 0;
+      }
+
+    };
+    //
+    // Part 4 Ends
+    //
+
+
+
+
+    var framecounter = 0;
+
+    function animate() {
+
+      framecounter += 1;
+
+      if (framecounter > 150) {
+
+        // roughly every five seconds with 30 FPS
+
+        // update score
+        document.getElementById('scoreboard').innerHTML = parseInt(document.getElementById('scoreboard').innerHTML) + 100;
+
+        //
+        // Bonus Part 2!
+        //
+        step_x += 0.01;
+        step_y += 0.01;
+
+
+        framecounter = 0;
+
+      }
+
+      gl.clearColor( 0., 0., 0., 0.)
+      gl.clear( gl.COLOR_BUFFER_BIT );
+
+
+
+      for( var o = 0; o < objects.length; o++ ) {
+
+        var current_objecttype = objects[o][0];
+        var current_v_buffer = objects[o][1];
+        var current_vertices = objects[o][2];
+        var current_offset = objects[o][3];
+        var current_color = objects[o][4];
+        var current_drawtype = objects[o][5];
+
+        var current_v_count = current_vertices.length;
+        
+        if (current_objecttype == 'airplane') {
+
+          // update offsets
+          if ( current_offset[0] <= -1. ) {
+            // bumped into left end of screen
+            direction_x = 1;
+          } else if ( current_offset[0] >= 1. ) {
+            // bumped into right end of screen
+            direction_x = -1;
+          }
+          current_offset[0] += direction_x*step_x;
+
+          if ( current_offset[1] <= -1. ) {
+            // bumped into left end of screen
+            direction_y = 1;
+          } else if ( current_offset[1] >= 1. ) {
+            // bumped into right end of screen
+            direction_y = -1;
+          }
+          current_offset[1] += direction_y*step_y;
+
+
+          // get the bounding box of this airplane
+          var bbox_plane = calculateBoundingBox( current_vertices, current_offset);
+
+
+        } else if (current_objecttype == 'obstacle') {
+
+
+          //
+          // Bonus Part 1!
+          //
+          current_offset[0] += -0.01;
+          if(current_offset[0] <= -1. ){
+            current_offset[0] = 1;
+          }
+
+
+          // collision detection using the bounding box of this airplane
+          if (detectCollision(bbox_plane, current_offset)) {
+
+            document.getElementById('scoreboard').innerHTML += ' AND...GAME OVER!'
+
+            return;
+
+          }
+
+
+        }
+
+
+        //************************************************************//
+        //
+        // CONNECT SHADER WITH GEOMETRY
+        //
+        
+        gl.bindBuffer( gl.ARRAY_BUFFER, current_v_buffer );
+
+        // gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, current_i_buffer );
+
+        // find the attribute in the shader source
+        var a_position = gl.getAttribLocation( shaderprogram, 'a_position' );
+
+        gl.vertexAttribPointer( a_position, 3, gl.FLOAT, false, 0, 0 );
+
+        gl.enableVertexAttribArray ( a_position );
+
+        // find the uniform in the shader source
+        var u_offset = gl.getUniformLocation( shaderprogram, 'u_offset' );
+
+        gl.uniform3fv( u_offset, current_offset)
+
+        var u_color = gl.getUniformLocation( shaderprogram, 'u_color' );
+        
+        gl.uniform4fv( u_color, new Float32Array(current_color) );
+
+        //************************************************************//
+        //
+        // DRAW!
+        //
+
+        //
+        // Bonus Part 3!
+        //
+        gl.drawArrays( current_drawtype, 0, current_v_count/3, 0 );
+
+      }
+
+
+      requestAnimationFrame(animate);
+
+    };
+
+  </script>
+  <body>
+    <canvas id="c"></canvas>
+    <div id="scoreboard">0</div>
+  </body>
+</html>
