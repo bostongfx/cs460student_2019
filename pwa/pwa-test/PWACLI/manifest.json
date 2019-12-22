@@ -1,5 +1,10 @@
 {
- 
+   "app": {
+      "launch": {
+         "local_path": "index.html",
+         "scope": "/"
+      }
+   },
    "background_color": "#2196f3", 
    "manifest_version": 2,
    "name": "PWA/CLI",
