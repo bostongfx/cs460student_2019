@@ -1,9 +1,13 @@
 <html>
   <head>
-    <meta charset="UTF-8" />
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>Assignment 9: Geometry, Materials, and Lighting!</title>
     <style>
       html, body { 
         background-color:#000;
+        color: white;
+        font-family: sans-serif;
         margin: 0;
         padding: 0;
         height: 100%;
@@ -45,6 +49,18 @@
 
         // TODO Part 3 (add 2 pointlights)
 
+        var sphere = new THREE.SphereBufferGeometry( 0.25, 16, 8 );
+
+        plight = new THREE.PointLight( 0xff0040, 2.5 , 100 );
+        //plight.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xff0040 } ) ) );
+        plight.position.set( -50, 200, 50 );
+        scene.add( plight );
+
+        pointlight = new THREE.PointLight( 0x0040ff, 2.5 , 100 );
+        //pointlight.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0x0040ff } ) ) );
+        pointlight.position.set( 50, 200, 50 );
+        scene.add( pointlight );
+
 
 
         var loader = new THREE.PLYLoader();
@@ -59,14 +75,30 @@
           mesh = new THREE.Mesh( geometry, toonMaterial );
           
           scene.add( mesh );
+          mesh.position.set(-100, 0, 0);
 
         } );
 
         // TODO Part 1, load another mesh
         // TODO Part 2, use a different material for this mesh
+        
+        var loader2 = new THREE.PLYLoader();
+        loader2.load('armadillo.ply', function (geometry) {
 
+          geometry.computeVertexNormals();
 
+          lambertMaterial = new THREE.MeshLambertMaterial( {
+             color: 0x6A0DAD
+          } );
 
+          mesh2 = new THREE.Mesh( geometry, lambertMaterial );
+          
+          scene.add( mesh2 );
+          mesh2.position.set(100, 0, 0);
+
+        } );
+
+        
         controller = {
           'color': 0xffffff // we can use this single color
                             // container for all colors in the scene 
@@ -91,7 +123,31 @@
 
         // TODO Part 4 (control the color and position of point lights)
 
+        var plight1 =gui.addFolder("Point Light 1");
+        plight1.addColor(controller, 'color').onChange( function(value) { plight.color.setHex(value); });
+        plight1.add(plight.position, 'x', -100, 100);
+        plight1.add(plight.position, 'y', -100, 100);
+        plight1.add(plight.position, 'z', -100, 100);
+        plight1.open();
+
+
+        var plight2 =gui.addFolder("Point Light 2");
+        plight2.addColor(controller, 'color').onChange( function(value) { pointlight.color.setHex(value); });
+        plight2.add(pointlight.position, 'x', -100, 100);
+        plight2.add(pointlight.position, 'y', -100, 100);
+        plight2.add(pointlight.position, 'z', -100, 100);
+        plight2.open();
+
+
         // TODO Part 5 (control the color of both materials in the scene)
+
+        var tm = gui.addFolder("Toon Material");
+        tm.addColor(controller, 'color').onChange( function(value) { toonMaterial.color.setHex(value); });
+        tm.open();
+
+        var lm = gui.addFolder("Lambert Material");
+        lm.addColor(controller, 'color').onChange( function(value) { lambertMaterial.color.setHex(value); });
+        lm.open();
 
         gui.open();
 
@@ -119,5 +175,6 @@
     </script>
   </head>
   <body>
+    <h1>Assignment 9: Geometry, Materials, and Lighting!</h1>
   </body>
 </html>
