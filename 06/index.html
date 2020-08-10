@@ -18,6 +18,9 @@
     <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
     <script src="https://threejs.org/examples/js/effects/AnaglyphEffect.js" type="text/javascript"></script>
+    <script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
+
+    <script src="robot.js"></script>
 
     <script>
 
@@ -33,7 +36,7 @@
         var zNear = 1;
         var zFar = 10000;
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-        camera.position.set( 0, 0, 500);
+        camera.position.set( 0, 0, 300);
 
         renderer = new THREE.WebGLRenderer({ alpha: true });
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -46,7 +49,6 @@
         light.position.set( 10, 100, 10 );
         scene.add( light );
 
-
         var floorTexture = new THREE.TextureLoader().load( 'marble.jpg' );
         var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
         var floorMaterial = new THREE.MeshBasicMaterial( {
@@ -58,19 +60,104 @@
         floor.rotateX(-30);
         scene.add( floor );
 
-        controls = new THREE.TrackballControls( camera );
+        controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+        // Effect
+        effect = new THREE.AnaglyphEffect( renderer );
+        effect.setSize( window.innerWidth, window.innerHeight );
+
+        // Make new Robot
+        r = new Robot(0,0,0);
+
+        r.show(scene);
+
+        // Gui
+
+        controller = {anaglyph: false};
+        var gui = new dat.GUI();
+        var rendering = gui.addFolder( "Rendering" );
+        rendering.add( controller, 'anaglyph' );
+        rendering.open();
+
+        var moving = gui.addFolder( "Movement" );
+
+        var ini_x = r.head.position.getComponent(0);
+        var ini_y = r.head.position.getComponent(1);
+        var ini_z = r.head.position.getComponent(2);
+        var reset_pos = {
+          'Reset Position':function(){ 
+            console.log("clicked");
+            console.log(ini_x);
+            console.log(ini_y);
+            console.log(ini_z);
+            r.head.position.set(ini_x,ini_y,ini_z);
+            console.log("r.head.position" + r.head.position.x);
+          }
+        };
+        moving.add(reset_pos,'Reset Position');
+
+        moving.add( r.head.position, "x", -1000, 1000 ).listen();
+        moving.add( r.head.position, "y", -1000, 1000 ).listen();
+        moving.add( r.head.position, "z", -1000, 1000 ).listen();
+        moving.open();
+
+        var animation = gui.addFolder( "Animate" );
+
+        animation.add( r, "raise_left_arm" );
+        animation.add( r, "lower_left_arm" );
+        animation.add( r, "right_kick" );
+        animation.add( r, "left_kick" );
+        animation.add( r, "dance" );
+        animation.add( r, "freeze" );
+
+        animation.open();
+
+        // Gui end
 
         animate();
 
+        // Onclick and Raycaster using "floor"
+        renderer.domElement.onclick = function( e ){
 
+            if (!e.shiftKey) {
+                e.preventDefault();
+                return false;
+            }
+          
+            pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+
+            vp_coords = new THREE.Vector2( 
+                        ( pixel_coords.x / window.innerWidth ) * 2 - 1,
+                        -( pixel_coords.y / window.innerHeight ) * 2 + 1) 
+
+            vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+
+            raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(vp_coords_near, camera);
+            intersects = raycaster.intersectObject(floor);
+
+            first_intersection = intersects[0];
+
+            // repositions Robot
+            r.head.position.set(first_intersection.point.x, first_intersection.point.y, first_intersection.point.z);
+          };
       };
-
+      
       function animate() {
 
         requestAnimationFrame( animate );
-
         controls.update();
-        renderer.render( scene, camera );
+        r.onAnimate();
+
+        if (controller.anaglyph == true) {
+          renderer.setClearAlpha( 1 );
+          effect.render( scene , camera );
+        }
+
+        else {
+          renderer.setClearAlpha( 0 );
+          renderer.render( scene , camera );
+        }
 
       };
 

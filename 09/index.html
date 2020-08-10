@@ -45,7 +45,21 @@
 
         // TODO Part 3 (add 2 pointlights)
 
+        pLight_1 = new THREE.PointLight( 0xF1C40F, 30, 50 );
+        pLight_1.position.set(50,50,50);
+        scene.add(pLight_1);
 
+        pLight_2 = new THREE.PointLight( 0xff0000, 30, 50 );
+        pLight_2.position.set(5,50,80);
+        scene.add(pLight_2);
+
+        var sphereSize = 1;
+        var pointLightHelper = new THREE.PointLightHelper( pLight_1, sphereSize );
+        scene.add( pointLightHelper );
+
+        var sphereSize = 1;
+        var pointLightHelper = new THREE.PointLightHelper( pLight_2, sphereSize );
+        scene.add( pointLightHelper );
 
         var loader = new THREE.PLYLoader();
         loader.load('armadillo.ply', function (geometry) {
@@ -56,22 +70,122 @@
              color: 0x21ce70
           } );
 
-          mesh = new THREE.Mesh( geometry, toonMaterial );
+          kaiju = new THREE.Mesh( geometry, toonMaterial );
+
+          kaiju.rotation.y =  Math.PI ;
           
-          scene.add( mesh );
+          scene.add( kaiju );
 
         } );
 
         // TODO Part 1, load another mesh
         // TODO Part 2, use a different material for this mesh
 
+        loader.load('hind.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( { color: 0x145A32, flatShading: true } );
+          mesh = new THREE.Mesh( geometry, material );
+          mesh.position.z = 80;
+          mesh.position.y = 50;
+          mesh.scale.multiplyScalar( 1.2 );
+          mesh.rotation.z = Math.PI / 2;
+          mesh.rotation.x = - Math.PI / 2;
+
+          scene.add( mesh );
+
+        } );
+
+          loader.load('hind.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( { color: 0x145A32, flatShading: true } );
+          mesh = new THREE.Mesh( geometry, material );
+          mesh.position.x = -30;
+          mesh.position.z = 90;
+          mesh.position.y = 55;
+          mesh.scale.multiplyScalar( 1.2 );
+          mesh.rotation.z = Math.PI / 2;
+          mesh.rotation.x = - Math.PI / 2;
+
+          scene.add( mesh );
+
+        } );
+
+          loader.load('hind.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( { color: 0x145A32, flatShading: true } );
+          mesh = new THREE.Mesh( geometry, material );
+          mesh.position.x = 30;
+          mesh.position.z = 90;
+          mesh.position.y = 52;
+          mesh.scale.multiplyScalar( 1.2 );
+          mesh.rotation.z = - Math.PI / 3;
+          mesh.rotation.x = - Math.PI / 2;
+
+          scene.add( mesh );
+
+        } );
+
+          loader.load('airplane.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( { color: 0x3498DB, flatShading: true } );
+          mesh = new THREE.Mesh( geometry, material );
+          mesh.position.x = 30;
+          mesh.position.z = 60;
+          mesh.position.y = 92;
+          mesh.scale.multiplyScalar( 0.02 );
+          mesh.rotation.z = - Math.PI / 3;
+          mesh.rotation.x = - Math.PI / 2;
+
+          scene.add( mesh );
+
+        } );
+
+          loader.load('airplane.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( { color: 0x3498DB, flatShading: true } );
+          mesh = new THREE.Mesh( geometry, material );
+          mesh.position.z = 30;
+          mesh.position.y = 52;
+          mesh.scale.multiplyScalar( 0.02 );
+          mesh.rotation.z = - Math.PI / 3;
+          mesh.rotation.x = - Math.PI / 2;
+
+          scene.add( mesh );
+
+        } );
+
+          loader.load('mug.ply', function (geometry) {
+
+          geometry.computeVertexNormals();
+
+          material = new THREE.MeshStandardMaterial( { color: 0x3498DB, flatShading: true } );
+          mug = new THREE.Mesh( geometry, material );
+          mug.position.x = -85;
+          mug.position.z = 30;
+          mug.position.y = 75;
+          mug.scale.multiplyScalar( 400 );
+          mug.rotation.z = - Math.PI / 7;
+
+          scene.add( mug );
+
+        } );
 
 
         controller = {
-          'color': 0xffffff // we can use this single color
+          'color': 0xffffff, // we can use this single color
                             // container for all colors in the scene 
                             // if we modify the onChange callback (see below)
-
+          'material': [ 'toon', 'standard', 'phong' ]
           // TODO Bonus Part 1
           // TODO Bonus Part 2
         }
@@ -91,11 +205,64 @@
 
         // TODO Part 4 (control the color and position of point lights)
 
+        var pLight_1Folder = gui.addFolder('Point Light 1');
+        pLight_1Folder.addColor(controller, 'color').onChange( function(value) { pLight_1.color.setHex(value); });
+        pLight_1Folder.add(pLight_1.position, 'x', -100, 100);
+        pLight_1Folder.add(pLight_1.position, 'y', -100, 100);
+        pLight_1Folder.add(pLight_1.position, 'z', -100, 100);
+        pLight_1Folder.open();
+
+        var pLight_2Folder = gui.addFolder('Point Light 2');
+        pLight_2Folder.addColor(controller, 'color').onChange( function(value) { pLight_2.color.setHex(value); });
+        pLight_2Folder.add(pLight_2.position, 'x', -100, 100);
+        pLight_2Folder.add(pLight_2.position, 'y', -100, 100);
+        pLight_2Folder.add(pLight_2.position, 'z', -100, 100);
+        pLight_2Folder.open();
+
+
         // TODO Part 5 (control the color of both materials in the scene)
+        var materialColorFolder = gui.addFolder('Material Color');
+        materialColorFolder.addColor(controller, 'color').onChange( function(value) { kaiju.material.color.setHex(value); });
+        materialColorFolder.addColor(controller, 'color').onChange( function(value) { mug.material.color.setHex(value); });
+
+        materialColorFolder.open();
+
+        var kaijuFolder = gui.addFolder('Kaiju Material');
+        // Choose from accepted values
+        kaijuFolder.add(controller, 'material', [ 'toon', 'standard', 'phong' ] ).onChange( function(value) {
+          
+          if (value == 'phong') {
+            kaiju.material = new THREE.MeshPhongMaterial({ color: 0x2194CE });
+
+          } else if (value == 'standard'){
+            kaiju.material = new THREE.MeshStandardMaterial({ color: 0x2194CE });
+
+          } else if (value == 'toon'){
+            kaiju.material = new THREE.MeshToonMaterial({ color: 0x2194CE });
+          }
+
+        });
+        var mugFolder = gui.addFolder('Mug Material');
+        // Choose from accepted values
+        mugFolder.add(controller, 'material', [ 'toon', 'standard', 'phong' ] ).onChange( function(value) {
+          
+          if (value == 'phong') {
+            mug.material = new THREE.MeshPhongMaterial({ color: 0x2194CE });
+
+          } else if (value == 'standard'){
+            mug.material = new THREE.MeshStandardMaterial({ color: 0x2194CE });
+
+          } else if (value == 'toon'){
+            mug.material = new THREE.MeshToonMaterial({ color: 0x2194CE });
+
+          }
+
+        });
+
+
+        
 
         gui.open();
-
-
 
 
         controls = new THREE.TrackballControls( camera, renderer.domElement );

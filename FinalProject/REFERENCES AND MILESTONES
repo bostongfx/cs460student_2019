@@ -1,0 +1,83 @@
+RESOURCES
+
+TOOLTIP
+https://stackoverflow.com/questions/39177205/threejs-tooltip
+
+http://jsfiddle.net/t3r41mvL/
+
+MILESTONES
+
+Replacement of Dat.GUI
+////////
+Initially attempted to utilize Dat.GUI from Assignment 05 to 09.
+Problem A ): Dat.Gui has strange limitations & complications 
+& also wanted to experiment with different GUIs
+Problem B ): How do we parse information from GUI to the object prototype?
+
+Solution: Jonathan Cole’s Guify
+
+
+Positioning of Days
+///////////////////
+
+Problem A ): Where does the cubes stand on the plane?
+Solution A ): day_pos = [-710, -460, -210, 40, 290, 540, 790];
+
+
+Dimentions of a time cube
+/////////////////////////
+Problem B ): What are the dimensions of a cube?
+Solution B ): Length, Height, Width
+Length, Width = 120;
+Height = Duration, The time it takes for an Activity [In Mins]
+
+Dealing with 3d textgeometry
+/////////////////
+Problem A ): How do I know which day is which?
+Solution A ): 3D Text! 
+
+Problem B ): How do I go about doing that?
+Solution B ): IDK, Google!
+
+Dealing with FontLoader and facetypes.js
+/////////////////////
+https://gero3.github.io/facetype.js/
+
+Dealing with duration selection
+/////////////////
+var duration = [], i, j;
+        for(i=0; i<24; i++) {
+          for(j=0; j<4; j++) {
+            duration.push(i + ":" + (j===0 ? "00" : 15*j) );
+          };
+        };
+		
+		
+Selection of appropriate days via selection
+////////////
+Chosen_Time = day_pos[days_name.indexOf(day_Selection)];
+
+
+Cube won't start in the correct position, may causing clipping to the floorplane
+////////////
+creation of testcubes to experiment
+Turns out, the floorplane's position was offset
+We can then determine the actual offset, 
+since the origin is in the center of any cube, we can offset exactly half, 
+which is the distance from origin to the bottom.
+the true offset for the position is then 
+this.cubeSize/2 + this.min_height
+where, this.min_height = MinInDay - End_Act;
+
+Time selected now goes from top to bottom
+//////////
+this.max_height = MinInDay - Start_Act;
+this.min_height = MinInDay - End_Act;
+
+where, var MinInDay = 1440;
+
+
+
+Contingencies
+//////////
+if color was ever null, randomize color

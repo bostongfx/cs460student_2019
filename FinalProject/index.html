@@ -1,0 +1,520 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body { 
+        background-color:#000;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;  
+
+        background-image: url(sky.jpg);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+        #guify {
+            max-width: 300px;
+            max-height: 300px;
+            width: 80vw;
+            height: 80vw;
+            margin-left: auto;
+            margin-right: auto;
+            position: absolute;
+            top:0;
+            right:0;
+        }
+        #tooltip {
+              position: fixed;
+              left: 0;
+              top: 0;
+              min-width: 100px;
+              text-align: center;
+              padding: 5px 12px;
+              font-family: monospace;
+              background: #a0c020;
+              display: none;
+              opacity: 0;
+              border: 1px solid black;
+              box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+              transition: opacity 0.25s linear;
+              border-radius: 3px;
+            }
+    </style>
+    <div id="guify"></div>
+    <div id="tooltip"></div>
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://threejs.org/build/three.js" type="text/javascript"></script>
+    <script src="https://stemkoski.github.io/Three.js/js/Stats.js"></script>
+    <script src="https://threejs.org/examples/js/controls/OrbitControls.js" type="text/javascript"></script>
+    <script src="fonts/white_smith_regular.json"></script>
+    <script src='lib/guify.js'></script>
+    <script src="activity.js"></script>
+    <script>
+      var scene, camera, renderer, ambientLight, light, controls, floor;
+      var tooltipEnabledObjects = [];
+      var Monday_Activity_Array = [],
+      Tuesday_Activity_Array = [],
+      Wednesday_Activity_Array = [],
+      Thursday_Activity_Array = [],
+      Friday_Activity_Array = [],
+      Saturday_Activity_Array = [],
+      Sunday_Activity_Array = [];
+      var Activity_Array = [
+                        Monday_Activity_Array, 
+                        Tuesday_Activity_Array, 
+                        Wednesday_Activity_Array, 
+                        Thursday_Activity_Array, 
+                        Friday_Activity_Array, 
+                        Saturday_Activity_Array, 
+                        Sunday_Activity_Array
+                        ];
+        var container, stats;
+        var mouse = new THREE.Vector2();
+        var sprite1;
+        var canvas1, context1, texture1;
+
+      window.onload = function() {
+        scene = new THREE.Scene();
+        var fov = 80;
+        var ratio = window.innerWidth / window.innerHeight;
+        var zNear = 1;
+        var zFar = 10000;
+        camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camera.position.set( 0, 1000, 500);
+        renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+        ambientLight = new THREE.AmbientLight();
+        scene.add( ambientLight );
+        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        light.position.set( 10, 100, 10 );
+        scene.add( light );
+        var floorTexture = new THREE.TextureLoader().load( 'marble.jpg' );
+        var floorGeometry = new THREE.PlaneBufferGeometry( 2000, 1000 );
+        var floorMaterial = new THREE.MeshBasicMaterial( {
+          map: floorTexture,
+          side: THREE.DoubleSide
+        } );
+        floor = new THREE.Mesh( floorGeometry, floorMaterial );
+        floor.position.x = 60;
+        floor.position.y = -1;
+        floor.rotateX(Math.PI/2);
+        scene.add( floor );
+
+        controls = new THREE.OrbitControls( camera, renderer.domElement );
+        controls.rotateSpeed = 0.5;
+
+        raycaster = new THREE.Raycaster();
+
+        ///////////
+        // Stats //
+        ///////////
+
+        stats = new Stats();
+        stats.domElement.style.position = 'fixed';
+        stats.domElement.style.bottom = '0px';
+        stats.domElement.style.right = '0px';
+        stats.domElement.style.zIndex = 100;
+        container.appendChild( stats.domElement );
+
+        var initial_text_pos = [-800, 31, 100];
+        var days = [0,1,2,3,4,5,6];
+        days_name = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+
+        var loader = new THREE.FontLoader();
+        loader.load( 'fonts/White_Smith_Regular.json', function ( font ) {
+
+        for (var i = 0; i < days_name.length; i++) {
+
+          var day_Text = new THREE.TextGeometry( days_name[i] , {
+            font: font,
+            size: 40,
+            height: 10,
+            curveSegments: 12,
+            bevelThickness: 1,
+            bevelSize: 1,
+            bevelEnabled: true
+          });
+          var textMaterial = new THREE.MeshPhongMaterial( 
+            { color: 0x010047, specular: 0xffffff }
+          );
+          // RANDOM TEXT COLOR
+          // var textMaterial = new THREE.MeshPhongMaterial( 
+          //   { color: '#'+Math.floor(Math.random()*16777215).toString(16), specular: 0xffffff }
+          // );
+          var mesh = new THREE.Mesh( day_Text, textMaterial );
+          mesh.position.set(initial_text_pos[0]+250*i , initial_text_pos[1] , initial_text_pos[2] );
+          mesh.rotation.x = 100;
+          scene.add( mesh );
+          };
+        });
+        day_pos = [-710, -460, -210, 40, 290, 540, 790];
+        
+        // TOOLTIP START
+        //
+        //
+        var latestMouseProjection; // this is the latest projection of the mouse on object (i.e. intersection with ray)
+        var hoveredObj; // this objects is hovered at the moment
+        // tooltip will not appear immediately. If object was hovered shortly,
+        // - the timer will be canceled and tooltip will not appear at all.
+        var tooltipDisplayTimeout;
+        // This will move tooltip to the current mouse position and show it by timer.
+        function showTooltip() {
+          var divElement = $("#tooltip");
+
+          if (divElement && latestMouseProjection) {
+            divElement.css({
+              display: "block",
+              opacity: 0.0
+            });
+            var canvasHalfWidth = renderer.domElement.offsetWidth / 2;
+            var canvasHalfHeight = renderer.domElement.offsetHeight / 2;
+            var tooltipPosition = latestMouseProjection.clone().project(camera);
+            tooltipPosition.x = (tooltipPosition.x * canvasHalfWidth) + canvasHalfWidth + renderer.domElement.offsetLeft;
+            tooltipPosition.y = -(tooltipPosition.y * canvasHalfHeight) + canvasHalfHeight + renderer.domElement.offsetTop;
+            var tootipWidth = divElement[0].offsetWidth;
+            var tootipHeight = divElement[0].offsetHeight;
+            divElement.css({
+              left: `${tooltipPosition.x - tootipWidth/2}px`,
+              top: `${tooltipPosition.y - tootipHeight - 5}px`
+            });
+        divElement.text(hoveredObj.userData.tooltipText);
+
+        setTimeout(function() {
+          divElement.css({
+            opacity: 1.0
+          });
+        }, 25);
+          }
+        }
+        // This will immediately hide tooltip.
+        function hideTooltip() {
+          var divElement = $("#tooltip");
+          if (divElement) {
+            divElement.css({
+              display: "none"
+            });
+          }
+        }
+    // Following two functions will convert mouse coordinates
+    // from screen to three.js system (where [0,0] is in the middle of the screen)
+    function updateMouseCoords(event, coordsObj) {
+      coordsObj.x = ((event.clientX - renderer.domElement.offsetLeft + 0.5) / window.innerWidth) * 2 - 1;
+      coordsObj.y = -((event.clientY - renderer.domElement.offsetTop + 0.5) / window.innerHeight) * 2 + 1;
+    }
+
+    function handleManipulationUpdate() {
+      raycaster.setFromCamera(mouse, camera);
+      {
+        var intersects = raycaster.intersectObjects(tooltipEnabledObjects);
+        if (intersects.length > 0) {
+          latestMouseProjection = intersects[0].point;
+          hoveredObj = intersects[0].object;
+        }
+      }
+
+      if (tooltipDisplayTimeout || !latestMouseProjection) {
+        clearTimeout(tooltipDisplayTimeout);
+        tooltipDisplayTimeout = undefined;
+        hideTooltip();
+      }
+
+      if (!tooltipDisplayTimeout && latestMouseProjection) {
+        tooltipDisplayTimeout = setTimeout(function() {
+          tooltipDisplayTimeout = undefined;
+          showTooltip();
+        }, 100);
+      }
+    }
+
+    function onMouseMove(event) {
+      updateMouseCoords(event, mouse);
+
+      latestMouseProjection = undefined;
+      hoveredObj = undefined;
+      handleManipulationUpdate();
+    }
+
+    window.addEventListener('mousemove', onMouseMove, false);
+        //
+        //
+        // TOOLTIP END
+        renderer.domElement.onclick = function( event ){
+
+            if (!event.shiftKey) {
+                event.preventDefault();
+                return false;
+            }
+
+          var mouse3D = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1,   
+                                    -( event.clientY / window.innerHeight ) * 2 + 1,  
+                                    0.5 );     
+            var raycaster_2 =  new THREE.Raycaster();
+           raycaster_2.setFromCamera( mouse3D, camera );
+            var intersects_2 = raycaster_2.intersectObjects( scene.children );
+            // console.log("intersects_2: " + intersects_2);
+            if ( intersects_2.length > 0 ) {
+                // console.log( "//////////INSIDE SHIFT + CLICK///////////" );
+                // console.log(intersects_2);
+                // console.log( intersects_2[0] );
+                // console.log( intersects_2[0].object );
+                // console.log( intersects_2[0].object.userData.Day );
+                // console.log( intersects_2[0].object.userData.Start );
+                // console.log( intersects_2[0].object.userData.End );
+                var intersected_day = intersects_2[0].object.userData.Day;
+                var day_start = intersects_2[0].object.userData.Start;
+                var day_end = intersects_2[0].object.userData.End;
+                var intersected_mesh = intersects_2[ 0 ].object;
+                var intersected_day_index = days_name.indexOf(intersected_day);
+                // console.log("tooltipEnabledObjects : " + tooltipEnabledObjects);
+                // console.log("intersected_mesh : " + intersected_mesh);
+                tooltipEnabledObjects.pop(intersected_mesh);
+                // console.log( "intersects_2[0].object : " + intersects_2[0].object );
+    
+                    for (var j = 0; j < Activity_Array[intersected_day_index].length; j++) {
+
+                        if (Activity_Array[intersected_day_index][j].start_time == day_start && Activity_Array[intersected_day_index][j].end_time == day_end) {
+
+                            // console.log("//OMG ITS THE SAME//");
+
+                            // tooltipEnabledObjects.pop(Activity_Array[intersected_day_index][j].currentMesh);
+
+                            Activity_Array[intersected_day_index][j].removeActivity();
+
+                            Activity_Array[intersected_day_index].pop(Activity_Array[intersected_day_index][j]);
+
+                            return gui.Toast("Removed.");
+                        }
+                    }
+            }
+            
+            // console.log("///Triggered///");
+
+          };
+
+          animate();
+      };
+
+      
+      function animate() {
+        requestAnimationFrame( animate );
+        controls.update();
+        stats.update();
+        // r.onAnimate();
+        renderer.render( scene , camera );
+      };
+
+
+    </script>
+    
+
+        <script>
+        var container = document.getElementById("guify");
+        // Create the GUI
+        var gui = new guify({
+            title: 'Scheduler',
+            theme: 'dark', // dark, light, yorha, or theme object
+            align: 'right', // left, right
+            width: 300,
+            barMode: 'offset', // none, overlay, above, offset
+            panelMode: 'inner',
+            opacity: 0.95,
+            root: container,
+            open: true
+        });
+        // Populate the GUI
+        gui.Register({
+            type: 'title',
+            label: 'New Activity'
+        });
+
+        var Chosen_Time = -710;
+        var day_Selection = 'Monday';
+        gui.Register({
+            type: 'select',
+            label: 'Select Day',
+            object: this,
+            property: 'day_Selection',
+            options: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+            onChange: (data) => {
+                // console.log(day_Selection);
+                Chosen_Time = day_pos[days_name.indexOf(day_Selection)];
+                // console.log(days_name.indexOf(day_Selection));
+                // console.log(Chosen_Time);
+            }
+        })
+        var actdesc_Text = 'Add Description Here';
+        gui.Register({
+            type: 'text',
+            label: 'Activity Description',
+            object: this,
+            property: 'actdesc_Text',
+            onChange: (data) => {
+                // console.log(actdesc_Text);
+            }
+        })
+        var duration = [], i, j;
+        for(i=0; i<24; i++) {
+          for(j=0; j<4; j++) {
+            duration.push(i + ":" + (j===0 ? "00" : 15*j) );
+          };
+        };
+
+        duration.push(24 + ":" + "00");
+        // console.log(duration);
+
+        var duration_start_Selection = '0:00';
+        gui.Register({
+            type: 'select',
+            label: 'Select Start',
+            object: this,
+            property: 'duration_start_Selection',
+            options: duration,
+            onChange: (data) => {
+                // console.log(duration_start_Selection);
+            }
+        })
+
+        var duration_end_Selection = '0:00';
+        gui.Register({
+            type: 'select',
+            label: 'Select End',
+            object: this,
+            property: 'duration_end_Selection',
+            options: duration,
+            onChange: (data) => {
+                // console.log(duration_end_Selection);
+            }
+        })
+
+        var hexColor = '#00FF00';
+        gui.Register({
+            type: 'color',
+            label: 'Hex Color',
+            format: 'hex',
+            object: this,
+            property: 'hexColor'
+        })
+
+        gui.Register({
+            type: 'button',
+            label: 'Add Activity',
+            action: () => {
+                // console.log('Clicked');
+                // console.log(duration_start_Selection - duration_end_Selection);
+
+                var dur_start = duration_start_Selection;   // your input string
+                var a = dur_start.split(':'); // split it at the colons
+
+                // Hours are worth 60 minutes.
+                var start_minutes = (+a[0]) * 60 + (+a[1]);
+
+                var dur_end = duration_end_Selection;   // your input string
+                var b = dur_end.split(':'); // split it at the colons
+
+                // Hours are worth 60 minutes.
+                var end_minutes = (+b[0]) * 60 + (+b[1]);
+
+                var total_minutes = end_minutes - start_minutes;
+
+                if ((Math.sign(total_minutes) == -1) || (end_minutes == start_minutes)) {
+
+                        gui.Toast("Uh Oh! It looks like you're attempting to time travel!");
+
+                        gui.Toast("We cannot allow that.");
+
+                      return gui.Toast("(AKA an Error has Occured.)");
+                }
+
+                // console.log('Start Duration: ' + start_minutes);
+                // console.log('End Duration: ' + end_minutes);
+                // console.log(total_minutes);
+                // console.log("Chosen_Time: " + Chosen_Time);
+                // console.log("actdesc_Text: " + actdesc_Text);
+                // console.log("total_minutes: " + total_minutes);
+                // console.log("hexColor: " + hexColor);
+                // console.log("///////////////////////");
+
+                new_activity = new Activity(day_Selection, Chosen_Time, actdesc_Text, total_minutes, start_minutes, end_minutes, hexColor);
+
+                Activity_Array[days_name.indexOf(day_Selection)].push(new_activity);
+            
+
+                for (var j = 0; j < Activity_Array[days_name.indexOf(day_Selection)].length; j++) {
+
+                        // console.log( "//////////INSIDE FOR LOOP///////////" );
+
+                        if (((Activity_Array[days_name.indexOf(day_Selection)][j].start_time < new_activity.start_time) && (new_activity.start_time < Activity_Array[days_name.indexOf(day_Selection)][j].end_time)) 
+                            ||
+                             ((Activity_Array[days_name.indexOf(day_Selection)][j].start_time < new_activity.end_time) && (new_activity.end_time < Activity_Array[days_name.indexOf(day_Selection)][j].end_time))
+                             ||
+                             ((Activity_Array[days_name.indexOf(day_Selection)][j].start_time >= new_activity.start_time) && (new_activity.end_time > Activity_Array[days_name.indexOf(day_Selection)][j].end_time))
+                             ||
+                             ((Activity_Array[days_name.indexOf(day_Selection)][j].start_time > new_activity.start_time) && (new_activity.end_time >= Activity_Array[days_name.indexOf(day_Selection)][j].end_time))
+                             ) {
+                            // console.log( "//////////INSIDE INTERSECTION///////////" );
+                            new_activity.removeActivity();
+
+                            Activity_Array[days_name.indexOf(day_Selection)].pop();
+
+                            return gui.Toast("There appears to be an overlap/intersection.");
+                        }
+                    }
+                tooltipEnabledObjects.push(new_activity.currentMesh);
+            }
+        })
+        var ShowFPS = true;
+        gui.Register({
+            type: 'checkbox',
+            label: 'Show FPS',
+            object: this,
+            property: 'ShowFPS',
+            onChange: (data) => {
+                // console.log(ShowFPS);
+                if (ShowFPS == false) {
+                    return stats.domElement.style.display = 'none';
+                }
+                else {
+                    return stats.domElement.style.display = 'block';
+                }
+            }
+        })
+
+        var displayValue = "Hold Shift key and Click to Delete.";
+        gui.Register({
+            type: 'display',
+            label: 'Deletion',
+            object: this,
+            property: 'displayValue'
+        })
+
+        // Folder example
+        gui.Register({
+            type: 'folder',
+            label: 'Known Bugs and Issues',
+            open: false
+        });
+
+        var displayValue = "When two timecubes are in the exact same position, start time and end time, Mesh ceases to be removed.";
+        gui.Register({
+            type: 'display',
+            label: 'Deletion Bug',
+            object: this,
+            property: 'displayValue',
+            folder: 'Known Bugs and Issues'
+        })
+
+        var displayValue = "white_smith_regular.json converted with an unexpected token, appears to still function seemlessly.";
+        gui.Register({
+            type: 'display',
+            label: 'Uncaught SyntaxError',
+            object: this,
+            property: 'displayValue',
+            folder: 'Known Bugs and Issues'
+        })
+
+    </script>
+  </head>
+  <body></body>
+</html>
