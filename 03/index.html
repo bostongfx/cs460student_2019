@@ -1,0 +1,304 @@
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    html, body { 
+      background-color:#000;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden !important;  
+    }
+  </style>
+  <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
+  <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
+  <script>
+    window.onload = function() {
+
+      scene = new THREE.Scene();
+
+      fov = 75;
+      ratio = window.innerWidth / window.innerHeight;
+      zNear = 1;
+      zFar = 10000;
+        // console.log(ratio);
+        camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
+        camera.position.set( 0, 0, 100);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+        
+        ambientLight = new THREE.AmbientLight();
+        scene.add( ambientLight );
+
+        light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+        light.position.set( 10, 100, 10 );
+        scene.add( light );
+
+
+        // now we add the cube
+        // geometry = new THREE.BoxBufferGeometry( 20, 20, 20);
+        // material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        // cube = new THREE.Mesh( geometry, material);
+        // scene.add(cube);
+
+
+        //
+        // The invisible plane
+        //
+        geometry = new THREE.PlaneBufferGeometry( 10000, 10000 );
+        material = new THREE.MeshBasicMaterial( {
+          visible: false
+        });
+
+        invisible_plane = new THREE.Mesh( geometry, material );
+
+        scene.add( invisible_plane );
+        //
+        //
+        //
+
+
+
+        controls = new THREE.TrackballControls( camera );
+
+        animate();
+
+
+        //
+        // ACTION!
+        //
+
+        renderer.domElement.onmousemove = function(e) {
+
+          if (!e.shiftKey) {
+            e.preventDefault();
+            return false;
+          }
+
+          console.log('yes! you clicked!');
+
+          pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
+
+          console.log('Pixel coordinates', pixel_coords);
+
+          vp_coords = new THREE.Vector2( ( pixel_coords.x / window.innerWidth ) * 2 - 1,
+            -( pixel_coords.y / window.innerHeight ) * 2 + 1);
+
+          console.log('Viewport coordinates', vp_coords);
+
+          vp_coords_near = new THREE.Vector3( vp_coords.x, vp_coords.y, 0);
+
+          raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(vp_coords_near, camera);
+          intersects = raycaster.intersectObject(invisible_plane);
+
+          console.log('Ray to Invisible Plane', intersects[0].point);
+
+          // update cube position
+          // cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+
+
+          // the following code was inspired by skw1335
+
+
+          var x = (Math.floor(Math.random() * 6)); // random color
+
+          if (x == 0) {
+           var geometry = new THREE.BoxBufferGeometry( 15, 15, 15 ); // shape size
+           var color = new THREE.Color( Math.random(),Math.random(),Math.random()); // random shape color       
+           var material = new THREE.MeshBasicMaterial( {color: color});
+           var box = new THREE.Mesh( geometry, material );
+           // set position
+           box.position.set( intersects[0].point.x,
+            intersects[0].point.y,
+            intersects[0].point.z );
+           // add shape
+           scene.add( box );
+         }
+         else if(x == 1) { 
+           var geometry = new THREE.TorusKnotGeometry( 15, 3, 100, 16 );              
+           var color = new THREE.Color( Math.random(),Math.random(),Math.random());         
+           var material = new THREE.MeshBasicMaterial( {color: color});
+           var torusKnot = new THREE.Mesh( geometry, material);
+           torusKnot.position.set( intersects[0].point.x,
+            intersects[0].point.y,
+            intersects[0].point.z );
+           scene.add( torusKnot );
+         }
+         else if(x == 2) {
+           var geometry = new THREE.SphereBufferGeometry( 15, 32, 32 );
+           var color = new THREE.Color( Math.random(),Math.random(),Math.random());               
+           var material = new THREE.MeshBasicMaterial( {color: color});
+           var sphere = new THREE.Mesh( geometry, material );
+           sphere.position.set( intersects[0].point.x,
+            intersects[0].point.y,
+            intersects[0].point.z );
+           scene.add( sphere );
+         }
+         else if(x == 3) {
+           var geometry = new THREE.OctahedronBufferGeometry(15,0);
+           var color = new THREE.Color( Math.random(),Math.random(),Math.random());             
+           var material = new THREE.MeshBasicMaterial( {color: color});
+           var octohedron = new THREE.Mesh(geometry, material );
+           octohedron.position.set( intersects[0].point.x,
+            intersects[0].point.y,
+            intersects[0].point.z );
+           scene.add(octohedron);
+         }
+         else if(x == 4) {
+           var geometry = new THREE.ConeBufferGeometry( 15, 20, 32 );
+           var color = new THREE.Color( Math.random(),Math.random(),Math.random());             
+           var material = new THREE.MeshBasicMaterial( {color: color});
+           var cone = new THREE.Mesh( geometry, material );
+           cone.position.set( intersects[0].point.x,
+            intersects[0].point.y,
+            intersects[0].point.z );
+           scene.add( cone );
+         }
+         else if(x == 5) {
+           var geometry = new THREE.RingBufferGeometry( 2, 15, 32 );
+           var color = new THREE.Color( Math.random(),Math.random(),Math.random());               
+           var material = new THREE.MeshBasicMaterial( {color: color});             
+           var ring = new THREE.Mesh( geometry, material );
+           ring.position.set( intersects[0].point.x,
+            intersects[0].point.y,
+            intersects[0].point.z );
+           scene.add( ring );
+         }
+
+       }
+
+
+     };
+
+     function animate() {
+ 
+      framecounter += 1;
+ 
+      if (framecounter > 150) {
+ 
+        // roughly every five seconds with 30 FPS
+ 
+        // update score
+        document.getElementById('scoreboard').innerHTML = parseInt(document.getElementById('scoreboard').innerHTML) + 100;
+ 
+        //
+        // Bonus Part 2!
+        //
+ 
+ 
+        framecounter = 0;
+ 
+      }
+ 
+      gl.clearColor( 0., 0., 0., 0.)
+      gl.clear( gl.COLOR_BUFFER_BIT );
+ 
+ 
+ 
+      for( var o = 0; o < objects.length; o++ ) {
+ 
+        var current_objecttype = objects[o][0];
+        var current_v_buffer = objects[o][1];
+        var current_vertices = objects[o][2];
+        var current_offset = objects[o][3];
+        var current_color = objects[o][4];
+        var current_drawtype = objects[o][5];
+ 
+        var current_v_count = current_vertices.length;
+        
+        if (current_objecttype == 'airplane') {
+ 
+          // update offsets
+          if ( current_offset[0] <= -1. ) {
+            // bumped into left end of screen
+            direction_x = 1;
+          } else if ( current_offset[0] >= 1. ) {
+            // bumped into right end of screen
+            direction_x = -1;
+          }
+          current_offset[0] += direction_x*step_x;
+ 
+          if ( current_offset[1] <= -1. ) {
+            // bumped into left end of screen
+            direction_y = 1;
+          } else if ( current_offset[1] >= 1. ) {
+            // bumped into right end of screen
+            direction_y = -1;
+          }
+          current_offset[1] += direction_y*step_y;
+ 
+ 
+          // get the bounding box of this airplane
+          var bbox_plane = calculateBoundingBox( current_vertices, current_offset);
+ 
+ 
+        } else if (current_objecttype == 'obstacle') {
+ 
+          current_offset[0] -= 0.1;
+          //
+          // Bonus Part 1!
+          //
+ 
+ 
+          // collision detection using the bounding box of this airplane
+          if (detectCollision(bbox_plane, current_offset)) {
+ 
+            document.getElementById('scoreboard').innerHTML += ' AND...GAME OVER!'
+ 
+            return;
+ 
+          }
+ 
+ 
+        }
+ 
+ 
+        //************************************************************//
+        //
+        // CONNECT SHADER WITH GEOMETRY
+        //
+        
+        gl.bindBuffer( gl.ARRAY_BUFFER, current_v_buffer );
+ 
+        // gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, current_i_buffer );
+ 
+        // find the attribute in the shader source
+        var a_position = gl.getAttribLocation( shaderprogram, 'a_position' );
+ 
+        gl.vertexAttribPointer( a_position, 3, gl.FLOAT, false, 0, 0 );
+ 
+        gl.enableVertexAttribArray ( a_position );
+ 
+        // find the uniform in the shader source
+        var u_offset = gl.getUniformLocation( shaderprogram, 'u_offset' );
+ 
+        gl.uniform3fv( u_offset, current_offset)
+ 
+        var u_color = gl.getUniformLocation( shaderprogram, 'u_color' );
+        
+        gl.uniform4fv( u_color, new Float32Array(current_color) );
+ 
+        //************************************************************//
+        //
+        // DRAW!
+        //
+ 
+        //
+        // Bonus Part 3!
+        //
+        gl.drawArrays( current_drawtype, 0, current_v_count/3, 0 );
+ 
+      }
+ 
+ 
+      requestAnimationFrame(animate);
+ 
+    };
+
+  </script>
+</head>
+<body></body>
+</html>

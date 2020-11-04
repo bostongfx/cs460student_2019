@@ -1,0 +1,103 @@
+<html>
+<head>
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+	<title>CS460 Assignment 2</title>
+	<style>
+		body {
+			background-color: black;
+			color: white; /* font color */
+			font-family: sans-serif;
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			overflow: hidden !important;
+		}
+		#logo {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+		}
+	</style>
+	<script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
+	<script type="text/javascript">
+			// this gets called when the site is ready
+			window.onload = function() {
+		     	// create a new scene and renderer
+		     	r = new X.renderer3D();
+		     	r.init();
+		     	// grid 9x9 pixels 
+		     	for ( var y = 0; y < 9; y++) {
+		     		for ( var x = 0; x < 9; x++) {
+		     			// create a cube and add it!
+		     			c = new X.cube();
+				     	// set the center position in world space
+				     	c.center = [x * 2, y * 2, 0];
+					    // configure the edge length
+					    c.lengthX = c.lengthY = c.lengthZ = 1;
+				  		// .. and the color based on the
+				  		// color sides of fox black
+				  		if( x == 0 || x == 8){
+				  			c.color = [0,0,0];
+				  		}
+				  		// color black squares
+				  		else if((y == 8 && x == 2) || (y == 8 && x == 3) || 
+				  			(y == 8 && x == 4) || (y == 8 && x == 5) || 
+				  			(y == 8 && x == 6) || (y == 7 && x == 3) || 
+				  			(y == 7 && x == 4) || (y == 7 && x == 5) || 
+				  			(y == 6 && x == 3) || (y == 6 && x == 4) || 
+				  			(y == 6 && x == 5) || (y == 0 && x == 1) || 
+				  			(y == 0 && x == 2) || (y == 1 && x == 1) || 
+				  			(y == 0 && x == 7) || (y == 0 && x == 6) || 
+				  			(y == 1 && x == 7) || (y == 5 && x == 1) || 
+				  			(y == 5 && x == 7)){ 
+				  			c.color = [0,0,0];
+				  	}
+				  		// white eye color
+				  		else if((y == 3 && x == 2) || (y == 3 && x == 6)){
+				  			c.color = [1,1,1];
+				  		}
+				  		// grey eye color
+				  		else if((y == 3 && x == 3) || (y == 3 && x == 5)){
+				  			c.color = [.1,.1,.1];
+
+				  		}
+				  		// nose color
+				  		else if((y == 1 && x == 4)){
+				  			c.color = [.1,.1,.1];
+				  		}
+				  		// white fur color
+				  		else if((y == 0 && x == 3) || (y == 0 && x == 4) 
+				  			|| (y == 0 && x == 5) || (y == 1 && x == 3) 
+				  			|| (y == 1 && x == 5)){
+				  			c.color = [1,1,1];
+				  		}
+				  		// orange fur color
+				  		else {
+				  			c.color = [1,.42,.2];
+				  		}
+				  		c.opacity = .8;
+
+				  		r.add(c);
+				  		
+				  	}
+				}
+				
+				r.camera.position = [0,0,30];
+		     	// render everything!
+		     	r.render();
+		     	
+		     	// .. and animate!!
+		     	r.onRender = function() {
+	   				// rotate the camera in X-direction
+	   				r.camera.rotate([1, 0]);
+	   			};
+	   			
+	   		};
+	   	</script>
+	   </head>
+	   <body>
+	   	<h1>CS460 Assignment 2</h1>
+	   	<div id="logo"><img style="height:60px" src="gfx/cs460.png"></div>
+	   </body>
+	   </html>
