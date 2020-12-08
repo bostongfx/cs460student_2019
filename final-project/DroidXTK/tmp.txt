@@ -1,0 +1,120 @@
+       
+       var btnSphere = app.CreateButton("Add Sphere +");
+       btnSphere.SetOnTouch(function()
+       {
+           var xpos = txtXPos.GetText();
+           var ypos = txtYPos.GetText();
+           var zpos = txtZPos.GetText();
+           
+           var rVal  = skbRed.GetValue();
+           var gVal  = skbGreen.GetValue();
+           var bVal  = skbBlue.GetValue();
+           
+           var sphereName = "sphere" + countSphere;
+           
+           var code = ""
+           code += (sphereName + " = new X.sphere();")
+           code += (sphereName + ".center" + " = [" + xpos + "," + ypos + "," + zpos + "];")
+           code += (sphereName + ".color" + " = [" + rVal + "," + gVal + "," + bVal + " ];")
+           code += ("r.add( " + sphereName + ");")
+           
+app.SaveText("sphereVar", code);
+countSphere++;
+app.Execute(app.LoadText("sphereVar"))
+app.Execute("r.render();")
+});
+layDebug.AddChild(btnSphere);
+
+
+    /*
+    app.Script( "controlDrawer.js" );
+  
+       var cube1 = xds.cube("cubetest", 0, cubecounter,0,0,01,1,0);
+        app.Execute(cube1);
+        var sphere1 = xds.sphere("spheretest",0,spherecounter,50,0,0,0,1,0,1);
+        app.Execute( sphere1 );
+        */
+        
+
+ 
+ 
+               
+                  /*
+                   var cubeName = "cube" + countCube;
+                  var code = ""
+                  code += (cubeName + " = new X.cube();")
+                  code += (cubeName + ".center" + " = [" + xpos + "," + ypos + "," + zpos + "];")
+                  code += (cubeName + ".color" + " = [" + rVal + "," + gVal + "," + bVal + " ];")
+                  code += ("r.add( " + cubeName + ");")
+                  app.SaveText("cubeVar", code);
+                  countCube++;
+                  app.Execute(app.LoadText("cubeVar"))
+                  app.Execute("r.render();")
+                  */
+                  
+                  
+                  
+           /*var fileName = rootPath + "/" + name + ".txt"
+    var stuff = 
+     {
+      "name": name,
+      "color": {
+        "r": r,
+        "g": g,
+        "b": b,
+        "a": 1.0
+      },
+      "position": {
+        "x": x ,
+        "y": y,
+        "z": z
+      }
+    }
+    
+    dsx.writeAsJson(fileName,stuff);
+    var newobj = dsx.readAsJson(fileName);
+    alert(newobj.name);
+    */
+   /* 
+   //debug
+   alert("name-" + newobj.name 
+   + "\n" + "name-" + newobj.name + "\n"
+   + "\n" + "color\n" 
+   + "red-" +  newobj.color.r + "\n"
+   + "green-" + newobj.color.g + "\n"
+   + "blue-" + newobj.color.b + "\n")
+   */
+   
+   // alert(objTmp.name);
+            //obj counter
+            //   this.counter = counter;
+            //increment counter by 1
+            //   counter+=1;
+            // alert(this.counter)
+            // dsx.objlstput(name, "cube");
+            // var fileName = rootPath + "/" + name + ".txt"
+           /* var stuff = 
+             {
+              "name": name,
+              "color": {
+                "r": r,
+                "g": g,
+                "b": b,
+                "a": 1.0
+              },
+              "position": {
+                "x": x ,
+                "y": y,
+                "z": z
+              }
+            }*/
+            
+    
+       // alert(objTmp.name);
+    
+    //obj counter
+    //   this.counter = counter;
+    //increment counter by 1
+    //   counter+=1;
+    // alert(this.counter)
+    // dsx.objlstput(name, "cube");

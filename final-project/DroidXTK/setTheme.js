@@ -1,0 +1,17 @@
+theme = app.CreateTheme( "Dark" );
+        theme.AdjustColor( -30, -90, -10 );
+        theme.SetBackColor( "#2c2b2a" );
+        theme.SetBtnTextColor( "lightgray" );
+        theme.SetButtonOptions( "custom" );
+        theme.SetButtonStyle( "darkgray","darkgray",2,"lightgray",0,1,"#ff9000" );
+        theme.SetCheckBoxOptions( "dark" );
+		theme.SetTextEditOptions( "underline" );
+        theme.SetDialogColor( "#2c2b2a" );
+        theme.SetDimBehind(false);
+        // theme.SetDialogBtnColor( "#ffeeeeee" );
+        // theme.SetDialogBtnTxtColor( "#ff666666" );
+        // theme.SetTitleHeight( 42 );
+        // theme.SetTitleColor( "#ff888888" ); 
+         theme.SetTitleDividerColor( "#ff0099CC" );
+        // theme.SetTextColor( "#ff666666" );
+        app.SetTheme( theme );

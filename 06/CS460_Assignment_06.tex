@@ -1,0 +1,261 @@
+\documentclass[10pt,oneside,onecolumn,letterpaper]{article}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+
+\usepackage[top=.5in, bottom=1in, left=.5in, right=.7in]{geometry}
+
+\usepackage{fontspec}
+\setmainfont{Arial}
+
+\begin{document}
+
+%%
+% THIS IS THE HEADER
+%%
+\noindent\colorbox{black}{
+\begin{minipage}[c]{.99\linewidth}
+  \vspace{.4cm}
+  \Large{\color{white}{\textbf{\hspace{.3cm}University of Massachusetts Boston}}}
+  \begin{flushright}
+    \vspace{-1.2cm}
+    \includegraphics[width=3cm]{gfx/cs460.png}
+  \end{flushright}
+\end{minipage}
+}
+
+%%
+% CONTENT STARTS HERE
+%%
+
+\vspace{.5cm} % add some space
+
+\noindent\textbf{CS460 Fall 2019} \\
+\textbf{Name:} Jared Barresi \\
+\textbf{Student ID:} 00974358 \\
+\textbf{Due Date:} 10/28/2019
+
+\section*{Assignment 6: The Virtual Robot!}
+
+\textbf{We will create a virtual robot that uses a human-inspired skeleton.}
+
+\vspace{.5cm} % add some space
+
+\noindent In class, we started using the \url{THREE.Bone} class to assemble a skeleton of a virtual robot. Here, we will extend this skeleton and add code to animate certain robot movements. From a software engineering perspective, we will be writing \textbf{object-oriented code}. This allows us to create multiple robots within the same scene later on.
+
+\vspace{.5cm}
+
+\begin{center}
+\includegraphics[width=.7\textwidth]{gfx/screenshot-1.png}
+\end{center}
+
+\vspace{.5cm}
+
+\noindent\textbf{Starter code for assignment 6.} In class, we pulled from the upstream repository and received the \url{06/index.html} file. This is the official starter code. However, we already worked on it during class so your local version might include some of this assignment.
+
+\vspace{.5cm}
+
+
+\noindent\textbf{Part 1 (2 points):} Create an empty \url{robot.js} file and include it in the \url{index.html} file using the \url{<script>}-tag..
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 2 (2 points):} Modify \url{robot.js} to include an empty constructor for a Robot object. The constructor should take \url{x}, \url{y}, and \url{z} parameters to configure the position of the robot.
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 3 (2 points):} Add properties to the Robot class. Each property is pre-fixed with \url{this.} which refers to the current robot if we created multiple robots. Please add the following properties: \url{this.head}, \url{this.neck}, \url{this.torso}.
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 4 (2 points):} Initialize \url{THREE.Bone} objects for \url{this.head}, \url{this.neck}, and \url{this.torso}.
+
+\clearpage
+
+\noindent\textbf{Part 5 (1 points):} Create the \textbf{scene graph} hierarchy with \url{this.head} as root.
+
+\vspace{.5cm}
+
+\begin{verbatim}
+this.head.add(this.neck);
+this.neck.add(this.torso);
+\end{verbatim}
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 6 (10 points):} Now we create the limbs of the robot. Let's start with the left and right arms. Each arm has three elements: \url{upper_arm}, \url{lower_arm}, and \url{hand}. Please create the hierarchy of the left and right arms. The parent node of the arms is \url{this.neck}. And, please do not forget to create \url{THREE.Bone} objects for all elements.
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 7 (10 points):} What about the legs? Please create the left and right legs. Each leg consists of a hierarchy of three elements: \url{upper_leg}, \url{lower_leg}, and \url{foot}. The parent node of the legs is \url{this.torso}. Also, please use \url{THREE.Bone} objects for all elements.
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 8 (15 points):} Write a \url{Robot.prototype.show(scene)} method that displays the robot by using the\\ \url{THREE.SkeletonHelper} object. Then, change  \url{index.html} code to create the robot and call the \url{show} method.
+
+\vspace{.5cm}
+
+\noindent In \url{robot.js} add
+
+\begin{verbatim}
+Robot.prototype.show = function(scene) {
+
+  var rGroup = new THREE.Group();
+  rGroup.add( this.head );
+
+  var helper = new THREE.SkeletonHelper( rGroup );
+  helper.material.linewidth = 3; // make the skeleton thick
+
+  scene.add(rGroup);
+  scene.add(helper);
+
+};
+\end{verbatim}
+
+\noindent And in \url{index.html} add
+
+\begin{verbatim}
+// ...
+var r = new Robot(0, -55, 0); // any position works
+r.show(scene);
+
+animate();
+// ...
+\end{verbatim}
+
+\noindent But nothing shows up! We need to adjust positions of the bones in part 9.
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 9 (15 points):} Please adjust the positions of all properties. All our properties are now THREE.Bone objects which have a position associated. Please modify the position to layout the robot's skeleton as we did in class. And remember, in this scene graph hierarchy, all positions are relative to the parent element.
+
+\vspace{.5cm}
+
+\noindent Example:
+
+\begin{verbatim}
+Robot = function(x, y, z) {
+
+  this.head = new THREE.Bone();
+  this.head.position.set( x, y, z );
+
+  // ...
+
+  this.neck.position.y = -10;
+  this.torso.position.y = -30; // the torso is 3x as long as the neck
+\end{verbatim}
+
+\noindent The robot should now appear when reloading the local website!
+
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 10 (20 points):} A static robot is no fun! Let's add some movement. Let's first include the dat.GUI library and add sliders to change the x, y, and z position of the robot.
+
+\begin{verbatim}
+<script src="https://threejs.org/examples/js/libs/dat.gui.min.js" type="text/javascript"></script>
+\end{verbatim}
+
+\noindent And configure the menu (and at the same time add the anaglyph rendering):
+
+\begin{verbatim}
+var controller = {
+  anaglyph: false
+}
+
+var gui = new dat.GUI();
+var rendering = gui.addFolder( "Rendering" );
+rendering.add( controller, 'anaglyph' );
+rendering.open();
+\end{verbatim}
+
+\noindent For anaglyph rendering, replace the \url{render()} call in \url{animate()} with \url{effect.render()} depending on the controller.anaglyph flag. Note: use the \url{renderer.setClearAlpha(1)} to deactivate the sky background if anaglyph is active.
+
+\vspace{.5cm}
+
+\noindent Then, add sliders for movement in x,y,z:
+
+\begin{verbatim}
+var moving = gui.addFolder( "Movement" );
+moving.add( r.head.position, "x", -1000, 1000 );
+// ... add y and z
+moving.open();
+\end{verbatim}
+
+\noindent There is slider bug in dat.GUI and we need to set up the trackball controls only on the domElement:
+
+\begin{verbatim}
+controls = new THREE.TrackballControls( camera, renderer.domElement );
+\end{verbatim}
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 11 (20 points):} Finally, let's add some animations! We can use slerp interpolation between quaternions to move the robots' limbs. We will need a \url{Robot.prototype.onAnimate} function that is called from the \url{animate()} loop.
+
+\noindent Then, please add the following functionality
+
+\begin{verbatim}
+Robot.prototype.raise_left_arm = function() {
+  this.movement = 'raise left arm';
+};
+
+Robot.prototype.lower_left_arm = function() {
+  this.movement = 'lower left arm';
+};
+
+Robot.prototype.kick = function() {
+  this.movement = 'kick';
+};
+
+Robot.prototype.onAnimate = function() {
+  if (this.movement == 'raise left arm') {
+    // ... TODO slerping
+  } else if (this.movement == 'lower left arm') {
+    // ... TODO slerping
+  } else if (this.movement == 'kick') {
+  // ... TODO slerping and check once it is done for a backwards slerp
+  // you can use the identity quaternion for a backwards slerp
+  }
+};
+\end{verbatim}
+
+\noindent And then, please connect dat.GUI to these actions!
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 12 (1 points):} Please update the screenshot above with your own and then post the github pages url here:
+
+\vspace{.5cm}
+
+\url{https://hltdev8642.github.io/cs460student/06/}
+
+\vspace{3cm}
+
+\noindent\textbf{Bonus (33 points):}
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 1 (11 points):} Use the window.onclick callback and a THREE.RayCaster to place to robot on the floor plane if the user clicks while holding shift. Don't forget to update the dat.GUI sliders with the new position (look at the \url{.listen()} function of dat.GUI).
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 2 (22 points):} Add a \url{Robot.prototype.dance} function that makes the robot go crazy (a lot of movements). Please add some screenshots.
+
+
+\vspace{.5cm}
+
+\begin{center}
+\includegraphics[width=.7\textwidth]{gfx/screenshot-2-dance.png}
+\end{center}
+
+
+\begin{center}
+\includegraphics[width=.7\textwidth]{gfx/screenshot-3-dance.png}
+\end{center}
+
+\vspace{.5cm}
+
+
+\end{document}

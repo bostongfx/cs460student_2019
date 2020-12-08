@@ -1,0 +1,85 @@
+
+{
+    "asset":
+    {
+        "generator": "3D Builder",
+        "version": "2.0"
+    },
+    "scene": 0,
+    "scenes": [
+        {
+            "nodes": [0]
+        }
+    ],
+    "nodes": [
+        {
+            "mesh": 0,
+            "matrix": [18.552909851074219, 0, 0, 0, 0, -2.2116792024462484E-6, -18.552907943725586, 0, 0, 18.552907943725586, -2.2116792024462484E-6, 0, -14.399386405944824, 67.47760009765625, -7.21984906704165E-6, 1]
+        }
+    ],
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes":
+                    {
+                        "POSITION": 0
+                    },
+                    "mode": 4,
+                    "indices": 1,
+                    "material": 0
+                }
+            ]
+        }
+    ],
+    "materials": [
+        {
+            "pbrMetallicRoughness":
+            {
+                "baseColorFactor": [0.21951973438262939, 0.21951973438262939, 0.21951973438262939, 1],
+                "metallicFactor": 0,
+                "roughnessFactor": 0
+            },
+            "alphaMode": "OPAQUE"
+        }
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "count": 2903,
+            "componentType": 5126,
+            "type": "VEC3",
+            "min": [-4.4458351135253906, -1.7014046907424927, -3.6370358467102051],
+            "max": [5.9980878829956055, 1.7014049291610718, 2.7597198486328125]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "count": 17412,
+            "componentType": 5125,
+            "type": "SCALAR"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 34836,
+            "byteStride": 12,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 34836,
+            "byteLength": 69648,
+            "target": 34963
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 104484,
+            "uri": "cow.bin"
+        }
+    ]
+}

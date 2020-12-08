@@ -1,0 +1,137 @@
+\documentclass[10pt,oneside,onecolumn,letterpaper]{article}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+
+\usepackage[top=.5in, bottom=1in, left=.5in, right=.7in]{geometry}
+
+\usepackage{fontspec}
+\setmainfont{Arial}
+
+\begin{document}
+
+%%
+% THIS IS THE HEADER
+%%
+\noindent\colorbox{black}{
+\begin{minipage}[c]{.99\linewidth}
+  \vspace{.4cm}
+  \Large{\color{white}{\textbf{\hspace{.3cm}University of Massachusetts Boston}}}
+  \begin{flushright}
+    \vspace{-1.2cm}
+    \includegraphics[width=3cm]{gfx/cs460.png}
+  \end{flushright}
+\end{minipage}
+}
+
+%%
+% CONTENT STARTS HERE
+%%
+
+\vspace{.5cm} % add some space
+
+\noindent\textbf{CS460 Fall 2019} \\
+\textbf{Name:} Jared Barresi \\
+\textbf{Student ID:} 00974358 \\
+\textbf{Due Date:} 10/02/2019
+
+\section*{Assignment 4: A Vanilla WebGL Game!}
+
+\textbf{WebGL without a framework is hard. But this makes it even more rewarding when we create cool stuff!}
+
+\vspace{.5cm} % add some space
+
+In class, we learned how to draw multiple objects (rectangles) with different properties (colors and offset). We also made the rectangles move! In this assignment, we will create a simple but fun video game based on the things we learned. In the game, the player can control an airplane using the \url{UP, DOWN, LEFT, RIGHT} arrow keys in a scene to avoid obstacles. The longer the player can fly around without colliding with the obstacles, the more points are awarded. Once the player hits an obstacle, the game is over and the website can be reloaded to play again. The screenshot below shows the black airplane roughly in the center and multiple square obstacles in different colors. The mountains, sky, and stars are a background image that is added via CSS (as always, feel free to replace and change any design aspects).
+
+\begin{center}
+\includegraphics[width=.7\textwidth]{gfx/game.png}
+\end{center}
+
+\vspace{.5cm}
+
+\noindent\textbf{Starter code:} Please use the code from \url{https://cs460.org/shortcuts/16} and copy it to your fork as \url{04/index.html}.
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 1 Coding: Extend the \url{createAirplane} method. (25 points)}
+
+\vspace{.5cm}
+
+First, we need to create the airplane. Take a look at the existing \url{createAirplane} method. \textbf{This method needs to be extended.} We will use triangles to create a shape similar to the one pictured below. Please figure out the triangles we need and set the \url{vertices} array. We can assume that the center of the airplane is \url{0,0,0} in viewport coordinates. Then, please setup the vertex buffer \url{v_buffer} (and remember create, bind, put data in, unbind). There is no need to change the \url{return} statement of the method. This returned array contains the name of the object, the vertex buffer, the vertices, an offset, a color, and the primitive type---the drawing code of the \url{animate} method needs this array in this exact order.
+
+\begin{center}
+\includegraphics[width=.3\textwidth]{gfx/airplane.png}
+\end{center}
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 2 Coding: Extend the \url{createObstacle} method. (25 points)}
+
+\vspace{.5cm}
+
+Now we will extend the \url{createObstacle} method. This method creates a single square obstacle. There are different ways of rendering a square but the simplest is to use a single vertex and the \url{gl.POINTS} primitive. Make sure that \url{gl_PointSize} is set appropriately in the vertex shader! We use \url{0,0,0} as our vertex and then control the position of the obstacle using the \url{offset} vector. Please modify the code to set the x and y offsets to random values between -1 and 1 (viewport coordinates). The color of an obstacle is already set to random and the \url{return} statement follows the same order as in Part 1. Once this method is complete, multiple obstacles should appear at random positions on the screen (9 in total as added to the \url{objects} array after linking the shaders).
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 3 Explaining: Detect collisions using the \url{calculateBoundingBox} and \url{detectCollision} method. (20 points)}
+
+\vspace{.5cm}
+
+In class we learned about bounding boxes. The starter code includes collision detection using bounding box calculation of the airplane and the offset of an obstacle. Please study the existing \url{calculateBoundingBox} and \url{detectCollision} methods and describe how it works and when the collision detection is happening:
+
+\vspace{.5cm}
+
+\noindent\textbf{calculateBoundingBox():}
+\newline
+This function creates a space in which any particular object in the scene will occupy in space (in the scene "space"). This space is computed through using a \textcolor{red}{(1x3) matrix} that contains the \textcolor{red}{x, y, and z coordinates} of the object, of which is simplified from a complex geometry (the object could be odd-shaped) into a \textcolor{red}{simple primitive space} that it occupies.
+\newline
+
+\noindent\textbf{detectCollision():}
+\newline
+This function determines when any particular object (parameter 1), has the same coordinates as another object (parameter 2).For this particular project, parameter 1 was the \textcolor{red}{bounding box}, and parameter 2 was any of the  \textcolor{red}{obstacles (points)} that were placed throughout the scene. In this instance the objects sharing the  "same coordinates" were \textcolor{red}{the ship} (the ship's bounding box) and \textcolor{red}{any of the obstacles}, which would determine that a collision had occurred (thus ending the game).
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 4 Coding: Extend the \url{window.onkeyup} callback. (20 point)}
+
+\vspace{.5cm}
+
+We want to allow the player to use the arrow keys to move the airplane. Please take a look at the existing \url{window.onkeyup} method. The \url{if} statement checks which arrow key was pressed. Please extend this method to move the airplane. Hint: Like in class, we just need to set the \url{step_x, step_y} values and the \url{direction_x, direction_y} based on which arrow key was pressed.
+
+\vspace{.5cm}
+
+\noindent\textbf{Part 5 Cleanup: Replace the screenshot above, activate Github pages, edit the URL below, and add this PDF to your repo. Then, send a pull request for assignment submission (or do the bonus first). (10 points)}
+
+\vspace{.5cm}
+
+Link to your assignment: \url{https://hltdev8642.github.io/cs460student/04/index.html}
+
+
+\clearpage
+\noindent\textbf{Bonus (33 points):}
+
+
+\vspace{.5cm} % add some space
+
+\noindent\textbf{Part 1 (11 points): Please add code to move the obstacles!} Flying the airplane around static obstacles is half the fun. The obstacles should really move! Please write code to move the obstacles every frame. The obstacles should just move in \url{x} direction from right to left to create a flying illusion for the airplane. This can be done with little code by modifying the offsets accordingly at the right place!
+\newline
+\textcolor{green}{The plane in mine moves (with directional key throttle). You can stop, speed up, slow down, or loop from the top to the bottom of the frame (but not from the left side, similar to a side-scroller video game like the original super mario bros). Also cannot cheat by staying still, as the only way for the scoreboard to increase points, is if you advance to the next frame.}
+
+\vspace{1cm}
+
+\noindent \textbf{Part 2 (11 points): Make the obstacles move faster the longer the game is played!} Right now, the game is not very hard and a skilled pilot can play it for a very long time. Currently, the scoreboard updates roughly every 5 seconds. What if we also increase the speed of the obstacles every 5 seconds? Please write code to do so. This can be done in one line-of-code!
+\newline
+\textcolor{green}{I programmed the of objects to increase with each frame. Also you can increase/decrease speed using the directional keys (each time you press it, the speed in that direction is "stepped up")}
+
+\vspace{1cm}
+
+\noindent \textbf{Part 3 (11 points): Save resources with an indexed geometry!} As discussed in class, an indexed geometry saves redundancy and reduces memory consumption. Please write code to introduce a \url{gl.ELEMENT_ARRAY_BUFFER} for the airplane. Of course, we do not need to change anything for the obstacles since a single vertex does not need an index :).
+
+
+
+
+
+
+\end{document}

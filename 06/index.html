@@ -1,30 +1,32 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <style>
-      html, body { 
+    <style> 
+      html, body {
         background-color:#000;
         margin: 0;
         padding: 0;
         height: 100%;
-        overflow: hidden !important;  
-
-        background-image: url(sky.jpg);
+        overflow: hidden !important;
+        background-image: url("gfx/sky_alt.jpg");
         background-repeat: no-repeat;
-        background-size: 100% 100%;
+        background-position: center;
+        background-size: auto auto;
       }
-    </style>
 
-    <script src="https://threejs.org/build/three.min.js" type="text/javascript"></script>
-    <script src="https://threejs.org/examples/js/controls/TrackballControls.js" type="text/javascript"></script>
-    <script src="https://threejs.org/examples/js/effects/AnaglyphEffect.js" type="text/javascript"></script>
+    </style>
+    <script src="js/dat.gui.min.js" type="text/javascript"></script>
+    <script src="js/robot.js" type="text/javascript"></script>
+    <script src="js/three.min.js" type="text/javascript"></script>
+    <script src="js/TrackballControls.js" type="text/javascript"></script>
+    <script src="js/AnaglyphEffect.js" type="text/javascript"></script>
 
     <script>
+        var firstRun = true;
 
-      var scene, camera, renderer, ambientLight, light, controls;
-      var floor;
-
+      var scene, camera, renderer, ambientLight, light, controls, effect, floor, r,helper;
       window.onload = function() {
+
 
         scene = new THREE.Scene();
 
@@ -33,12 +35,12 @@
         var zNear = 1;
         var zFar = 10000;
         camera = new THREE.PerspectiveCamera(fov, ratio, zNear, zFar);
-        camera.position.set( 0, 0, 500);
+        camera.position.set( 0, 250, 1000);
 
         renderer = new THREE.WebGLRenderer({ alpha: true });
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( renderer.domElement );
-        
+
         ambientLight = new THREE.AmbientLight();
         scene.add( ambientLight );
 
@@ -47,9 +49,9 @@
         scene.add( light );
 
 
-        var floorTexture = new THREE.TextureLoader().load( 'marble.jpg' );
-        var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
-        var floorMaterial = new THREE.MeshBasicMaterial( {
+        floorTexture = new THREE.TextureLoader().load( 'gfx/magic_carpet.jpg' );
+        floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
+        floorMaterial = new THREE.MeshBasicMaterial( {
           map: floorTexture,
           side: THREE.DoubleSide
         } );
@@ -58,23 +60,91 @@
         floor.rotateX(-30);
         scene.add( floor );
 
-        controls = new THREE.TrackballControls( camera );
+        //create robot object
+       r = new Robot(0,-55,0);
+        var rGroup = new THREE.Group();
+        rGroup.add(r.head);
+        helper = new THREE.SkeletonHelper( rGroup );
+        helper.material.linewidth = 3;
+        scene.add(helper);
+        scene.add(rGroup);
 
+        controller = {
+        anaglyph: false
+        }
+
+        effect = new THREE.AnaglyphEffect( renderer );
+        effect.setSize( window.innerWidth, window.innerHeight );
+
+        //configure menu system (dat.gui) 
+        //and anaglyph rendering
+        var gui = new dat.GUI();
+        
+        var rendering = gui.addFolder( "Rendering" );
+        rendering.add( controller, 'anaglyph' );
+        rendering.open();
+
+        //sliders for xyz movement
+        var moving = gui.addFolder( "Movement" );
+        moving.add( r.head.position, "x", -300, 300 );
+        // ... add y and z
+        moving.add( r.head.position, "y", -30, 300 );
+        moving.add( r.head.position, "z", -300, 300 );
+        moving.open();
+
+        var actions = gui.addFolder("Actions");
+        actions.add(r, "wave", r.wave());
+        actions.add(r, "raiseLeftArm", r.raiseLeftArm());
+        actions.add(r, "lowerLeftArm", r.lowerLeftArm());
+        actions.add(r, "raiseRightArm", r.raiseRightArm());
+        actions.add(r, "lowerRightArm", r.lowerRightArm());
+        actions.add(r, "raiseRightLeg", r.raiseRightLeg());
+        actions.add(r, "lowerRightLeg", r.lowerRightLeg());
+        actions.add(r, "raiseLeftLeg", r.raiseLeftLeg());
+        actions.add(r, "lowerLeftLeg", r.lowerLeftLeg());
+        actions.add(r, "kick", r.kick());
+        actions.add(r, "dance", r.dance());
+        actions.open();
+
+        //fix for slider bug
+        controls = new THREE.TrackballControls( camera, renderer.domElement );
+        r.show(scene)
         animate();
+        // r.raiseLeftArm
+        
 
 
       };
 
-      function animate() {
+      function animate() 
+      {
+      
+       if (firstRun)
+        {
+            r.movement = null;
+            firstRun = false;
+        }
 
         requestAnimationFrame( animate );
-
+        r.onAnimate();
         controls.update();
         renderer.render( scene, camera );
+        if (controller.anaglyph)
+        {   
+            document.body.style.backgroundImage = "url('gfx/anaglyph-3d-background-2-credit-alt.png')";
+
+            // document.body.style.background-image = "gfx/marble.jpg"
+            effect.render(scene,camera);
+        }
+        else
+        {
+            document.body.style.backgroundImage = "url('gfx/sky_alt.jpg')";
+
+        }
 
       };
-
     </script>
   </head>
-  <body></body>
+  <body>
+  </body>
 </html>

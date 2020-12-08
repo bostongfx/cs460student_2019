@@ -1,0 +1,56 @@
+<html>
+
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>CS460 Assignment 2</title>
+    <style>
+        body {
+        background-color: black;
+        color: white; /* font color */
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden !important;
+        }
+        
+        #logo {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        }
+    </style>
+
+    <script type="text/javascript" src="js/xtk_edge.js"></script>
+
+    <script type="text/javascript">
+        // this gets called when the site is ready
+        window.onload = function() {
+        
+        // create a new scene and renderer
+        r = new X.renderer3D();
+        r.init();
+        
+        /*    
+        c = new X.cube();
+        c.color = [0,1,0];
+        c.center = [0,0,0]
+        r.add(c)
+        */
+        
+        // set camera further away!
+        r.camera.position = [0, 0, 1000];
+        // render everything!
+        r.render();
+        
+        };
+    </script>
+</head>
+
+<body>
+    <h1>CS460</h1>
+    <div id="logo"><img style="height:60px" src="./gfx/cs460.png"></div>
+</body>
+
+</html>
